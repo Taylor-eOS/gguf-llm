@@ -1,0 +1,4 @@
+setuptools
+wheel
+llama-cpp-python
+huggingface-hub
