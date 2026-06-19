@@ -1,13 +1,27 @@
 from huggingface_hub import hf_hub_download
 from llama_cpp import Llama
-from settings import REPO_ID, FILENAME, N_CTX, N_THREADS
+from settings import MODELS, N_CTX, N_THREADS
 
-def load_model():
-    path = hf_hub_download(repo_id=REPO_ID, filename=FILENAME)
-    return Llama(model_path=path, n_ctx=N_CTX, n_threads=N_THREADS, verbose=False,)
+def pick_model():
+    print("Available models:")
+    for i, m in enumerate(MODELS):
+        print(f"  {i + 1}. {m['repo_id']}")
+    while True:
+        try:
+            choice = input("Select model (number): ").strip()
+        except (KeyboardInterrupt, EOFError):
+            print("\nExiting.")
+            raise SystemExit
+        if choice.isdigit() and 1 <= int(choice) <= len(MODELS):
+            return MODELS[int(choice) - 1]
+        print(f"Enter a number between 1 and {len(MODELS)}.")
+
+def load_model(model):
+    path = hf_hub_download(repo_id=model["repo_id"], filename=model["filename"])
+    return Llama(model_path=path, n_ctx=N_CTX, n_threads=N_THREADS, verbose=False)
 
 def stream_response(llm, prompt):
-    stream = llm.create_chat_completion(messages=[{"role": "user", "content": prompt}], stream=True,)
+    stream = llm.create_chat_completion(messages=[{"role": "user", "content": prompt}], stream=True)
     for chunk in stream:
         delta = chunk["choices"][0]["delta"]
         token = delta.get("content", "")
@@ -16,7 +30,7 @@ def stream_response(llm, prompt):
     print()
 
 def run_chat_loop(llm):
-    print("Type your prompt and press Enter. Use Ctrl+C to exit.\n")
+    print("Prompt:\n")
     while True:
         try:
             prompt = input(">>> ").strip()
@@ -27,9 +41,7 @@ def run_chat_loop(llm):
             continue
         stream_response(llm, prompt)
 
-def main():
-    llm = load_model()
-    run_chat_loop(llm)
-
 if __name__ == "__main__":
-    main()
+    model = pick_model()
+    llm = load_model(model)
+    run_chat_loop(llm)
