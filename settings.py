@@ -1,6 +1,6 @@
 N_CTX = 4 * 1024
 N_THREADS = 6
-STYLE_INSTRUCTION = " [Write continuous text without line breaks and traditional punctuation.]"
+STYLE_INSTRUCTION = ""
 MODELS = [
     {
         "repo_id": "yuxinlu1/gemma-4-12B-coder-fable5-composer2.5-v1-GGUF", #non-thinking, good, censored
@@ -46,11 +46,11 @@ MODELS = [
         "repo_id": "dphn/Dolphin3.0-Llama3.1-8B-GGUF", #general
         "filename": "Dolphin3.0-Llama3.1-8B-Q4_K_M.gguf",
     },
-    {
-        "repo_id": "yuxinlu1/gemma-4-12B-it-Claude-4.6-4.8-Opus-GGUF", #
-        "filename": "gemma4-opus48-Q2_K.gguf"
-        #"filename": "gemma4-opus48-Q4_K_M.gguf",
-    },
+    #{
+    #    "repo_id": "yuxinlu1/gemma-4-12B-it-Claude-4.6-4.8-Opus-GGUF", #loops on hallucination
+    #    "filename": "gemma4-opus48-Q2_K.gguf"
+    #    #"filename": "gemma4-opus48-Q4_K_M.gguf",
+    #},
     {
         "repo_id": "squ11z1/Mythos-nano", #thinking, fast, censored
         "filename": "mythos-nano-Q4_K_M.gguf",
