@@ -1,32 +1,10 @@
 from huggingface_hub import hf_hub_download
 from llama_cpp import Llama
 from pathlib import Path
+from run import is_cached, load_model, pick_model
 import settings
 
 DEBUG_SUMMARY = True
-
-def is_cached(model):
-    repo_slug = "models--" + model["repo_id"].replace("/", "--")
-    return (Path.home() / ".cache" / "huggingface" / "hub" / repo_slug).is_dir()
-
-def load_model(model):
-    path = hf_hub_download(repo_id=model["repo_id"], filename=model["filename"])
-    return Llama(model_path=path, n_ctx=settings.N_CTX, n_threads=settings.N_THREADS, verbose=False)
-
-def pick_model():
-    print("Available models ([x] = cached):")
-    for i, m in enumerate(settings.MODELS):
-        tag = "[x]" if is_cached(m) else "[ ]"
-        print(f" {i + 1:2d} {tag} {m['repo_id']}")
-    while True:
-        try:
-            choice = input("Select model number: ").strip()
-        except (KeyboardInterrupt, EOFError):
-            print("\nExiting.")
-            raise SystemExit
-        if choice.isdigit() and 1 <= int(choice) <= len(settings.MODELS):
-            return settings.MODELS[int(choice) - 1]
-        print(f"Enter a number between 1 and {len(settings.MODELS)}.")
 
 def build_summary_prompt(pairs):
     lines = []
@@ -35,10 +13,10 @@ def build_summary_prompt(pairs):
         lines.append(f"A{i}: {a}")
     body = "\n".join(lines)
     return (
-        "Extract key facts from the exchanges below as compressed notes. "
-        "Use semicolons to separate facts. No bullet points, no line breaks, no headers, no good grammar needed. "
-        "Write this as one continuous block of text, not repeating the Q&A format. "
-        "Never repeat a question. Never analyze or comment. Fewer words is strictly better. "
+        "Extract key facts from the exchange between a user and LLM assistant as compressed notes. "
+        "No bullet points, no line breaks, no headers, no good grammar needed. "
+        "Write this as one continuous block of text, without bullet points, line breaks, or headers, and not repeating the Q&A format. "
+        "Don't analyze or comment. The purpose is to provicde a compact truncation as context for the next response. "
         "Use the same language as the exchanges.\n\n"
         + body
         + "\n\nCompressed facts:"
@@ -86,7 +64,7 @@ def run_chat_loop(llm):
             continue
         context_prefix = ""
         if summary:
-            context_prefix = f"Context from earlier in this conversation:\n{summary}\n\nCurrent query:\n"
+            context_prefix = f"This is a summary of the earlier queries in this conversation:\n{summary}\n\nCurrent query:\n"
         full_prompt = context_prefix + prompt + settings.STYLE_INSTRUCTION
         answer = stream_response(llm, full_prompt)
         pairs.append((prompt, strip_think(answer)))

@@ -12,10 +12,12 @@ def load_model(model):
     return Llama(model_path=path, n_ctx=settings.N_CTX, n_threads=settings.N_THREADS, verbose=False)
 
 def pick_model():
-    print("Available models ([x] = cached):")
+    print("Available models ([x] = cached, [T] = thinking):")
     for i, m in enumerate(settings.MODELS):
         tag = "[x]" if is_cached(m) else "[ ]"
-        print(f" {i + 1:2d} {tag} {m['repo_id']}")
+        think_val = m.get("thinking")
+        think_tag = "[T]" if think_val is True else ("[ ]" if think_val is None else "[N]")
+        print(f" {i + 1:2d} {tag}{think_tag} {m['repo_id']}")
     while True:
         try:
             choice = input("Select model number: ").strip()
