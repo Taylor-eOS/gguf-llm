@@ -11,7 +11,7 @@ def process_line(llm, line):
         f"Task: {settings.REQUEST}\nProcessed:",
     ]
     prompt = "\n".join(parts)
-    if settings.PRINT:
+    if settings.PRINT_PROCESSING_PROMPT:
         print(prompt)
     result = llm.create_chat_completion(
         messages=[{"role": "user", "content": prompt}],
@@ -21,44 +21,43 @@ def process_line(llm, line):
     )
     return result["choices"][0]["message"]["content"].strip()
 
+def write_output(outfile, output):
+    print(output)
+    outfile.write(output + "\n")
+    outfile.flush()
+
+def process_segments(llm, infile, outfile):
+    paragraph_lines = []
+    for raw_line in infile:
+        line = raw_line.rstrip("\n")
+        if line.strip() == "":
+            if paragraph_lines:
+                write_output(outfile, process_line(llm, "\n".join(paragraph_lines)))
+                paragraph_lines = []
+            outfile.write("\n")
+            outfile.flush()
+        else:
+            paragraph_lines.append(line)
+    if paragraph_lines:
+        write_output(outfile, process_line(llm, "\n".join(paragraph_lines)))
+
+def process_lines(llm, infile, outfile):
+    for raw_line in infile:
+        line = raw_line.rstrip("\n")
+        if line.strip() == "":
+            outfile.write("\n")
+            outfile.flush()
+        else:
+            write_output(outfile, process_line(llm, line))
+
 def main():
     model = pick_model()
     llm = load_model(model)
     with open(input_file, "r", encoding="utf-8") as infile, open(output_file, "w", encoding="utf-8") as outfile:
         if settings.SEGMENT_MODE:
-            paragraph_lines = []
-            for raw_line in infile:
-                line = raw_line.rstrip("\n")
-                if line.strip() == "":
-                    if paragraph_lines:
-                        paragraph = "\n".join(paragraph_lines)
-                        output = process_line(llm, paragraph)
-                        print(output)
-                        outfile.write(output + "\n\n")
-                        outfile.flush()
-                        paragraph_lines = []
-                    else:
-                        outfile.write("\n")
-                        outfile.flush()
-                else:
-                    paragraph_lines.append(line)
-            if paragraph_lines:
-                paragraph = "\n".join(paragraph_lines)
-                output = process_line(llm, paragraph)
-                print(output)
-                outfile.write(output + "\n")
-                outfile.flush()
+            process_segments(llm, infile, outfile)
         else:
-            for raw_line in infile:
-                line = raw_line.rstrip("\n")
-                if line.strip() == "":
-                    outfile.write("\n")
-                    outfile.flush()
-                else:
-                    output = process_line(llm, line)
-                    print(output)
-                    outfile.write(output + "\n")
-                    outfile.flush()
+            process_lines(llm, infile, outfile)
 
 if __name__ == "__main__":
     main()
