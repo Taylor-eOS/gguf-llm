@@ -1,7 +1,4 @@
-from huggingface_hub import hf_hub_download
-from llama_cpp import Llama
-from pathlib import Path
-from run import is_cached, load_model, pick_model
+from utils import is_cached, load_model, pick_model
 import settings
 
 DEBUG_SUMMARY = True
@@ -17,7 +14,7 @@ def build_summary_prompt(pairs):
         "No bullet points, no line breaks, no headers, no good grammar needed. "
         "Write this as one continuous block of text, without bullet points, line breaks, or headers, and not repeating the Q&A format. "
         "Don't analyze or comment. The purpose is to provicde a compact truncation as context for the next response. "
-        "Use the same language as the exchanges.\n\n"
+        "Use the same language as the exchanges. Focus more on the later parts and truncate the earlier relatively more. Keep most of what the user said while truncating assistant answers more.\n\n"
         + body
         + "\n\nCompressed facts:"
     )

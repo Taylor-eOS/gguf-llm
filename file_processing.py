@@ -1,7 +1,4 @@
-from huggingface_hub import hf_hub_download
-from llama_cpp import Llama
-from pathlib import Path
-from run import is_cached, load_model, pick_model
+from utils import is_cached, load_model, pick_model
 import settings
 
 input_file = "input.txt"
