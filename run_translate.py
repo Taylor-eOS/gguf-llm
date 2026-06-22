@@ -2,10 +2,11 @@ from huggingface_hub import hf_hub_download
 from llama_cpp import Llama
 import json
 
-N_CTX = 6 * 1024
+N_CTX = 8 * 1024
 N_THREADS = 6
 REPO_ID = "mradermacher/translategemma-12b-it-i1-GGUF"
-FILENAME = "translategemma-12b-it.i1-IQ4_NL.gguf"
+#FILENAME = "translategemma-12b-it.i1-IQ4_NL.gguf"
+FILENAME = "translategemma-12b-it.i1-Q6_K.gguf"
 INPUT_FILE = "input.txt"
 OUTPUT_FILE = "output_translate.txt"
 SOURCE_LANG = "en"
