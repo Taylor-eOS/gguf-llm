@@ -10,6 +10,7 @@ INPUT_FILE = "input.txt"
 OUTPUT_FILE = "output_translate.txt"
 SOURCE_LANG = "en"
 TARGET_LANG = "de"
+SEGMENT_MODE = True
 
 PARAGRAPH_PLACEHOLDER = "\x00"
 
@@ -29,7 +30,12 @@ def read_elements(input_file):
     for i, paragraph in enumerate(text.split("\n\n")):
         if i > 0:
             elements.append(PARAGRAPH_PLACEHOLDER)
-        elements.extend(line for line in paragraph.splitlines() if line.strip())
+        if SEGMENT_MODE:
+            segment = "\n".join(line for line in paragraph.splitlines() if line.strip())
+            if segment:
+                elements.append(segment)
+        else:
+            elements.extend(line for line in paragraph.splitlines() if line.strip())
     return elements
 
 def make_pair(counter, original, translation):
