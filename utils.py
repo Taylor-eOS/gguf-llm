@@ -14,12 +14,16 @@ def load_model(model):
 def pick_model():
     DIM = "\033[2m"
     RESET = "\033[0m"
-    print("Available models ([x] = cached, [T] = thinking):")
+    cached_symb = "x"
+    thinking_symb= "t"
+    nonthinking_symb = "n"
+    neither_symb = " "
+    print(f"Available models ([{cached_symb}] = cached, [{nonthinking_symb}] = non-thinking):")
     for i, m in enumerate(settings.MODELS):
-        tag = "[D]" if is_cached(m) else "[ ]"
+        tag = f"[{cached_symb}]" if is_cached(m) else f"[{neither_symb}]"
         think_val = m.get("thinking")
-        think_tag = "[T]" if think_val is True else ("[ ]" if think_val is None else "[N]")
-        comment = f"  {DIM}({m['comment']}){RESET}" if m.get("comment") else ""
+        think_tag = f"[{thinking_symb}]" if think_val is True else (f"[{neither_symb}]" if think_val is None else f"[{nonthinking_symb}]")
+        comment = f"  {DIM}({m['comment']}){RESET}" if m.get("comment") else "  ()"
         #print(f"{i + 1:2d} {tag}{think_tag} {m['repo_id']}{comment}")
         print(f"{i + 1:2d} {tag}{think_tag} {m['repo_id']}")
         if comment != "": print(f"        {comment}")

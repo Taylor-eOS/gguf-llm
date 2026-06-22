@@ -6,7 +6,7 @@ MAX_TOKENS = 2 * 1024
 PRINT_PROCESSING_PROMPT = False
 BASE = 'Role: You are a sequential text processing tool, run from a script. Output only the requested text itself. Do not add any other explanations or comments.'
 #REQUEST = 'Condense this book segment into a clear and simple encapsulation. Present the central causal mechanism while omitting less important details. In other words compress a summary of the main point. Infer the underlying meaning instead of repeating the text verbatim. Write for a reader that gets an entire book of similar segments summarized, wanting to extract the gist of each segment. Assume the context is known and does not have to be repeated. Do not sanitize contrarian aspects. Apply the same narrative voice as the original content. Omit introductory phrases like “the takeaway is”.'
-REQUEST = 'Write this segment into slightly less difficult language, while expressing exactly the same content. You may split sentences up that combine too many separate points, or change words to more common synonyms if they express the same meaning more naturally. Many sentences would stay the same. This edit should be a light touch. Do not simplify the writing too much; just soften the places where there is too heavy writing into a normal, adult tone, that would read as natural for this kind of content. Never use em dashes or overly snaily parenthetical insertions.',
+REQUEST = 'Write this segment into slightly less difficult language, while preserving exactly the same meaning, nuance, tone, emphasis, implications, qualifications, and level of detail. Make the fewest changes necessary. Leave sentences unchanged unless they contain wording that is unusually complex, formal, or cumbersome for an adult general reader. Replace difficult words only when a more common alternative expresses the same meaning with equal precision. You may split sentences that are overloaded with multiple distinct ideas, but do not reorganize, condense, summarize, or remove information. Do not make the writing simpler than necessary. The goal is only to smooth excessive complexity, not to alter the authors style or reduce nuance. When a choice is uncertain, preserve the original wording. Never use em dashes or snaily parenthetical insertions.',
 
 MODELS = [
     {
@@ -175,11 +175,6 @@ MODELS = [
         "filename": "VertaLily-1.2-1B-Q8_0-stable.gguf",
         "thinking": False,
         "comment": "1.25GB, can stop, follows style, good translation",
-    },
-    {
-        "repo_id": "OBLITERATUS/gemma-4-E4B-it-OBLITERATED",
-        "filename": "gemma-4-E4B-it-OBLITERATED-Q8_0.gguf",
-        "comment": "uncensored but dumb",
     },
     {
         "repo_id": "MaziyarPanahi/Phi-3.5-mini-instruct-GGUF",
