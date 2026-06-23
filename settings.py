@@ -6,7 +6,7 @@ MAX_TOKENS = 2 * 1024
 PRINT_PROCESSING_PROMPT = False
 BASE = 'Role: You are a sequential text processing tool, run from a script. Output only the requested text itself. Do not add any other explanations or comments.'
 #REQUEST = 'Condense this book segment into a clear and simple encapsulation. Present the central causal mechanism while omitting less important details. In other words compress a summary of the main point. Infer the underlying meaning instead of repeating the text verbatim. Write for a reader that gets an entire book of similar segments summarized, wanting to extract the gist of each segment. Assume the context is known and does not have to be repeated. Do not sanitize contrarian aspects. Apply the same narrative voice as the original content. Omit introductory phrases like “the takeaway is”.'
-REQUEST = 'Write this segment into slightly less difficult language, while preserving exactly the same meaning, nuance, tone, emphasis, implications, qualifications, and level of detail. Make the fewest changes necessary. Leave sentences unchanged unless they contain wording that is unusually complex, formal, or cumbersome for an adult general reader. Replace difficult words only when a more common alternative expresses the same meaning with equal precision. You may split sentences that are overloaded with multiple distinct ideas, but do not reorganize, condense, summarize, or remove information. Do not make the writing simpler than necessary. The goal is only to smooth excessive complexity, not to alter the authors style or reduce nuance. When a choice is uncertain, preserve the original wording. Never use em dashes or snaily parenthetical insertions.',
+REQUEST = 'Write this segment into less difficult language, while preserving exactly the same meaning, nuance, tone, implications, qualifications, and level of detail. Leave sentences unchanged unless they contain wording that is unusually complex, formal, or cumbersome for an adult general reader. Replace difficult words when a more common alternative expresses the same meaning with equal precision. You may split sentences that are overloaded with multiple distinct ideas, but do not summarize or remove information. Do not make the writing simpler than necessary. The goal is only to smooth excessive complexity. When a choice is uncertain, preserve the original wording. Never use em dashes or snaily parenthetical insertions.',
 
 MODELS = [
     {
@@ -58,7 +58,7 @@ MODELS = [
     },
     {
         "repo_id": "dphn/Dolphin3.0-Llama3.1-8B-GGUF",
-        "filename": "Dolphin3.0-Llama3.1-8B-Q4_K_M.gguf",
+        "filename": "Dolphin3.0-Llama3.1-8B-Q6_K.gguf", #smaller ones might fit Pi
         "comment": "general",
     },
     {
@@ -81,7 +81,7 @@ MODELS = [
     },
     {
         "repo_id": "mlabonne/Meta-Llama-3.1-8B-Instruct-abliterated-GGUF",
-        "filename": "meta-llama-3.1-8b-instruct-abliterated.Q4_K_M.gguf",
+        "filename": "meta-llama-3.1-8b-instruct-abliterated.Q6_K.gguf",
     },
     {
         "repo_id": "bartowski/Mistral-7B-Instruct-v0.3-GGUF",
@@ -98,83 +98,75 @@ MODELS = [
     },
     {
         "repo_id": "bartowski/SmolLM2-1.7B-Instruct-GGUF",
-        "filename": "SmolLM2-1.7B-Instruct-IQ4_XS.gguf", #there are bigger Q ones
+        "filename": "SmolLM2-1.7B-Instruct-Q6_K_L.gguf",
         "comment": "for Pi, 940MB",
     },
     {
         "repo_id": "janhq/Jan-v3.5-4B-gguf",
-        "filename": "Jan-v3.5-4B-Q5_K_M.gguf", #Q4 loops
+        "filename": "Jan-v3.5-4B-Q6_K.gguf", #Q4 loops
         "thinking": True,
         "comment": "personality, kind of fun, 2.72GB, fast, refuses",
     },
     {
         "repo_id": "bartowski/aya-expanse-8b-GGUF",
-        "filename": "aya-expanse-8b-IQ4_XS.gguf",
+        "filename": "aya-expanse-8b-Q6_K_L.gguf",
         "thinking": False,
         "comment": "for translation",
     },
     {
         "repo_id": "MaziyarPanahi/aya-expanse-8b-abliterated-GGUF",
-        "filename": "aya-expanse-8b-abliterated.Q5_K_M.gguf",
+        "filename": "aya-expanse-8b-abliterated.Q6_K.gguf",
         "comment": "for translation, abliterated",
     },
     {
         "repo_id": "MaziyarPanahi/mistral-small-3.1-24b-instruct-2503-hf-GGUF",
-        "filename": "mistral-small-3.1-24b-instruct-2503-hf.Q4_K_S.gguf",
+        "filename": "mistral-small-3.1-24b-instruct-2503-hf.Q6_K.gguf",
         "comment": "big, slow",
     },
     {
         "repo_id": "MaziyarPanahi/gpt-oss-20b-Derestricted-GGUF",
-        "filename": "gpt-oss-20b-Derestricted.Q4_K_M.gguf",
+        "filename": "gpt-oss-20b-Derestricted.Q3_K_M.gguf",
+        "thinking": True,
+        "comment": "might be too big, MoE",
     },
     {
         "repo_id": "MaziyarPanahi/Qwen3-14B-GGUF",
-        "filename": "Qwen3-14B.Q4_K_M.gguf",
+        "filename": "Qwen3-14B.Q5_K_M.gguf", #depending on performance, check Q4_K_M or Q6_K
     },
     {
         "repo_id": "MaziyarPanahi/Mistral-Small-Instruct-2409-GGUF",
         "filename": "Mistral-Small-Instruct-2409.IQ4_XS.gguf",
+        "comment": "might be too big",
     },
     {
         "repo_id": "MaziyarPanahi/phi-4-GGUF",
-        "filename": "phi-4.Q4_K_M.gguf",
-    },
-    {
-        "repo_id": "unsloth/GLM-4.7-Flash-REAP-23B-A3B-GGUF",
-        "filename": "GLM-4.7-Flash-REAP-23B-A3B-IQ4_NL.gguf",
-        "thinking": True,
-        "comment": "thinks too much, fast enough, fails at translation, swaps but not slow, thinking loops",
-    },
-    {
-        "repo_id": "bartowski/nbeerbower_Gemma4-Gutenberg-31B-Heretic-GGUF",
-        "filename": "nbeerbower_Gemma4-Gutenberg-31B-Heretic-IQ2_S.gguf", #M swaps heavily, could try XS
-        "comment": "31B, creative writing not logic, limited cache, keep short, swaps",
+        "filename": "phi-4.Q5_K_M.gguf" #or Q4_K_M if too slow
     },
     {
         "repo_id": "bartowski/google_gemma-4-26B-A4B-it-GGUF",
-        "filename": "google_gemma-4-26B-A4B-it-IQ3_XS.gguf", #or try M
-        "comment": "12.4GB, big",
+        "filename": "google_gemma-4-26B-A4B-it-IQ3_XXS.gguf",
+        "comment": "might be too big, IQ3_XXS",
     },
     {
         "repo_id": "yuxinlu1/gemma-4-12B-it-Claude-4.6-4.8-Opus-GGUF",
-        "filename": "gemma4-opus48-Q6_K.gguf", #or try Q4_K_M
-        "comment": "",
+        "filename": "gemma4-opus48-Q6_K.gguf", #Q4_K_M if slow
+        "comment": "9.79GB",
     },
     {
         "repo_id": "KevinJK51/Qwen3.6-12B-IQ-Ultra-Heretic-Uncensored-Thinking-V2-Hightop-GGUF",
-        "filename": "Qwen3.6-12B-IQ-Q5_K_M.gguf", #or try IQ-Q5_K_M, there are a lot more sizes
-        "comment": "",
+        "filename": "Qwen3.6-12B-IQ-Q6_K.gguf",
+        "comment": "9.59GB",
     },
     {
         "repo_id": "MaziyarPanahi/NVIDIA-Nemotron-Nano-12B-v2-GGUF",
-        "filename": "NVIDIA-Nemotron-Nano-12B-v2.Q5_K_M.gguf", #also bigger Q6_K or smaller Q6_K
-        "comment": "",
+        "filename": "NVIDIA-Nemotron-Nano-12B-v2.Q5_K_M.gguf", #Q6_K is 10.1GB
+        "comment": "8.76GB",
     },
     {
         "repo_id": "VLTX/VertaLily-1.2-1B-GGUF",
         "filename": "VertaLily-1.2-1B-Q8_0-stable.gguf",
         "thinking": False,
-        "comment": "1.25GB, can stop, follows style, good translation",
+        "comment": "Q8, 1.25GB, can stop, follows style, good translation",
     },
     {
         "repo_id": "MaziyarPanahi/Phi-3.5-mini-instruct-GGUF",
@@ -196,14 +188,14 @@ MODELS = [
     },
     {
         "repo_id": "bartowski/dolphin-2.8-mistral-7b-v02-GGUF",
-        "filename": "dolphin-2.8-mistral-7b-v02-IQ4_XS.gguf", #smaller ones might fit Pi
+        "filename": "dolphin-2.8-mistral-7b-v02-Q6_K.gguf", #smaller ones might fit Pi
         "thinking": False,
         "comment": "older dolphin mistral, uncensored",
     },
     {
         "repo_id": "diffusionmodels1254ani/gemma-3-12b-it-heretic-v2",
-        "filename": "gguf/gemma-3-12b-it-heretic-v2-Q5_K_M.gguf", #or Q4
-        "comment": "have same model by another user",
+        "filename": "gemma-3-12b-it-heretic-v2-Q6_K.gguf", #or Q5K_M for speed
+        "comment": "9.66GB, have same model by another user",
     },
     {
         "repo_id": "",

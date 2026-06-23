@@ -2,17 +2,18 @@ from huggingface_hub import hf_hub_download
 from llama_cpp import Llama
 import json
 
+SEGMENT_MODE = True
 N_CTX = 8 * 1024
 N_THREADS = 6
-REPO_ID = "mradermacher/translategemma-12b-it-i1-GGUF"
+#REPO_ID = "mradermacher/translategemma-12b-it-i1-GGUF"
 #FILENAME = "translategemma-12b-it.i1-IQ4_NL.gguf"
-FILENAME = "translategemma-12b-it.i1-Q6_K.gguf"
+#FILENAME = "translategemma-12b-it.i1-Q6_K.gguf"
+REPO_ID = "steampunque/translategemma-12b-it-MP-GGUF"
+FILENAME = "translategemma-12b-it.Q6_K_H.gguf"
 INPUT_FILE = "input.txt"
 OUTPUT_FILE = "output_translate.txt"
 SOURCE_LANG = "en"
 TARGET_LANG = "de"
-SEGMENT_MODE = True
-
 PARAGRAPH_PLACEHOLDER = "\x00"
 
 def load_model():

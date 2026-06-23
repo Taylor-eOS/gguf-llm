@@ -23,7 +23,7 @@ def pick_model():
         tag = f"[{cached_symb}]" if is_cached(m) else f"[{neither_symb}]"
         think_val = m.get("thinking")
         think_tag = f"[{thinking_symb}]" if think_val is True else (f"[{neither_symb}]" if think_val is None else f"[{nonthinking_symb}]")
-        comment = f"  {DIM}({m['comment']}){RESET}" if m.get("comment") else "  ()"
+        comment = f"  {DIM}({m['comment']}){RESET}" if m.get("comment") else "  "
         #print(f"{i + 1:2d} {tag}{think_tag} {m['repo_id']}{comment}")
         print(f"{i + 1:2d} {tag}{think_tag} {m['repo_id']}")
         if comment != "": print(f"        {comment}")
