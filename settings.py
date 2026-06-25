@@ -1,11 +1,10 @@
 N_CTX = 4 * 1024
 N_THREADS = 6
-STYLE_INSTRUCTION = " [Omit lineshifts and formatting. Write continuously.]"
-SYSTEM_INSTRUCTION = " You are a helpful assistant."
+SYSTEM_INSTRUCTION = " [Omit lineshifts and formatting. Write continuously.]"
 SEGMENT_MODE = True
 MAX_TOKENS = 2 * 1024
 PRINT_PROCESSING_PROMPT = False
 BASE = 'Role: You are a sequential text processing tool, run from a script. Output only the requested text itself. Do not add any other explanations or comments.'
 #REQUEST = 'Condense this book segment into a clear and simple encapsulation. Present the central causal mechanism while omitting less important details. In other words compress a summary of the main point. Infer the underlying meaning instead of repeating the text verbatim. Write for a reader that gets an entire book of similar segments summarized, wanting to extract the gist of each segment. Assume the context is known and does not have to be repeated. Do not sanitize contrarian aspects. Apply the same narrative voice as the original content. Omit introductory phrases like “the takeaway is”.'
 #REQUEST = 'Write this segment into less difficult language, while preserving exactly the same meaning, nuance, tone, implications, qualifications, and level of detail. Leave sentences unchanged unless they contain wording that is unusually complex, formal, or cumbersome for an adult general reader. Replace difficult words when a more common alternative expresses the same meaning with equal precision. You may split sentences that are overloaded with multiple distinct ideas, but do not summarize or remove information. Do not make the writing simpler than necessary. The goal is only to smooth excessive complexity. When a choice is uncertain, preserve the original wording. Never use em dashes or snaily parenthetical insertions.',
-REQUEST = 'Comment on this segment from a book. The point is not to repeat or summarize the content, but to evaluate it.'
+REQUEST = 'Comment on this segment from a book. The point is not to repeat or summarize the content, but to elaborate on it.'

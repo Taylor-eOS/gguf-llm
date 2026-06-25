@@ -1,16 +1,22 @@
 from utils import is_cached, load_model, pick_model
-from settings import SYSTEM_INSTRUCTION, STYLE_INSTRUCTION
+from settings import SYSTEM_INSTRUCTION
 
 def stream_response(llm, prompt):
     print()
     messages = []
-    system_instruction = SYSTEM_INSTRUCTION
-    if system_instruction and hasattr(llm, "metadata") and "tokenizer.chat_template" in llm.metadata:
-        messages.append({"role": "system", "content": system_instruction})
-    style_instruction = STYLE_INSTRUCTION
-    messages.append({"role": "user", "content": prompt + style_instruction})
+    has_system = False
+    if SYSTEM_INSTRUCTION and hasattr(llm, "metadata") and "tokenizer.chat_template" in llm.metadata:
+        messages.append({"role": "system", "content": SYSTEM_INSTRUCTION})
+        has_system = True
+    print(f"System prompt supported: {has_system}")
+    if has_system:
+        messages.append({"role": "user", "content": prompt})
+    else:
+        messages.append({"role": "user", "content": prompt + SYSTEM_INSTRUCTION})
     kwargs = {"messages": messages, "stream": True}
-    if "reasoning" in getattr(llm, "model_path", "").lower():
+    is_reasoning = "reasoning" in getattr(llm, "model_path", "").lower()
+    print(f"Disable thinking supported: {is_reasoning}")
+    if is_reasoning:
         kwargs["extra_body"] = {"extra_generation_params": {"disable_thinking": True}}
     try:
         stream = llm.create_chat_completion(**kwargs)
