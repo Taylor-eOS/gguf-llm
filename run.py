@@ -1,21 +1,15 @@
 from utils import is_cached, load_model, pick_model
 from settings import SYSTEM_INSTRUCTION
 
-def stream_response(llm, prompt):
+def stream_response(llm, prompt, has_system, is_reasoning):
     print()
     messages = []
-    has_system = False
-    if SYSTEM_INSTRUCTION and hasattr(llm, "metadata") and "tokenizer.chat_template" in llm.metadata:
-        messages.append({"role": "system", "content": SYSTEM_INSTRUCTION})
-        has_system = True
-    print(f"System prompt supported: {has_system}")
     if has_system:
+        messages.append({"role": "system", "content": SYSTEM_INSTRUCTION})
         messages.append({"role": "user", "content": prompt})
     else:
         messages.append({"role": "user", "content": prompt + SYSTEM_INSTRUCTION})
     kwargs = {"messages": messages, "stream": True}
-    is_reasoning = "reasoning" in getattr(llm, "model_path", "").lower()
-    print(f"Disable thinking supported: {is_reasoning}")
     if is_reasoning:
         kwargs["extra_body"] = {"extra_generation_params": {"disable_thinking": True}}
     try:
@@ -31,7 +25,13 @@ def stream_response(llm, prompt):
     print()
 
 def run_chat_loop(llm):
-    print("Prompt:\n")
+    has_system = False
+    if SYSTEM_INSTRUCTION and hasattr(llm, "metadata") and "tokenizer.chat_template" in llm.metadata:
+        has_system = True
+    print(f"System prompt supported: {has_system}")
+    is_reasoning = "reasoning" in getattr(llm, "model_path", "").lower()
+    print(f"Disable thinking supported: {is_reasoning}")
+    print("\nPrompt:\n")
     while True:
         try:
             prompt = input(">>> ").strip()
@@ -40,7 +40,7 @@ def run_chat_loop(llm):
             break
         if not prompt:
             continue
-        stream_response(llm, prompt)
+        stream_response(llm, prompt, has_system, is_reasoning)
 
 if __name__ == "__main__":
     model = pick_model()
