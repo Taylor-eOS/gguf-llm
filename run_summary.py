@@ -10,11 +10,10 @@ def build_summary_prompt(pairs):
         lines.append(f"A{i}: {a}")
     body = "\n".join(lines)
     return (
-        "Extract key facts from the exchange between a user and LLM assistant as compressed notes. "
-        "No bullet points, no line breaks, no headers, no good grammar needed. "
-        "Write this as one continuous block of text, without bullet points, line breaks, or headers, and not repeating the Q&A format. "
-        "Don't analyze or comment. The purpose is to provicde a compact truncation as context for the next response. "
-        "Use the same language as the exchanges. Focus more on the later parts and truncate the earlier relatively more. Keep most of what the user said while truncating assistant answers more.\n\n"
+        "Extract key facts from the exchange between a user and assistant as compressed context for the next prompt."
+        "No good grammar is needed. Write this as one continuous unformatted text. "
+        "Don't analyze or comment. The purpose is to provicde a truncation of the previous conversation that includes its factual claims. "
+        "Focus on the later parts and truncate the earlier relatively more. Keep most of what the user said while truncating assistant answers more.\n\n"
         + body
         + "\n\nCompressed facts:"
     )

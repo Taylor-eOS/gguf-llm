@@ -3,6 +3,10 @@ import settings
 
 input_file = "input.txt"
 output_file = "output.txt"
+#USE_SEGMENT_MODE = settings.SEGMENT_MODE
+USE_SEGMENT_MODE = input("Use segment mode? [Y/n]: ").strip().lower()
+USE_SEGMENT_MODE = USE_SEGMENT_MODE if USE_SEGMENT_MODE in ("y", "yes", "") else "n"
+USE_SEGMENT_MODE = USE_SEGMENT_MODE in ("y", "yes", "")
 
 def process_line(llm, line):
     parts = [
@@ -54,7 +58,7 @@ def main():
     model = pick_model()
     llm = load_model(model)
     with open(input_file, "r", encoding="utf-8") as infile, open(output_file, "w", encoding="utf-8") as outfile:
-        if settings.SEGMENT_MODE:
+        if USE_SEGMENT_MODE:
             process_segments(llm, infile, outfile)
         else:
             process_lines(llm, infile, outfile)
