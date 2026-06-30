@@ -73,7 +73,7 @@ MODELS = [
     {
         "repo_id": "mlabonne/Meta-Llama-3.1-8B-Instruct-abliterated-GGUF",
         "filename": "meta-llama-3.1-8b-instruct-abliterated.Q6_K.gguf",
-        "comment": "Q6, 6.6GB",
+        "comment": "Q6, 6.6GB, no spaces",
     },
     {
         "repo_id": "bartowski/Mistral-7B-Instruct-v0.3-GGUF",

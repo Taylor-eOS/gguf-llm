@@ -21,9 +21,10 @@ def run_chat_loop(llm):
             break
         if not prompt:
             continue
-        stream_response(llm, prompt + settings.STYLE_INSTRUCTION)
+        stream_response(llm, prompt + settings.SYSTEM_INSTRUCTION)
 
 if __name__ == "__main__":
     model = pick_model()
     llm = load_model(model)
     run_chat_loop(llm)
+
