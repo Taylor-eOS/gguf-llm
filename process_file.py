@@ -3,7 +3,6 @@ import settings
 
 input_file = "input.txt"
 output_file = "output.txt"
-#USE_SEGMENT_MODE = settings.SEGMENT_MODE
 USE_SEGMENT_MODE = input("Use segment mode? [Y/n]: ").strip().lower()
 USE_SEGMENT_MODE = USE_SEGMENT_MODE if USE_SEGMENT_MODE in ("y", "yes", "") else "n"
 USE_SEGMENT_MODE = USE_SEGMENT_MODE in ("y", "yes", "")
