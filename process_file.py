@@ -3,9 +3,6 @@ import settings
 
 input_file = "input.txt"
 output_file = "output.txt"
-USE_SEGMENT_MODE = input("Use segment mode? [Y/n]: ").strip().lower()
-USE_SEGMENT_MODE = USE_SEGMENT_MODE if USE_SEGMENT_MODE in ("y", "yes", "") else "n"
-USE_SEGMENT_MODE = USE_SEGMENT_MODE in ("y", "yes", "")
 
 def process_line(llm, line):
     parts = [
@@ -25,6 +22,7 @@ def process_line(llm, line):
     return result["choices"][0]["message"]["content"].strip()
 
 def write_output(outfile, output):
+    output = "\n".join(line for line in output.split("\n") if line.strip() != "")
     print(output)
     outfile.write(output + "\n")
     outfile.flush()
@@ -57,7 +55,10 @@ def main():
     model = pick_model()
     llm = load_model(model)
     with open(input_file, "r", encoding="utf-8") as infile, open(output_file, "w", encoding="utf-8") as outfile:
-        if USE_SEGMENT_MODE:
+        _segment_mode = input("Use segment mode? [Y/n]: ").strip().lower()
+        _segment_mode = _segment_mode if _segment_mode in ("y", "yes", "") else "n"
+        _segment_mode = _segment_mode in ("y", "yes", "")
+        if _segment_mode:
             process_segments(llm, infile, outfile)
         else:
             process_lines(llm, infile, outfile)
