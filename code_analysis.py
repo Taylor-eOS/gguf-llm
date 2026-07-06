@@ -1,10 +1,11 @@
+import os
 from utils import load_model, pick_model
 import settings
-import os
 
 input_dir = "input"
 output_file = "output.txt"
-
+CODE_MAX_TOKENS = 8 * 1024
+CODE_N_CTX = 12 * 1024
 STATE = {
     "llm": None,
     "outfile": None,
@@ -28,7 +29,7 @@ def summarize_file(filepath):
         print(prompt)
     result = STATE["llm"].create_chat_completion(
         messages=[{"role": "user", "content": prompt}],
-        max_tokens=settings.MAX_TOKENS,
+        max_tokens=CODE_MAX_TOKENS,
         temperature=0.7,
         top_p=0.9,
     )
@@ -52,7 +53,7 @@ def gather_input_files():
 
 def main():
     model = pick_model()
-    STATE["llm"] = load_model(model)
+    STATE["llm"] = load_model(model, CODE_N_CTX)
     files = gather_input_files()
     if not files:
         print(f"No files found in {input_dir}/")

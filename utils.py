@@ -8,9 +8,9 @@ def is_cached(model):
     repo_slug = "models--" + model["repo_id"].replace("/", "--")
     return (Path.home() / ".cache" / "huggingface" / "hub" / repo_slug).is_dir()
 
-def load_model(model):
+def load_model(model, c_ntx=settings.N_CTX):
     path = hf_hub_download(repo_id=model["repo_id"], filename=model["filename"])
-    return Llama(model_path=path, n_ctx=settings.N_CTX, n_threads=settings.N_THREADS, verbose=False)
+    return Llama(model_path=path, n_ctx=c_ntx, n_threads=settings.N_THREADS, verbose=False)
 
 def pick_model():
     DIM = "\033[2m"
