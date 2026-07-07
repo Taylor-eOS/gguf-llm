@@ -10,10 +10,10 @@ def build_summary_prompt(pairs):
         lines.append(f"A{i}: {a}")
     body = "\n".join(lines)
     return (
-        "Extract key facts from the exchange between a user and assistant as compressed context for the next prompt."
-        "No good grammar is needed. Write this as one continuous unformatted text. "
-        "Don't analyze or comment. The purpose is to provicde a truncation of the previous conversation that includes its factual claims. "
-        "Focus on the later parts and truncate the earlier relatively more. Keep most of what the user said while truncating assistant answers more.\n\n"
+        "Write key facts from the exchange between a user and assistant as compressed context for the next prompt."
+        "No good grammar is needed. Write this as one continuous unformatted text without Q and A segmentation. "
+        "Don't analyze or comment. The purpose is to provicde a truncation of the previous conversation that includes its factual data. "
+        "Focus on the later parts and truncate the earlier more. Keep most of what the user said while truncating assistant answers more.\n\n"
         + body
         + "\n\nCompressed facts:"
     )
@@ -61,7 +61,7 @@ def run_chat_loop(llm):
         context_prefix = ""
         if summary:
             context_prefix = f"This is a summary of the earlier queries in this conversation:\n{summary}\n\nCurrent query:\n"
-        full_prompt = context_prefix + prompt + settings.STYLE_INSTRUCTION
+        full_prompt = context_prefix + prompt + settings.SYSTEM_INSTRUCTION
         answer = stream_response(llm, full_prompt)
         pairs.append((prompt, strip_think(answer)))
         summary = strip_think(summarize(llm, list(pairs)))
@@ -72,3 +72,4 @@ if __name__ == "__main__":
     model = pick_model()
     llm = load_model(model)
     run_chat_loop(llm)
+

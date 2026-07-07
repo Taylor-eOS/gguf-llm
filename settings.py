@@ -2,7 +2,7 @@ N_THREADS = 6
 N_CTX = 4 * 1024
 MAX_TOKENS = 2 * 1024
 PRINT_PROCESSING_PROMPT = False
-SYSTEM_INSTRUCTION = " [Write continuously.]"
+SYSTEM_INSTRUCTION = ""
 BASE = 'Role: You are a sequential text processing tool that is run from a script. Output only the requested text itself. Do not add any other explanations or comments.'
 REQUESTS = [
     'Condense this book segment into a simple and clear encapsulation. Present the central causal mechanism while omitting less important details. Compress a summary of the main point. Infer the underlying meaning instead of restating what the text said. Write for a reader that gets an entire book of similar segments summarized separately, wanting to extract the gist of each segment. Assume the context is known and does not have to be repeated. Do not sanitize contrarian aspects. Apply the same narrative voice as the original content. Omit introductory phrases like “the takeaway is”.',
