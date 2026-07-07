@@ -2,14 +2,13 @@ import os
 from utils import load_model, pick_model
 import settings
 
-input_dir = "input"
+input_dir = "input_code"
 output_file = "output.txt"
 CODE_MAX_TOKENS = 8 * 1024
 CODE_N_CTX = 12 * 1024
-STATE = {
-    "llm": None,
-    "outfile": None,
-}
+CODE_CHARS_PER_TOKEN = 4
+STATE = {"llm": None, "outfile": None,}
+TRUNCATE_INPUT = True
 
 def build_prompt(filename, content):
     parts = [
@@ -20,10 +19,24 @@ def build_prompt(filename, content):
     ]
     return "\n".join(parts)
 
+def truncate_content(filename, content):
+    if not TRUNCATE_INPUT:
+        return content
+    budget_tokens = CODE_N_CTX - CODE_MAX_TOKENS
+    budget_chars = budget_tokens * CODE_CHARS_PER_TOKEN
+    overhead = len(build_prompt(filename, ""))
+    limit = budget_chars - overhead
+    if limit < 0:
+        limit = 0
+    if len(content) > limit:
+        content = content[:limit]
+    return content
+
 def summarize_file(filepath):
     filename = os.path.basename(filepath)
     with open(filepath, "r", encoding="utf-8") as f:
         content = f.read()
+    content = truncate_content(filename, content)
     prompt = build_prompt(filename, content)
     if settings.PRINT_PROCESSING_PROMPT:
         print(prompt)
@@ -66,4 +79,3 @@ def main():
 
 if __name__ == "__main__":
     main()
-

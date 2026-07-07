@@ -10,5 +10,5 @@ REQUESTS = [
     'Comment on the ideas in this segment from a book. The point is not to repeat or summarize the content, but to provide constructive criticism.',
     'Write this segment into different words, so it means the same but is not immediately recognizable as the same text.',
 ]
-CODE_TASK = "Task: Briefly summarize what this code does in one sentece."
+CODE_TASK = "Analyze this code and write a brief description what it does in terms of user-experienced mechanics."
 

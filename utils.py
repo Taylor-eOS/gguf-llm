@@ -16,7 +16,7 @@ def pick_model():
     DIM = "\033[2m"
     RESET = "\033[0m"
     cached_symb = "x"
-    thinking_symb= "t"
+    thinking_symb= "T"
     nonthinking_symb = "n"
     neither_symb = " "
     print(f"Available models ([{cached_symb}] = cached, [{nonthinking_symb}] = non-thinking):")

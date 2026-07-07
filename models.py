@@ -3,13 +3,19 @@ MODELS = [
         "repo_id": "yuxinlu1/gemma-4-12B-coder-fable5-composer2.5-v1-GGUF",
         "filename": "gemma4-coding-Q4_K_M.gguf",
         "thinking": False,
-        "comment": "Q4, 7.38GB, orig. gemma, works well, censored but can handle most text",
+        "comment": "Q4, 7.38GB, orig. gemma, works well, censored but can handle most text, swaps",
     },
     {
         "repo_id": "deadbydawn101/RavenX-OpenFable-Coder-Gemma-4-12B-GGUF",
         "filename": "RavenX-OpenFable-Coder-Gemma-4-12B-Q4_K_M.gguf",
         "thinking": False,
         "comment": "Q4, 7.38GB, seems to work",
+    },
+    {
+        "repo_id": "Qwen/Qwen2.5-Coder-7B-Instruct-GGUF",
+        "filename": "qwen2.5-coder-7b-instruct-q5_k_m.gguf",
+        "thinking": False,
+        "comment": "Q5, 5.44GB, fast coding",
     },
     {
         "repo_id": "Jackrong/Qwopus3.5-9B-Coder-GGUF",
@@ -201,6 +207,24 @@ MODELS = [
         "filename": "gemma-4-12b-it-Q6_K.gguf",
         "thinking": True,
         "comment": "Q6, 9.79GB",
+    },
+    {
+        "repo_id": "deepreinforce-ai/Ornith-1.0-9B-GGUF",
+        "filename": "ornith-1.0-9b-Q8_0.gguf",
+        "thinking": True,
+        "comment": "Q8, 9.53GB, doesn't seem to use much memory, thinks into oblivion",
+    },
+    {
+        "repo_id": "LiquidAI/LFM2.5-230M-GGUF",
+        "filename": "LFM2.5-230M-Q8_0.gguf",
+        "thinking": False,
+        "comment": "Q8, 247MB, tiny, coherent, stops, overly censored",
+    },
+    {
+        "repo_id": "jica98/qwen3.5-4B-super-coder",
+        "filename": "qwen3.5-4B-super-coder.Q4_0.gguf",
+        "thinking": True,
+        "comment": "Q4, 2.61GB, bad ad code description",
     },
     {
         "repo_id": "",
