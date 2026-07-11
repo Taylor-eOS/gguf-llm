@@ -91,7 +91,7 @@ MODELS = [
         "repo_id": "bartowski/Mistral-7B-Instruct-v0.3-GGUF",
         "filename": "Mistral-7B-Instruct-v0.3-IQ4_NL.gguf",
         "thinking": False,
-        "comment": "IQ4, 4.13GB, workhorse, fast, limited censorship, does summaries well",
+        "comment": "IQ4 of the above, 4.13GB",
     },
     {
         "repo_id": "Qwen/Qwen2.5-1.5B-Instruct-GGUF",
@@ -224,7 +224,7 @@ MODELS = [
         "repo_id": "jica98/qwen3.5-4B-super-coder",
         "filename": "qwen3.5-4B-super-coder.Q4_0.gguf",
         "thinking": True,
-        "comment": "Q4, 2.61GB, bad ad code description",
+        "comment": "Q4, 2.61GB, bad at code description, fine at summaried conversation",
     },
     {
         "repo_id": "",
