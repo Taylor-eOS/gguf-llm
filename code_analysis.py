@@ -2,8 +2,12 @@ import os
 from utils import load_model, pick_model
 import settings
 
+"""
+Goes through separate files.
+"""
+
 input_dir = "input_code"
-output_file = "output.txt"
+output_file = "output_code.txt"
 CODE_MAX_TOKENS = 8 * 1024
 CODE_N_CTX = 12 * 1024
 CODE_CHARS_PER_TOKEN = 4
