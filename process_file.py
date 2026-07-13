@@ -66,12 +66,12 @@ def pick_request():
 
 def main():
     model = pick_model()
+    _segment_mode = input("Use segment mode? [Y/n]: ").strip().lower()
+    _segment_mode = _segment_mode if _segment_mode in ("y", "yes", "") else "n"
+    _segment_mode = _segment_mode in ("y", "yes", "")
+    pick_request()
     llm = load_model(model)
     with open(input_file, "r", encoding="utf-8") as infile, open(output_file, "w", encoding="utf-8") as outfile:
-        _segment_mode = input("Use segment mode? [Y/n]: ").strip().lower()
-        _segment_mode = _segment_mode if _segment_mode in ("y", "yes", "") else "n"
-        _segment_mode = _segment_mode in ("y", "yes", "")
-        pick_request()
         if _segment_mode:
             process_segments(llm, infile, outfile)
         else:
