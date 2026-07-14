@@ -9,7 +9,7 @@ MODELS = [
         "repo_id": "deadbydawn101/RavenX-OpenFable-Coder-Gemma-4-12B-GGUF",
         "filename": "RavenX-OpenFable-Coder-Gemma-4-12B-Q4_K_M.gguf",
         "thinking": False,
-        "comment": "Q4, 7.38GB, seems to work",
+        "comment": "Q4, 7.38GB, seems to work, good at code description",
     },
     {
         "repo_id": "Qwen/Qwen2.5-Coder-7B-Instruct-GGUF",
@@ -158,11 +158,6 @@ MODELS = [
         "comment": "Q6, 9.79GB",
     },
     {
-        "repo_id": "KevinJK51/Qwen3.6-12B-IQ-Ultra-Heretic-Uncensored-Thinking-V2-Hightop-GGUF",
-        "filename": "Qwen3.6-12B-IQ-Q6_K.gguf",
-        "comment": "Q6, 9.59GB",
-    },
-    {
         "repo_id": "MaziyarPanahi/NVIDIA-Nemotron-Nano-12B-v2-GGUF",
         "filename": "NVIDIA-Nemotron-Nano-12B-v2.Q5_K_M.gguf", #Q6_K is 10.1GB
         "comment": "Q5, 8.76GB",
@@ -190,12 +185,6 @@ MODELS = [
         "filename": "dolphin-2.9.3-mistral-7B-32k-Q6_K_L.gguf", #smaller ones might fit Pi
         "thinking": False,
         "comment": "Q6, 6.26GB, good, doesn't refuse but boring",
-    },
-    {
-        "repo_id": "bartowski/dolphin-2.8-mistral-7b-v02-GGUF",
-        "filename": "dolphin-2.8-mistral-7b-v02-Q6_K.gguf", #smaller ones might fit Pi
-        "thinking": False,
-        "comment": "Q6, 5.94GB, older dolphin mistral, uncensored",
     },
     {
         "repo_id": "diffusionmodels1254ani/gemma-3-12b-it-heretic-v2",

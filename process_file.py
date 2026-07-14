@@ -1,4 +1,4 @@
-from utils import is_cached, load_model, pick_model
+from utils import is_cached, load_model, pick_model, strip_think
 import settings
 
 input_file = "input.txt"
@@ -19,7 +19,7 @@ def process_line(llm, line):
         temperature=0.7,
         top_p=0.9,
     )
-    return result["choices"][0]["message"]["content"].strip()
+    return strip_think(result["choices"][0]["message"]["content"].strip())
 
 def write_output(outfile, output):
     output = "\n".join(line for line in output.split("\n") if line.strip() != "")

@@ -1,4 +1,4 @@
-from utils import is_cached, load_model, pick_model
+from utils import is_cached, load_model, pick_model, strip_think
 import settings
 
 DEBUG_SUMMARY = True
@@ -9,12 +9,7 @@ def build_summary_prompt(pairs):
         lines.append(f"Q{i}: {q}")
         lines.append(f"A{i}: {a}")
     body = "\n".join(lines)
-    return (
-        "Write key facts from the exchange between a user and assistant as compressed context for the next prompt."
-        "No good grammar is needed. Write this as one continuous unformatted text without Q and A segmentation. "
-        "Don't analyze or comment. The purpose is to provicde a truncation of the previous conversation that includes its factual data. "
-        "Focus on the later parts and truncate the earlier more. Keep most of what the user said while truncating assistant answers more.\n\n"
-        + body
+    return (settings.SUMMARY_INSTRUCTION + body
         + "\n\nCompressed facts:"
     )
 
@@ -25,13 +20,6 @@ def summarize(llm, pairs):
         stream=False,
     )
     return response["choices"][0]["message"]["content"].strip()
-
-def strip_think(text):
-    marker = "</think>"
-    idx = text.find(marker)
-    if idx == -1:
-        return text
-    return text[idx + len(marker):].strip()
 
 def stream_response(llm, prompt):
     print()

@@ -1,5 +1,6 @@
 import os
 import sys
+from datetime import datetime
 from huggingface_hub import hf_hub_download
 from llama_cpp import Llama
 from pathlib import Path
@@ -8,12 +9,20 @@ import models
 
 WRITE_LOG = False
 PERFORMANCE_METRICS = False
+MODEL_LOG_PATH = Path(__file__).resolve().parent / "model.log"
 
 def is_cached(model):
     repo_slug = "models--" + model["repo_id"].replace("/", "--")
     return (Path.home() / ".cache" / "huggingface" / "hub" / repo_slug).is_dir()
 
+def log_model_use(model):
+    MODEL_LOG_PATH.parent.mkdir(parents=True, exist_ok=True)
+    timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+    with open(MODEL_LOG_PATH, "a") as f:
+        f.write(f"{timestamp} {model['repo_id']} {model['filename']}\n")
+
 def load_model(model, c_ntx=settings.N_CTX, redirect_logs=WRITE_LOG):
+    log_model_use(model)
     path = hf_hub_download(repo_id=model["repo_id"], filename=model["filename"])
     log_target = "llama_output.log" if redirect_logs else os.devnull
     log_file = open(log_target, "a" if redirect_logs else "w")
@@ -66,3 +75,10 @@ def pick_model():
         if choice.isdigit() and 1 <= int(choice) <= len(models.MODELS):
             return models.MODELS[int(choice) - 1]
         print(f"Enter a number between 1 and {len(models.MODELS)}.")
+
+def strip_think(text):
+    marker = "</think>"
+    idx = text.find(marker)
+    if idx == -1:
+        return text
+    return text[idx + len(marker):].strip()
