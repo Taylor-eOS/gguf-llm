@@ -1,4 +1,4 @@
-from utils import is_cached, load_model, pick_model, strip_think
+from utils import is_cached, load_model, pick_model, split_lines_by_tokens, strip_think
 import settings
 
 input_file = "input.txt"
@@ -33,14 +33,26 @@ def process_segments(llm, infile, outfile):
         line = raw_line.rstrip("\n")
         if line.strip() == "":
             if paragraph_lines:
-                write_output(outfile, process_line(llm, "\n".join(paragraph_lines)))
+                overhead = len(llm.tokenize(
+                    (f"Input content: \"\"\n{settings.BASE}\nTask: {settings.REQUEST}\nProcessed:").encode("utf-8"),
+                    add_bos=False
+                ))
+                budget = settings.N_CTX - settings.MAX_TOKENS - overhead
+                for chunk in split_lines_by_tokens(llm, paragraph_lines, budget):
+                    write_output(outfile, process_line(llm, "\n".join(chunk)))
                 paragraph_lines = []
             outfile.write("\n")
             outfile.flush()
         else:
             paragraph_lines.append(line)
     if paragraph_lines:
-        write_output(outfile, process_line(llm, "\n".join(paragraph_lines)))
+        overhead = len(llm.tokenize(
+            (f"Input content: \"\"\n{settings.BASE}\nTask: {settings.REQUEST}\nProcessed:").encode("utf-8"),
+            add_bos=False
+        ))
+        budget = settings.N_CTX - settings.MAX_TOKENS - overhead
+        for chunk in split_lines_by_tokens(llm, paragraph_lines, budget):
+            write_output(outfile, process_line(llm, "\n".join(chunk)))
 
 def process_lines(llm, infile, outfile):
     for raw_line in infile:

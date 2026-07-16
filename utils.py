@@ -76,6 +76,22 @@ def pick_model():
             return models.MODELS[int(choice) - 1]
         print(f"Enter a number between 1 and {len(models.MODELS)}.")
 
+def split_lines_by_tokens(llm, lines, max_tokens):
+    chunks = []
+    current = []
+    current_tokens = 0
+    for line in lines:
+        line_tokens = len(llm.tokenize(line.encode("utf-8"), add_bos=False))
+        if current and current_tokens + line_tokens > max_tokens:
+            chunks.append(current)
+            current = []
+            current_tokens = 0
+        current.append(line)
+        current_tokens += line_tokens
+    if current:
+        chunks.append(current)
+    return chunks
+
 def strip_think(text):
     marker = "</think>"
     idx = text.find(marker)

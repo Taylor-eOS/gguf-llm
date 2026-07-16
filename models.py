@@ -27,7 +27,7 @@ MODELS = [
         "repo_id": "prithivMLmods/VibeThinker-3B-GGUF",
         "filename": "VibeThinker-3B.Q4_K_M.gguf",
         "thinking": True,
-        "comment": "Q4, 1.93GB, doesn't finish",
+        "comment": "Q4, 1.93GB, does not finish",
     },
     {
         "repo_id": "LiquidAI/LFM2.5-8B-A1B-GGUF",
@@ -160,7 +160,12 @@ MODELS = [
     {
         "repo_id": "MaziyarPanahi/NVIDIA-Nemotron-Nano-12B-v2-GGUF",
         "filename": "NVIDIA-Nemotron-Nano-12B-v2.Q5_K_M.gguf", #Q6_K is 10.1GB
-        "comment": "Q5, 8.76GB",
+        "comment": "Q5, 8.76GB, slow, might be memory-constrained",
+    },
+    {
+        "repo_id": "dominguesm/NVIDIA-Nemotron-Nano-9B-v2-GGUF",
+        "filename": "nemotron-nano-9b-v2-q5_k_m.gguf", #or q4_k_s for speed
+        "comment": "Q5, 7.07GB, does not swap, not quite as good at code description as 12B above",
     },
     {
         "repo_id": "VLTX/VertaLily-1.2-1B-GGUF",
@@ -184,7 +189,7 @@ MODELS = [
         "repo_id": "bartowski/dolphin-2.9.3-mistral-7B-32k-GGUF",
         "filename": "dolphin-2.9.3-mistral-7B-32k-Q6_K_L.gguf", #smaller ones might fit Pi
         "thinking": False,
-        "comment": "Q6, 6.26GB, good, doesn't refuse but boring",
+        "comment": "Q6, 6.26GB, good, does not refuse but boring",
     },
     {
         "repo_id": "diffusionmodels1254ani/gemma-3-12b-it-heretic-v2",
@@ -201,7 +206,7 @@ MODELS = [
         "repo_id": "deepreinforce-ai/Ornith-1.0-9B-GGUF",
         "filename": "ornith-1.0-9b-Q8_0.gguf",
         "thinking": True,
-        "comment": "Q8, 9.53GB, doesn't seem to use much memory, thinks into oblivion",
+        "comment": "Q8, 9.53GB, does not seem to use much memory, thinks into oblivion",
     },
     {
         "repo_id": "LiquidAI/LFM2.5-230M-GGUF",
