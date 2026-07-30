@@ -56,7 +56,8 @@ MODELS = [
     {
         "repo_id": "dphn/Dolphin3.0-Llama3.1-8B-GGUF",
         "filename": "Dolphin3.0-Llama3.1-8B-Q6_K.gguf", #smaller ones might fit Pi
-        "comment": "Q6, 6.6GB, general",
+        "thinking": False,
+        "comment": "Q6, 6.6GB, general, uncensored, not boring",
     },
     {
         "repo_id": "squ11z1/Mythos-nano",
@@ -160,12 +161,14 @@ MODELS = [
     {
         "repo_id": "MaziyarPanahi/NVIDIA-Nemotron-Nano-12B-v2-GGUF",
         "filename": "NVIDIA-Nemotron-Nano-12B-v2.Q5_K_M.gguf", #Q6_K is 10.1GB
+        "thinking": True,
         "comment": "Q5, 8.76GB, slow, might be memory-constrained",
     },
     {
         "repo_id": "dominguesm/NVIDIA-Nemotron-Nano-9B-v2-GGUF",
         "filename": "nemotron-nano-9b-v2-q5_k_m.gguf", #or q4_k_s for speed
-        "comment": "Q5, 7.07GB, does not swap, not quite as good at code description as 12B above",
+        "thinking": True,
+        "comment": "Q5, 7.07GB, does not swap, not as good at code description as 12B, limited thinking",
     },
     {
         "repo_id": "VLTX/VertaLily-1.2-1B-GGUF",

@@ -9,7 +9,7 @@ import models
 
 WRITE_LOG = False
 PERFORMANCE_METRICS = False
-MODEL_LOG_PATH = Path(__file__).resolve().parent / "model.log"
+MODEL_LOG_PATH = Path(__file__).resolve().parent / "llm_use.log"
 
 def is_cached(model):
     repo_slug = "models--" + model["repo_id"].replace("/", "--")

@@ -27,32 +27,57 @@ def write_output(outfile, output):
     outfile.write(output + "\n")
     outfile.flush()
 
-def process_segments(llm, infile, outfile):
+def read_segments(infile):
+    segments = []
     paragraph_lines = []
     for raw_line in infile:
         line = raw_line.rstrip("\n")
         if line.strip() == "":
             if paragraph_lines:
-                overhead = len(llm.tokenize(
-                    (f"Input content: \"\"\n{settings.BASE}\nTask: {settings.REQUEST}\nProcessed:").encode("utf-8"),
-                    add_bos=False
-                ))
-                budget = settings.N_CTX - settings.MAX_TOKENS - overhead
-                for chunk in split_lines_by_tokens(llm, paragraph_lines, budget):
-                    write_output(outfile, process_line(llm, "\n".join(chunk)))
+                segments.append(paragraph_lines)
                 paragraph_lines = []
-            outfile.write("\n")
-            outfile.flush()
+            segments.append(None)
         else:
             paragraph_lines.append(line)
     if paragraph_lines:
-        overhead = len(llm.tokenize(
-            (f"Input content: \"\"\n{settings.BASE}\nTask: {settings.REQUEST}\nProcessed:").encode("utf-8"),
-            add_bos=False
-        ))
-        budget = settings.N_CTX - settings.MAX_TOKENS - overhead
-        for chunk in split_lines_by_tokens(llm, paragraph_lines, budget):
-            write_output(outfile, process_line(llm, "\n".join(chunk)))
+        segments.append(paragraph_lines)
+    return segments
+
+def segment_token_count(llm, paragraph_lines):
+    return len(llm.tokenize("\n".join(paragraph_lines).encode("utf-8"), add_bos=False))
+
+def compute_budget(llm):
+    overhead = len(llm.tokenize(
+        (f"Input content: \"\"\n{settings.BASE}\nTask: {settings.REQUEST}\nProcessed:").encode("utf-8"),
+        add_bos=False
+    ))
+    return settings.N_CTX - settings.MAX_TOKENS - overhead
+
+def check_oversized_segments(llm, segments, budget):
+    oversized = []
+    segment_index = 0
+    for segment in segments:
+        if segment is None:
+            continue
+        segment_index += 1
+        tokens = segment_token_count(llm, segment)
+        if tokens > budget:
+            preview = " ".join(" ".join(segment).split()[:10])
+            oversized.append((segment_index, tokens, preview))
+    return oversized
+
+def process_segments(llm, segments, outfile, budget, allow_split):
+    for segment in segments:
+        if segment is None:
+            outfile.write("\n")
+            outfile.flush()
+            continue
+        tokens = segment_token_count(llm, segment)
+        if tokens > budget and allow_split:
+            for chunk in split_lines_by_tokens(llm, segment, budget):
+                write_output(outfile, process_line(llm, "\n".join(chunk)))
+        else:
+            write_output(outfile, process_line(llm, "\n".join(segment)))
 
 def process_lines(llm, infile, outfile):
     for raw_line in infile:
@@ -85,7 +110,19 @@ def main():
     llm = load_model(model)
     with open(input_file, "r", encoding="utf-8") as infile, open(output_file, "w", encoding="utf-8") as outfile:
         if _segment_mode:
-            process_segments(llm, infile, outfile)
+            segments = read_segments(infile)
+            budget = compute_budget(llm)
+            oversized = check_oversized_segments(llm, segments, budget)
+            allow_split = True
+            if oversized:
+                print(f"\n{len(oversized)} segment(s) exceed the token budget of {budget}:")
+                for index, tokens, preview in oversized:
+                    print(f"{tokens}: \"{preview}...\"")
+                choice = input("\nProceed and split oversized segments? [y/N]: ").strip().lower()
+                if choice not in ("y", "yes"):
+                    print("Aborted")
+                    return
+            process_segments(llm, segments, outfile, budget, allow_split)
         else:
             process_lines(llm, infile, outfile)
 
