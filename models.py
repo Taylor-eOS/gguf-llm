@@ -19,7 +19,7 @@ MODELS = [
     },
     {
         "repo_id": "Jackrong/Qwopus3.5-9B-Coder-GGUF",
-        "filename": "Qwopus3.5-9B-coder-Exp-IQ4_XS.gguf",
+        "filename": "Qwopus3.5-9B-coder-Exp-Q4_K_M.gguf",
         "thinking": True,
         "comment": "IQ4, 5.23GB, not fast, censored, claims class leader, good responses, too much thinking",
     },
@@ -222,6 +222,12 @@ MODELS = [
         "filename": "qwen3.5-4B-super-coder.Q4_0.gguf",
         "thinking": True,
         "comment": "Q4, 2.61GB, bad at code description, fine at summaried conversation",
+    },
+    {
+        "repo_id": "DavidAU/Qwen3.5-9B-The-Defiant-Fable-Uncensored-Heretic-NEO-IMATRIX-MAX-MTP-GGUF",
+        "filename": "Qwen3.5-9B-The-Defiant-Fable-Uncnr-Heretic-NEO-MAX-IQ4_NL.gguf",
+        "thinking": True,
+        "comment": "IQ4, 6.62GB",
     },
     {
         "repo_id": "",
