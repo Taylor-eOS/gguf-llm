@@ -36,6 +36,12 @@ MODELS = [
         "comment": "Q4, 5.16GB, fast MoE, refuses",
     },
     {
+        "repo_id": "LiquidAI/LFM2.5-2.6B-GGUF",
+        "filename": "LFM2.5-2.6B-Q5_K_M.gguf",
+        "thinking": True,
+        "comment": "Q5, 1.94GB",
+    },
+    {
         "repo_id": "tvall43/Qwen3.6-14B-A3B-FableVibes-GGUF",
         "filename": "Qwen3.6-14B-A3B-FableVibes-Q5_K_M.gguf",
         "thinking": True,
@@ -86,7 +92,7 @@ MODELS = [
         "repo_id": "bartowski/Mistral-7B-Instruct-v0.3-GGUF",
         "filename": "Mistral-7B-Instruct-v0.3-IQ3_M.gguf", #not recommended in description
         "thinking": False,
-        "comment": "IQ3, 3.29GB, Pi, workhorse, fast, limited censorship, does summaries well",
+        "comment": "IQ3, 3.29GB, Pi, workhorse, fast, limited censorship, does summaries well, in library",
     },
     {
         "repo_id": "bartowski/Mistral-7B-Instruct-v0.3-GGUF",
@@ -227,7 +233,7 @@ MODELS = [
         "repo_id": "DavidAU/Qwen3.5-9B-The-Defiant-Fable-Uncensored-Heretic-NEO-IMATRIX-MAX-MTP-GGUF",
         "filename": "Qwen3.5-9B-The-Defiant-Fable-Uncnr-Heretic-NEO-MAX-IQ4_NL.gguf",
         "thinking": True,
-        "comment": "IQ4, 6.62GB",
+        "comment": "IQ4, 6.62GB, seems to think too much",
     },
     {
         "repo_id": "",

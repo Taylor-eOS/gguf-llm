@@ -4,8 +4,8 @@ rt.REPO_ID = "tencent/HY-MT1.5-7B-GGUF"
 rt.FILENAME = "HY-MT1.5-7B-Q8_0.gguf"
 #rt.REPO_ID = "mradermacher/Huihui-HY-MT1.5-7B-abliterated-i1-GGUF"
 #rt.FILENAME = "Huihui-HY-MT1.5-7B-abliterated.i1-Q6_K.gguf"
-rt.SOURCE_LANG = "English"
-rt.TARGET_LANG = "German"
+rt.SOURCE_LANG = input("Source language (e.g. English, German, Spanish, French, Japanese, Korean): ") or "English"
+rt.TARGET_LANG = input("Target language (e.g. German, English, Spanish, French, Japanese, Korean): ") or "German"
 
 def translate_hy(llm, text):
     prompt = f"Translate the following text from {rt.SOURCE_LANG} to {rt.TARGET_LANG}.\nText: {text}"

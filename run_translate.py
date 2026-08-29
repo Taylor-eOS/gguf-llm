@@ -9,11 +9,11 @@ N_THREADS = 6
 #FILENAME = "translategemma-12b-it.i1-IQ4_NL.gguf"
 #FILENAME = "translategemma-12b-it.i1-Q6_K.gguf"
 REPO_ID = "steampunque/translategemma-12b-it-MP-GGUF"
-FILENAME = "translategemma-12b-it.Q6_K_H.gguf"
+FILENAME = "translategemma-12b-it.Q4_E_H.gguf" #"translategemma-12b-it.Q6_K_H.gguf"
 INPUT_FILE = "input.txt"
 OUTPUT_FILE = "output_translate.txt"
-SOURCE_LANG = "en"
-TARGET_LANG = "de"
+SOURCE_LANG = input("Source language (e.g. en, de, da, es): ") or "en"
+TARGET_LANG = input("Target language (e.g. de, en, da, es): ") or "de"
 PARAGRAPH_PLACEHOLDER = "\x00"
 
 def load_model():
