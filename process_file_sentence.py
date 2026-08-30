@@ -4,6 +4,7 @@ import settings
 
 input_file = "input.txt"
 output_file = "output.txt"
+use_line_shifts = True
 _segmenter = pysbd.Segmenter(language="en", clean=False)
 starting_output = input("Starting output: ") or ""
 
@@ -24,6 +25,8 @@ def read_segments(infile):
     return segments
 
 def split_segment_sentences(segment_lines):
+    if use_line_shifts:
+        return [line.strip() for line in segment_lines if line.strip() != ""]
     text = "\n".join(segment_lines)
     return [s.strip() for s in _segmenter.segment(text) if s.strip()]
 
