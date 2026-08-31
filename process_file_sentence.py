@@ -1,28 +1,13 @@
 import pysbd
 from utils import load_model, pick_model, strip_think
 import settings
+from process_file import read_segments
 
 input_file = "input.txt"
 output_file = "output.txt"
 use_line_shifts = True
 _segmenter = pysbd.Segmenter(language="en", clean=False)
 starting_output = input("Starting output: ") or ""
-
-def read_segments(infile):
-    segments = []
-    paragraph_lines = []
-    for raw_line in infile:
-        line = raw_line.rstrip("\n")
-        if line.strip() == "":
-            if paragraph_lines:
-                segments.append(paragraph_lines)
-                paragraph_lines = []
-            segments.append(None)
-        else:
-            paragraph_lines.append(line)
-    if paragraph_lines:
-        segments.append(paragraph_lines)
-    return segments
 
 def split_segment_sentences(segment_lines):
     if use_line_shifts:
