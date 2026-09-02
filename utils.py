@@ -77,17 +77,26 @@ def pick_model():
         print(f"Enter a number between 1 and {len(models.MODELS)}.")
 
 def split_lines_by_tokens(llm, lines, max_tokens):
+    line_tokens = [len(llm.tokenize(line.encode("utf-8"), add_bos=False)) for line in lines]
+    total_tokens = sum(line_tokens)
+    if total_tokens == 0:
+        return [lines] if lines else []
+    num_chunks = max(1, -(-total_tokens // max_tokens))
+    target_tokens = -(-total_tokens // num_chunks)
     chunks = []
     current = []
     current_tokens = 0
-    for line in lines:
-        line_tokens = len(llm.tokenize(line.encode("utf-8"), add_bos=False))
-        if current and current_tokens + line_tokens > max_tokens:
+    for line, tokens in zip(lines, line_tokens):
+        if current and current_tokens + tokens > max_tokens:
+            chunks.append(current)
+            current = []
+            current_tokens = 0
+        elif current and current_tokens >= target_tokens and len(chunks) < num_chunks - 1:
             chunks.append(current)
             current = []
             current_tokens = 0
         current.append(line)
-        current_tokens += line_tokens
+        current_tokens += tokens
     if current:
         chunks.append(current)
     return chunks
