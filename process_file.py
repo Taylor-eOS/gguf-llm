@@ -22,6 +22,34 @@ def process_line(llm, line):
     )
     return strip_think(result["choices"][0]["message"]["content"].strip())
 
+def process_line_with_context(llm, line, context):
+    parts = [
+        f"Input content: \"{line}\"",
+        settings.BASE,
+        context,
+        f"Task: {settings.REQUEST}\nProcessed:",
+    ]
+    prompt = "\n".join(parts)
+    if settings.PRINT_PROCESSING_PROMPT:
+        print(prompt)
+    result = llm.create_chat_completion(
+        messages=[{"role": "user", "content": prompt}],
+        max_tokens=settings.MAX_TOKENS,
+        temperature=0.7,
+        top_p=0.9,
+    )
+    return strip_think(result["choices"][0]["message"]["content"].strip())
+
+def summarize_chunk(llm, text):
+    prompt = f"Input content: \"{text}\"\nTask: Write a short, continuous summary of the input content above.\nSummary:"
+    result = llm.create_chat_completion(
+        messages=[{"role": "user", "content": prompt}],
+        max_tokens=settings.MAX_TOKENS,
+        temperature=0.7,
+        top_p=0.9,
+    )
+    return strip_think(result["choices"][0]["message"]["content"].strip())
+
 def write_output(outfile, output):
     output = "\n".join(line for line in output.split("\n") if line.strip() != "")
     print(output)
@@ -75,7 +103,26 @@ def truncate_segment(llm, segment, budget):
     truncated_text = llm.detokenize(truncated_tokens).decode("utf-8", errors="ignore")
     return truncated_text
 
-def process_segments(llm, segments, outfile, budget, allow_split):
+def build_context(part_number, summaries):
+    lines = [f"Part {part_number} of {len(summaries)}."]
+    for other_number, summary in summaries.items():
+        if other_number != part_number:
+            lines.append(f"Summary of part {other_number}: {summary}")
+    return "\n".join(lines)
+
+def process_chunks_with_summaries(llm, chunks, outfile):
+    summaries = {}
+    for part_number, chunk in enumerate(chunks, 1):
+        text = "\n".join(chunk)
+        print(f"Now summarizing part {part_number}: {text[:50]}...")
+        summary = summarize_chunk(llm, text)
+        print(f"Summary of part {part_number}: {summary}")
+        summaries[part_number] = summary
+    for part_number, chunk in enumerate(chunks, 1):
+        context = build_context(part_number, summaries)
+        write_output(outfile, process_line_with_context(llm, "\n".join(chunk), context))
+
+def process_segments(llm, segments, outfile, budget, allow_split, use_summaries):
     for segment in segments:
         if segment is None:
             outfile.write("\n")
@@ -83,8 +130,12 @@ def process_segments(llm, segments, outfile, budget, allow_split):
             continue
         tokens = segment_token_count(llm, segment)
         if tokens > budget and allow_split:
-            for chunk in split_lines_by_tokens(llm, segment, budget):
-                write_output(outfile, process_line(llm, "\n".join(chunk)))
+            chunks = list(split_lines_by_tokens(llm, segment, budget))
+            if use_summaries and len(chunks) > 1:
+                process_chunks_with_summaries(llm, chunks, outfile)
+            else:
+                for chunk in chunks:
+                    write_output(outfile, process_line(llm, "\n".join(chunk)))
         elif tokens > budget:
             write_output(outfile, process_line(llm, truncate_segment(llm, segment, budget)))
         else:
@@ -125,13 +176,17 @@ def main():
             budget = compute_budget(llm)
             oversized = check_oversized_segments(llm, segments, budget)
             allow_split = True
+            use_summaries = False
             if oversized:
                 print(f"\n{len(oversized)} segment(s) exceed the token budget of {budget}:")
                 for index, tokens, preview in oversized:
                     print(f"{tokens}: \"{preview}...\"")
-                choice = input("\nSplit oversized segments? [Y/n] (no truncates instead): ").strip().lower()
+                choice = input("\nSplit oversized segments? [Y/n] (n truncates them instead): ").strip().lower()
                 allow_split = choice in ("y", "yes", "")
-            process_segments(llm, segments, outfile, budget, allow_split)
+                if allow_split:
+                    _use_summaries = input("When splitting, summarize each part for the others? [y/N]: ").strip().lower()
+                    use_summaries = _use_summaries in ("y", "yes")
+            process_segments(llm, segments, outfile, budget, allow_split, use_summaries)
         else:
             process_lines(llm, infile, outfile)
 
