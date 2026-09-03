@@ -3,6 +3,7 @@ import settings
 
 input_file = "input.txt"
 output_file = "output.txt"
+truncate_safety_margin = 16
 
 def process_line(llm, line):
     parts = [
@@ -66,6 +67,14 @@ def check_oversized_segments(llm, segments, budget):
             oversized.append((segment_index, tokens, preview))
     return oversized
 
+def truncate_segment(llm, segment, budget):
+    text = "\n".join(segment)
+    tokens = llm.tokenize(text.encode("utf-8"), add_bos=False)
+    limit = max(budget - truncate_safety_margin, 0)
+    truncated_tokens = tokens[:limit]
+    truncated_text = llm.detokenize(truncated_tokens).decode("utf-8", errors="ignore")
+    return truncated_text
+
 def process_segments(llm, segments, outfile, budget, allow_split):
     for segment in segments:
         if segment is None:
@@ -76,6 +85,8 @@ def process_segments(llm, segments, outfile, budget, allow_split):
         if tokens > budget and allow_split:
             for chunk in split_lines_by_tokens(llm, segment, budget):
                 write_output(outfile, process_line(llm, "\n".join(chunk)))
+        elif tokens > budget:
+            write_output(outfile, process_line(llm, truncate_segment(llm, segment, budget)))
         else:
             write_output(outfile, process_line(llm, "\n".join(segment)))
 
@@ -118,10 +129,8 @@ def main():
                 print(f"\n{len(oversized)} segment(s) exceed the token budget of {budget}:")
                 for index, tokens, preview in oversized:
                     print(f"{tokens}: \"{preview}...\"")
-                choice = input("\nProceed and split oversized segments? [y/N]: ").strip().lower()
-                if choice not in ("y", "yes"):
-                    print("Aborted")
-                    return
+                choice = input("\nSplit oversized segments? [Y/n] (no truncates instead): ").strip().lower()
+                allow_split = choice in ("y", "yes", "")
             process_segments(llm, segments, outfile, budget, allow_split)
         else:
             process_lines(llm, infile, outfile)
