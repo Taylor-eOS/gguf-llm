@@ -1,4 +1,4 @@
-from utils import is_cached, load_model, pick_model, split_lines_by_tokens, strip_think
+from utils import is_cached, load_model, load_tokenizer, pick_model, split_lines_by_tokens, strip_think
 import settings
 
 input_file = "input.txt"
@@ -56,6 +56,13 @@ def write_output(outfile, output):
     outfile.write(output + "\n")
     outfile.flush()
 
+def read_lines(infile):
+    lines = []
+    for raw_line in infile:
+        line = raw_line.rstrip("\n")
+        lines.append(line)
+    return lines
+
 def read_segments(infile):
     segments = []
     paragraph_lines = []
@@ -75,12 +82,40 @@ def read_segments(infile):
 def segment_token_count(llm, paragraph_lines):
     return len(llm.tokenize("\n".join(paragraph_lines).encode("utf-8"), add_bos=False))
 
-def compute_budget(llm):
-    overhead = len(llm.tokenize(
+def prompt_overhead_tokens(llm):
+    return len(llm.tokenize(
         (f"Input content: \"\"\n{settings.BASE}\nTask: {settings.REQUEST}\nProcessed:").encode("utf-8"),
         add_bos=False
     ))
-    return settings.N_CTX - settings.MAX_TOKENS - overhead
+
+def compute_budget(llm, n_ctx):
+    overhead = prompt_overhead_tokens(llm)
+    return n_ctx - settings.RESERVE_TOKENS - overhead
+
+def longest_segment_tokens(llm, segments):
+    longest = 0
+    for segment in segments:
+        if segment is None:
+            continue
+        tokens = segment_token_count(llm, segment)
+        if tokens > longest:
+            longest = tokens
+    return longest
+
+def longest_line_tokens(llm, lines):
+    longest = 0
+    for line in lines:
+        tokens = len(llm.tokenize(line.encode("utf-8"), add_bos=False))
+        if tokens > longest:
+            longest = tokens
+    return longest
+
+def compute_required_ctx(llm, longest_input_tokens):
+    overhead = prompt_overhead_tokens(llm)
+    required = overhead + settings.RESERVE_TOKENS + longest_input_tokens
+    required = max(required, settings.N_CTX_MIN)
+    required = min(required, settings.N_CTX_MAX)
+    return required
 
 def check_oversized_segments(llm, segments, budget):
     oversized = []
@@ -141,9 +176,8 @@ def process_segments(llm, segments, outfile, budget, allow_split, use_summaries)
         else:
             write_output(outfile, process_line(llm, "\n".join(segment)))
 
-def process_lines(llm, infile, outfile):
-    for raw_line in infile:
-        line = raw_line.rstrip("\n")
+def process_lines(llm, lines, outfile):
+    for line in lines:
         if line.strip() == "":
             outfile.write("\n")
             outfile.flush()
@@ -163,17 +197,35 @@ def pick_request():
         index = 0
     settings.REQUEST = settings.REQUESTS[index]
 
+def measure_required_ctx(model, segment_mode, segments, lines):
+    tokenizer_llm = load_tokenizer(model)
+    if segment_mode:
+        longest_tokens = longest_segment_tokens(tokenizer_llm, segments)
+    else:
+        longest_tokens = longest_line_tokens(tokenizer_llm, lines)
+    required_ctx = compute_required_ctx(tokenizer_llm, longest_tokens)
+    del tokenizer_llm
+    return required_ctx
+
 def main():
     model = pick_model()
     _segment_mode = input("Use segment mode? [Y/n]: ").strip().lower()
     _segment_mode = _segment_mode if _segment_mode in ("y", "yes", "") else "n"
     _segment_mode = _segment_mode in ("y", "yes", "")
     pick_request()
-    llm = load_model(model)
-    with open(input_file, "r", encoding="utf-8") as infile, open(output_file, "w", encoding="utf-8") as outfile:
+    with open(input_file, "r", encoding="utf-8") as infile:
         if _segment_mode:
             segments = read_segments(infile)
-            budget = compute_budget(llm)
+            lines = None
+        else:
+            segments = None
+            lines = read_lines(infile)
+    required_ctx = measure_required_ctx(model, _segment_mode, segments, lines)
+    print(f"Using context window of {required_ctx} tokens.")
+    llm = load_model(model, c_ntx=required_ctx)
+    with open(output_file, "w", encoding="utf-8") as outfile:
+        if _segment_mode:
+            budget = compute_budget(llm, required_ctx)
             oversized = check_oversized_segments(llm, segments, budget)
             allow_split = True
             use_summaries = False
@@ -188,7 +240,7 @@ def main():
                     use_summaries = _use_summaries in ("y", "yes")
             process_segments(llm, segments, outfile, budget, allow_split, use_summaries)
         else:
-            process_lines(llm, infile, outfile)
+            process_lines(llm, lines, outfile)
 
 if __name__ == "__main__":
     main()

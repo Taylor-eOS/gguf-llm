@@ -21,9 +21,7 @@ def log_model_use(model):
     with open(MODEL_LOG_PATH, "a") as f:
         f.write(f"{timestamp} {model['repo_id']} {model['filename']}\n")
 
-def load_model(model, c_ntx=settings.N_CTX, redirect_logs=WRITE_LOG):
-    log_model_use(model)
-    path = hf_hub_download(repo_id=model["repo_id"], filename=model["filename"])
+def construct_llama(path, llama_kwargs, redirect_logs):
     log_target = "llama_output.log" if redirect_logs else os.devnull
     log_file = open(log_target, "a" if redirect_logs else "w")
     old_stdout = os.dup(1)
@@ -31,15 +29,7 @@ def load_model(model, c_ntx=settings.N_CTX, redirect_logs=WRITE_LOG):
     os.dup2(log_file.fileno(), 1)
     os.dup2(log_file.fileno(), 2)
     try:
-        llm = Llama(
-            model_path=path,
-            n_ctx=c_ntx,
-            n_threads=settings.N_THREADS,
-            n_batch=512,
-            use_mmap=True,
-            use_mlock=False,
-            verbose=PERFORMANCE_METRICS
-        )
+        llm = Llama(model_path=path, **llama_kwargs)
     finally:
         sys.stdout.flush()
         sys.stderr.flush()
@@ -49,6 +39,34 @@ def load_model(model, c_ntx=settings.N_CTX, redirect_logs=WRITE_LOG):
         os.close(old_stderr)
         log_file.close()
     return llm
+
+def load_model(model, c_ntx=None, redirect_logs=WRITE_LOG):
+    if c_ntx is None:
+        c_ntx = settings.N_CTX
+    log_model_use(model)
+    path = hf_hub_download(repo_id=model["repo_id"], filename=model["filename"])
+    llama_kwargs = {
+        "n_ctx": c_ntx,
+        "n_threads": settings.N_THREADS,
+        "n_batch": 512,
+        "use_mmap": True,
+        "use_mlock": False,
+        "verbose": PERFORMANCE_METRICS,
+    }
+    return construct_llama(path, llama_kwargs, redirect_logs)
+
+def load_tokenizer(model, redirect_logs=WRITE_LOG):
+    path = hf_hub_download(repo_id=model["repo_id"], filename=model["filename"])
+    llama_kwargs = {
+        "n_ctx": 32,
+        "n_threads": settings.N_THREADS,
+        "n_batch": 32,
+        "use_mmap": True,
+        "use_mlock": False,
+        "vocab_only": True,
+        "verbose": PERFORMANCE_METRICS,
+    }
+    return construct_llama(path, llama_kwargs, redirect_logs)
 
 def pick_model():
     DIM = "\033[2m"

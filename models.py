@@ -152,6 +152,7 @@ MODELS = [
     {
         "repo_id": "MaziyarPanahi/phi-4-GGUF",
         "filename": "phi-4.Q5_K_M.gguf", #or Q4_K_M if too slow
+        "thinking": False,
         "comment": "14B, Q5, 10.6GB",
     },
     {
@@ -234,6 +235,18 @@ MODELS = [
         "filename": "Qwen3.5-9B-The-Defiant-Fable-Uncnr-Heretic-NEO-MAX-IQ4_NL.gguf",
         "thinking": True,
         "comment": "IQ4, 6.62GB, seems to think too much",
+    },
+    {
+        "repo_id": "unsloth/gemma-4-E2B-it-GGUF",
+        "filename": "gemma-4-E2B-it-IQ4_NL.gguf", #check out Q6_K or Q5_K_M
+        "thinking": False,
+        "comment": "IQ4, 3.04GB, fast, seems ok",
+    },
+    {
+        "repo_id": "unsloth/gemma-4-E4B-it-GGUF",
+        "filename": "gemma-4-E4B-it-Q5_K_S.gguf",
+        "thinking": False,
+        "comment": "Q5, 5.4GB, summarizes well",
     },
     {
         "repo_id": "",
