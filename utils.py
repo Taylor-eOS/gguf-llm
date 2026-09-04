@@ -10,6 +10,7 @@ import models
 WRITE_LOG = False
 PERFORMANCE_METRICS = False
 MODEL_LOG_PATH = Path(__file__).resolve().parent / "llm_use.log"
+tokenizer_n_batch = 32
 
 def is_cached(model):
     repo_slug = "models--" + model["repo_id"].replace("/", "--")
@@ -48,7 +49,8 @@ def load_model(model, c_ntx=None, redirect_logs=WRITE_LOG):
     llama_kwargs = {
         "n_ctx": c_ntx,
         "n_threads": settings.N_THREADS,
-        "n_batch": 512,
+        "n_batch": c_ntx,
+        "n_ubatch": c_ntx,
         "use_mmap": True,
         "use_mlock": False,
         "verbose": PERFORMANCE_METRICS,
@@ -60,7 +62,7 @@ def load_tokenizer(model, redirect_logs=WRITE_LOG):
     llama_kwargs = {
         "n_ctx": 32,
         "n_threads": settings.N_THREADS,
-        "n_batch": 32,
+        "n_batch": tokenizer_n_batch,
         "use_mmap": True,
         "use_mlock": False,
         "vocab_only": True,

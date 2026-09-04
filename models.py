@@ -9,7 +9,7 @@ MODELS = [
         "repo_id": "deadbydawn101/RavenX-OpenFable-Coder-Gemma-4-12B-GGUF",
         "filename": "RavenX-OpenFable-Coder-Gemma-4-12B-Q4_K_M.gguf",
         "thinking": False,
-        "comment": "Q4, 7.38GB, seems to work, good at code description",
+        "comment": "Q4, 7.38GB, seems to work, good at code description, good at advice",
     },
     {
         "repo_id": "Qwen/Qwen2.5-Coder-7B-Instruct-GGUF",
@@ -246,7 +246,7 @@ MODELS = [
         "repo_id": "unsloth/gemma-4-E4B-it-GGUF",
         "filename": "gemma-4-E4B-it-Q5_K_S.gguf",
         "thinking": False,
-        "comment": "Q5, 5.4GB, summarizes well",
+        "comment": "Q5, 5.4GB, actually, fairly good, summarizes well",
     },
     {
         "repo_id": "",
