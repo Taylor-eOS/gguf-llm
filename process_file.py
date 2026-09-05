@@ -185,23 +185,23 @@ def process_lines(llm, lines, outfile):
             write_output(outfile, process_line(llm, line))
 
 def pick_request():
-    manual_option = len(settings.REQUESTS) + 1
-    for i, request in enumerate(settings.REQUESTS, 1):
+    manual_option = 1
+    print(f"{manual_option}: Enter custom instruction.")
+    for i, request in enumerate(settings.REQUESTS, 2):
         sample = " ".join(request.split()[:10])
         print(f"{i}: {sample}...")
-    print(f"{manual_option}: Enter a custom instruction")
-    choice = input(f"Pick a task [1-{manual_option}]: ").strip()
+    choice = input(f"Pick a task [1-{len(settings.REQUESTS) + 1}]: ").strip()
     try:
         index = int(choice) - 1
-        if index < 0 or index >= manual_option:
+        if index < 0 or index > len(settings.REQUESTS):
             raise ValueError
     except ValueError:
-        index = 0
-    if index == manual_option - 1:
-        custom = input("Enter your instruction: ").strip()
+        index = 1
+    if index == 0:
+        custom = input("Enter instruction: ").strip()
         settings.REQUEST = custom if custom else settings.REQUESTS[0]
     else:
-        settings.REQUEST = settings.REQUESTS[index]
+        settings.REQUEST = settings.REQUESTS[index - 1]
 
 def measure_required_ctx(model, segment_mode, segments, lines):
     tokenizer_llm = load_tokenizer(model)
