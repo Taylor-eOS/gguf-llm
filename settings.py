@@ -5,7 +5,7 @@ RESERVE_TOKENS = MAX_TOKENS + 16 #Used in the process_file script
 N_CTX_MIN = 1024 #Floor in dynamic token allocation
 N_CTX_MAX = 12 * 1024 #Upper limit on dynamic token allocation
 PRINT_PROCESSING_PROMPT = False
-SYSTEM_INSTRUCTION = "Omit formatting."
+SYSTEM_INSTRUCTION = " [Style: Omit formatting.]"
 BASE = 'Role: You are a sequential text processing tool that is run from a script. Output only the requested text itself. Do not add any other explanations or comments. Provide the requested content directly without any introductory phrases. Write linear sentences without em dashes.'
 REQUESTS = [
     'Write this segment into a slightly less difficult language, while preserving exactly the same meaning, nuance, tone, implications, qualifications, and level of detail. Leave sentences unchanged unless they contain wording that is unusually complex, formal, or cumbersome for an adult general reader. Replace heavily burdened vocabulary or excessively difficult words when more common alternatives would express the same meaning, but do this conservatively. Split up sentences that are overloaded with multiple distinct ideas. Do not summarize or remove information. Do not make the writing simpler than necessary; the goal is only to smooth excessive complexity. When a choice is uncertain, preserve the original wording. Do not use em dashes or snaily parenthetical insertions.',

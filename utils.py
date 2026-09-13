@@ -96,12 +96,12 @@ def pick_model():
             selected = models.MODELS[int(choice) - 1]
             if selected.get("thinking") is True:
                 try:
-                    confirm = input("This is a thinking model, use it anyway? [y/N]: ").strip().lower()
+                    confirm = input("This is a thinking model, use it anyway? [Y/n]: ").strip().lower()
                 except (KeyboardInterrupt, EOFError):
                     print("\nExiting.")
                     raise SystemExit
-                if confirm != "y":
-                    return pick_model()
+                if confirm == "n":
+                    continue
             return selected
         print(f"Enter a number between 1 and {len(models.MODELS)}.")
 

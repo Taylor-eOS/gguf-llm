@@ -3,7 +3,7 @@ MODELS = [
         "repo_id": "yuxinlu1/gemma-4-12B-coder-fable5-composer2.5-v1-GGUF",
         "filename": "gemma4-coding-Q4_K_M.gguf",
         "thinking": False,
-        "comment": "Q4, 7.38GB, orig. gemma, works well, censored but can handle most text, swaps",
+        "comment": "Q4, 7.38GB, orig. gemma, works well, censored but can handle most text, in library, swaps",
     },
     {
         "repo_id": "deadbydawn101/RavenX-OpenFable-Coder-Gemma-4-12B-GGUF",
@@ -27,13 +27,13 @@ MODELS = [
         "repo_id": "prithivMLmods/VibeThinker-3B-GGUF",
         "filename": "VibeThinker-3B.Q4_K_M.gguf",
         "thinking": True,
-        "comment": "Q4, 1.93GB, does not finish",
+        "comment": "Q4, 1.93GB, small, too much thinking, may not finish",
     },
     {
         "repo_id": "LiquidAI/LFM2.5-8B-A1B-GGUF",
         "filename": "LFM2.5-8B-A1B-Q4_K_M.gguf",
         "thinking": True,
-        "comment": "Q4, 5.16GB, fast MoE, refuses",
+        "comment": "Q4, 5.16GB, fast MoE, refuses, ok answers",
     },
     {
         "repo_id": "LiquidAI/LFM2.5-2.6B-GGUF",
@@ -51,7 +51,7 @@ MODELS = [
         "repo_id": "bartowski/ibm-granite_granite-4.1-8b-GGUF",
         "filename": "ibm-granite_granite-4.1-8b-IQ4_NL.gguf",
         "thinking": False,
-        "comment": "IQ4, 5.19GB, fast, concise, good at translation, censored",
+        "comment": "IQ4, 5.19GB, fast, concise, good at translation, censored, in library",
     },
     {
         "repo_id": "DavidAU/Llama-3.2-8X3B-MOE-Dark-Champion-Instruct-uncensored-abliterated-18.4B-GGUF",
@@ -69,7 +69,7 @@ MODELS = [
         "repo_id": "squ11z1/Mythos-nano",
         "filename": "mythos-nano-Q4_K_M.gguf",
         "thinking": True,
-        "comment": "3B, Q4, 1.93GB, fast, censored",
+        "comment": "Q4, 1.93GB, 3B, fast, censored, in library",
     },
     {
         "repo_id": "DreamFast/gemma-3-12b-it-heretic-v2",
@@ -86,7 +86,7 @@ MODELS = [
     {
         "repo_id": "mlabonne/Meta-Llama-3.1-8B-Instruct-abliterated-GGUF",
         "filename": "meta-llama-3.1-8b-instruct-abliterated.Q6_K.gguf",
-        "comment": "Q6, 6.6GB, no spaces",
+        "comment": "Q6, 6.6GB, seems ok",
     },
     {
         "repo_id": "bartowski/Mistral-7B-Instruct-v0.3-GGUF",
@@ -95,20 +95,15 @@ MODELS = [
         "comment": "IQ3, 3.29GB, Pi, workhorse, fast, limited censorship, does summaries well, in library",
     },
     {
-        "repo_id": "bartowski/Mistral-7B-Instruct-v0.3-GGUF",
-        "filename": "Mistral-7B-Instruct-v0.3-IQ4_NL.gguf",
-        "thinking": False,
-        "comment": "IQ4 of the above, 4.13GB",
-    },
-    {
         "repo_id": "Qwen/Qwen2.5-1.5B-Instruct-GGUF",
         "filename": "qwen2.5-1.5b-instruct-q6_k.gguf",
         "thinking": False,
-        "comment": "Q6, Pi, 1.46GB, concise, can stop, precise",
+        "comment": "Q6, 1.46GB, Pi, concise, can stop, precise, in library",
     },
     {
         "repo_id": "bartowski/SmolLM2-1.7B-Instruct-GGUF",
         "filename": "SmolLM2-1.7B-Instruct-Q6_K_L.gguf",
+        "thinking": False,
         "comment": "Q6, 1.43GB, Pi",
     },
     {
@@ -126,12 +121,12 @@ MODELS = [
     {
         "repo_id": "MaziyarPanahi/aya-expanse-8b-abliterated-GGUF",
         "filename": "aya-expanse-8b-abliterated.Q6_K.gguf",
-        "comment": "Q6, 6.6GB, for translation, abliterated",
+        "comment": "Q6, 6.6GB, abliterated",
     },
     {
         "repo_id": "MaziyarPanahi/mistral-small-3.1-24b-instruct-2503-hf-GGUF",
-        "filename": "mistral-small-3.1-24b-instruct-2503-hf.Q4_K_S.gguf", #if this swaps try Q3_K_L (12.4) or Q3_K_M (11.5)
-        "comment": "Q4, 13.5GB, big",
+        "filename": "mistral-small-3.1-24b-instruct-2503-hf.Q3_K_M.gguf",
+        "comment": "Q4, 11.5GB, big",
     },
     {
         "repo_id": "MaziyarPanahi/gpt-oss-20b-Derestricted-GGUF",
@@ -147,13 +142,13 @@ MODELS = [
     {
         "repo_id": "MaziyarPanahi/Mistral-Small-Instruct-2409-GGUF",
         "filename": "Mistral-Small-Instruct-2409.IQ4_XS.gguf",
-        "comment": "22B, IQ4, 11.9GB, maybe too big",
+        "comment": "IQ4, 11.9GB, 22B, maybe too big",
     },
     {
         "repo_id": "MaziyarPanahi/phi-4-GGUF",
         "filename": "phi-4.Q5_K_M.gguf", #or Q4_K_M if too slow
         "thinking": False,
-        "comment": "14B, Q5, 10.6GB",
+        "comment": "Q5, 14B, 10.6GB",
     },
     {
         "repo_id": "bartowski/google_gemma-4-26B-A4B-it-GGUF",
@@ -202,21 +197,10 @@ MODELS = [
         "comment": "Q6, 6.26GB, good, does not refuse but boring",
     },
     {
-        "repo_id": "diffusionmodels1254ani/gemma-3-12b-it-heretic-v2",
-        "filename": "gemma-3-12b-it-heretic-v2-Q6_K.gguf", #or Q5K_M for speed
-        "comment": "Q6, 9.66GB, have same model by another user",
-    },
-    {
         "repo_id": "unsloth/gemma-4-12b-it-GGUF",
         "filename": "gemma-4-12b-it-Q6_K.gguf",
         "thinking": True,
         "comment": "Q6, 9.79GB",
-    },
-    {
-        "repo_id": "deepreinforce-ai/Ornith-1.0-9B-GGUF",
-        "filename": "ornith-1.0-9b-Q8_0.gguf",
-        "thinking": True,
-        "comment": "Q8, 9.53GB, does not seem to use much memory, thinks into oblivion",
     },
     {
         "repo_id": "LiquidAI/LFM2.5-230M-GGUF",
@@ -228,7 +212,7 @@ MODELS = [
         "repo_id": "jica98/qwen3.5-4B-super-coder",
         "filename": "qwen3.5-4B-super-coder.Q4_0.gguf",
         "thinking": True,
-        "comment": "Q4, 2.61GB, bad at code description, fine at summaried conversation",
+        "comment": "Q4, 2.61GB, bad at code description, fine at summaried chat",
     },
     {
         "repo_id": "DavidAU/Qwen3.5-9B-The-Defiant-Fable-Uncensored-Heretic-NEO-IMATRIX-MAX-MTP-GGUF",
