@@ -249,6 +249,31 @@ MODELS = [
         "comment": "Q5, 5.4GB, actually, fairly good, summarizes well",
     },
     {
+        "repo_id": "nguyenmanhd93/phi-4-unsloth-bnb-4bit-gguf-Q4_K_M",
+        "filename": "unsloth.Q4_K_M.gguf",
+        "comment": "Q4, 8.89GB",
+    },
+    {
+        "repo_id": "mradermacher/Arsh-V1-GGUF",
+        "filename": "Arsh-V1.Q4_K_M.gguf",
+        "comment": "Q4, 8.89GB",
+    },
+    {
+        "repo_id": "openbmb/MiniCPM5-2B-GGUF",
+        "filename": "MiniCPM5-2B-Q4_K_M.gguf", #Q8_0 is 2.68GB
+        "comment": "Q4, 1.56GB",
+    },
+    {
+        "repo_id": "HauhauCS/Qwen3.8-27B-Uncensored-HauhauCS-Aggressive-MTP-GGUF",
+        "filename": "Qwen3.8-27B-Uncensored-HauhauCS-Aggressive-IQ2_M.gguf", #IQ3_XS might fit
+        "comment": "IQ2, 10.3GB",
+    },
+    {
+        "repo_id": "XHToken/Spark-X2.5-4B-GGUF",
+        "filename": "Spark-X2.5-4B-Q4_K_M.gguf",
+        "comment": "Q4, 2.6GB",
+    },
+    {
         "repo_id": "",
         "filename": "",
         "comment": "",
