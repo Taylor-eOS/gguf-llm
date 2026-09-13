@@ -93,7 +93,16 @@ def pick_model():
             print("\nExiting.")
             raise SystemExit
         if choice.isdigit() and 1 <= int(choice) <= len(models.MODELS):
-            return models.MODELS[int(choice) - 1]
+            selected = models.MODELS[int(choice) - 1]
+            if selected.get("thinking") is True:
+                try:
+                    confirm = input("This is a thinking model, use it anyway? [y/N]: ").strip().lower()
+                except (KeyboardInterrupt, EOFError):
+                    print("\nExiting.")
+                    raise SystemExit
+                if confirm != "y":
+                    return pick_model()
+            return selected
         print(f"Enter a number between 1 and {len(models.MODELS)}.")
 
 def split_lines_by_tokens(llm, lines, max_tokens):

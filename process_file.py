@@ -84,7 +84,7 @@ def segment_token_count(llm, paragraph_lines):
 
 def prompt_overhead_tokens(llm):
     return len(llm.tokenize(
-        (f"Input content: \"\"\n{settings.BASE}\nTask: {settings.REQUEST}\nProcessed:").encode("utf-8"),
+        (f"Input content: \"\"\n{settings.BASE}\n[Instruction, carry out this task: {settings.REQUEST}]\nResponse:").encode("utf-8"),
         add_bos=False
     ))
 
