@@ -5,13 +5,7 @@ input_file = "input.txt"
 output_file = "output.txt"
 truncate_safety_margin = 16
 
-def process_line(llm, line):
-    parts = [
-        f"Input content: \"{line}\"",
-        settings.BASE,
-        f"Task: {settings.REQUEST}\nProcessed:",
-    ]
-    prompt = "\n".join(parts)
+def run_completion(llm, prompt):
     if settings.PRINT_PROCESSING_PROMPT:
         print(prompt)
     result = llm.create_chat_completion(
@@ -22,33 +16,19 @@ def process_line(llm, line):
     )
     return strip_think(result["choices"][0]["message"]["content"].strip())
 
-def process_line_with_context(llm, line, context):
-    parts = [
-        f"Input content: \"{line}\"",
-        settings.BASE,
-        context,
-        f"Task: {settings.REQUEST}\nProcessed:",
-    ]
-    prompt = "\n".join(parts)
-    if settings.PRINT_PROCESSING_PROMPT:
-        print(prompt)
-    result = llm.create_chat_completion(
-        messages=[{"role": "user", "content": prompt}],
-        max_tokens=settings.MAX_TOKENS,
-        temperature=0.7,
-        top_p=0.9,
-    )
-    return strip_think(result["choices"][0]["message"]["content"].strip())
+def build_process_prompt(line, context=None):
+    parts = [f"Input content: \"{line}\"", settings.BASE]
+    if context:
+        parts.append(context)
+    parts.append(f"Instruction (carry out this task): {settings.REQUEST}\nProcessed:")
+    return "\n".join(parts)
+
+def process_line(llm, line, context=None):
+    return run_completion(llm, build_process_prompt(line, context))
 
 def summarize_chunk(llm, text):
-    prompt = f"Input content: \"{text}\"\nTask: Write a short, continuous summary of the input content above.\nSummary:"
-    result = llm.create_chat_completion(
-        messages=[{"role": "user", "content": prompt}],
-        max_tokens=settings.MAX_TOKENS,
-        temperature=0.7,
-        top_p=0.9,
-    )
-    return strip_think(result["choices"][0]["message"]["content"].strip())
+    prompt = f"Input content: \"{text}\"\nInstruction (carry out this task): Write a short, continuous summary of the input content above.\nSummary:"
+    return run_completion(llm, prompt)
 
 def write_output(outfile, output):
     output = "\n".join(line for line in output.split("\n") if line.strip() != "")
@@ -83,10 +63,7 @@ def segment_token_count(llm, paragraph_lines):
     return len(llm.tokenize("\n".join(paragraph_lines).encode("utf-8"), add_bos=False))
 
 def prompt_overhead_tokens(llm):
-    return len(llm.tokenize(
-        (f"Input content: \"\"\n{settings.BASE}\n[Instruction, carry out this task: {settings.REQUEST}]\nResponse:").encode("utf-8"),
-        add_bos=False
-    ))
+    return len(llm.tokenize((f"Input content: \"\"\n{settings.BASE}\n[Instruction (carry out this task): {settings.REQUEST}]\nResponse:").encode("utf-8"), add_bos=False))
 
 def compute_budget(llm, n_ctx):
     overhead = prompt_overhead_tokens(llm)
@@ -155,7 +132,7 @@ def process_chunks_with_summaries(llm, chunks, outfile):
         summaries[part_number] = summary
     for part_number, chunk in enumerate(chunks, 1):
         context = build_context(part_number, summaries)
-        write_output(outfile, process_line_with_context(llm, "\n".join(chunk), context))
+        write_output(outfile, process_line(llm, "\n".join(chunk), context))
 
 def process_segments(llm, segments, outfile, budget, allow_split, use_summaries):
     for segment in segments:
@@ -190,7 +167,7 @@ def pick_request():
     for i, request in enumerate(settings.REQUESTS, 2):
         sample = " ".join(request.split()[:10])
         print(f"{i}: {sample}...")
-    choice = input(f"Pick a task [1-{len(settings.REQUESTS) + 1}]: ").strip()
+    choice = input(f"Pick an instruction [1-{len(settings.REQUESTS) + 1}]: ").strip()
     try:
         index = int(choice) - 1
         if index < 0 or index > len(settings.REQUESTS):
