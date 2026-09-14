@@ -156,7 +156,7 @@ MODELS = [
         "comment": "IQ3, 12.2GB, might be too big",
     },
     {
-        "repo_id": "yuxinlu1/gemma-4-12B-it-Claude-4.6-4.8-Opus-GGUF", #check out yuxinlu1/gemma-4-12B-agentic-fable5-composer2.5-v2-3.5x-tau2-GGUF
+        "repo_id": "yuxinlu1/gemma-4-12B-it-Claude-4.6-4.8-Opus-GGUF",
         "filename": "gemma4-opus48-Q6_K.gguf", #Q4_K_M if slow
         "comment": "Q6, 9.79GB",
     },
@@ -244,18 +244,21 @@ MODELS = [
     },
     {
         "repo_id": "openbmb/MiniCPM5-2B-GGUF",
-        "filename": "MiniCPM5-2B-Q4_K_M.gguf", #Q8_0 is 2.68GB
+        "filename": "MiniCPM5-2B-Q4_K_M.gguf", #Only other: Q8_0 is 2.68GB
+        "thinking": True,
         "comment": "Q4, 1.56GB",
     },
     {
         "repo_id": "HauhauCS/Qwen3.8-27B-Uncensored-HauhauCS-Aggressive-MTP-GGUF",
         "filename": "Qwen3.8-27B-Uncensored-HauhauCS-Aggressive-IQ2_M.gguf", #IQ3_XS might fit
-        "comment": "IQ2, 10.3GB",
+        "thinking": True,
+        "comment": "IQ2, 10.3GB, slow",
     },
     {
-        "repo_id": "XHToken/Spark-X2.5-4B-GGUF",
-        "filename": "Spark-X2.5-4B-Q4_K_M.gguf",
-        "comment": "Q4, 2.6GB",
+        "repo_id": "empero-ai/Qwen3.8-9B-Distill-GGUF",
+        "filename": "Qwen3.8-9B-Q5_K_M.gguf",
+        "thinking": True,
+        "comment": "Q5, 6.46GB, slow, too much thinking",
     },
     {
         "repo_id": "",

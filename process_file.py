@@ -20,14 +20,14 @@ def build_process_prompt(line, context=None):
     parts = [f"Input content: \"{line}\"", settings.BASE]
     if context:
         parts.append(context)
-    parts.append(f"Instruction (carry out this task): {settings.REQUEST}\nProcessed:")
+    parts.append(f"This is the instruction, the response should carry out the following task: {settings.REQUEST}\nProcessed:")
     return "\n".join(parts)
 
 def process_line(llm, line, context=None):
     return run_completion(llm, build_process_prompt(line, context))
 
 def summarize_chunk(llm, text):
-    prompt = f"Input content: \"{text}\"\nInstruction (carry out this task): Write a short, continuous summary of the input content above.\nSummary:"
+    prompt = f"Input content: \"{text}\"\nThis is the instruction, the response should carry out the following task: Write a short, continuous summary of the input content above.\nSummary:"
     return run_completion(llm, prompt)
 
 def write_output(outfile, output):
@@ -63,7 +63,7 @@ def segment_token_count(llm, paragraph_lines):
     return len(llm.tokenize("\n".join(paragraph_lines).encode("utf-8"), add_bos=False))
 
 def prompt_overhead_tokens(llm):
-    return len(llm.tokenize((f"Input content: \"\"\n{settings.BASE}\n[Instruction (carry out this task): {settings.REQUEST}]\nResponse:").encode("utf-8"), add_bos=False))
+    return len(llm.tokenize((f"Input content: \"\"\n{settings.BASE}\n[This is the instruction, the response should carry out the following task: {settings.REQUEST}]\nResponse:").encode("utf-8"), add_bos=False))
 
 def compute_budget(llm, n_ctx):
     overhead = prompt_overhead_tokens(llm)
