@@ -33,8 +33,9 @@ def summarize_chunk(llm, text):
 def write_output(outfile, output):
     output = "\n".join(line for line in output.split("\n") if line.strip() != "")
     print(output)
-    outfile.write(output + "\n")
-    outfile.flush()
+    if output:
+        outfile.write(output + "\n")
+        outfile.flush()
 
 def read_lines(infile):
     lines = []
