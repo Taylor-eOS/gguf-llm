@@ -10,6 +10,7 @@ import models
 WRITE_LOG = False
 PERFORMANCE_METRICS = False
 MODEL_LOG_PATH = Path(__file__).resolve().parent / "llm_use.log"
+INSTRUCTION_LOG_PATH = Path(__file__).resolve().parent / "instruction_use.log"
 tokenizer_n_batch = 32
 
 def is_cached(model):
@@ -21,6 +22,12 @@ def log_model_use(model):
     timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
     with open(MODEL_LOG_PATH, "a") as f:
         f.write(f"{timestamp} {model['repo_id']} {model['filename']}\n")
+
+def log_instruction_use(instruction):
+    INSTRUCTION_LOG_PATH.parent.mkdir(parents=True, exist_ok=True)
+    timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+    with open(INSTRUCTION_LOG_PATH, "a") as f:
+        f.write(f"{timestamp} {instruction}\n")
 
 def construct_llama(path, llama_kwargs, redirect_logs):
     log_target = "llama_output.log" if redirect_logs else os.devnull

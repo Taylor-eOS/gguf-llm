@@ -1,9 +1,9 @@
-from utils import is_cached, load_model, load_tokenizer, pick_model, split_lines_by_tokens, strip_think
+from utils import is_cached, load_model, load_tokenizer, log_instruction_use, pick_model, split_lines_by_tokens, strip_think
 import settings
 
 input_file = "input.txt"
 output_file = "output.txt"
-truncate_safety_margin = 16
+truncate_safety_margin = settings.SAFETY_MARGIN
 
 def run_completion(llm, prompt):
     if settings.PRINT_PROCESSING_PROMPT:
@@ -20,14 +20,14 @@ def build_process_prompt(line, context=None):
     parts = [f"Input content: \"{line}\"", settings.BASE]
     if context:
         parts.append(context)
-    parts.append(f"This is the instruction, the response should carry out the following task: {settings.REQUEST}\nProcessed:")
+    parts.append(f"{settings.TASK_LINE}: {settings.REQUEST}\nProcessed:")
     return "\n".join(parts)
 
 def process_line(llm, line, context=None):
     return run_completion(llm, build_process_prompt(line, context))
 
 def summarize_chunk(llm, text):
-    prompt = f"Input content: \"{text}\"\nThis is the instruction, the response should carry out the following task: Write a short, continuous summary of the input content above.\nSummary:"
+    prompt = f"Input content: \"{text}\"\n{settings.TASK_LINE}: Write a short, continuous summary of the input content above.\nSummary:"
     return run_completion(llm, prompt)
 
 def write_output(outfile, output):
@@ -63,7 +63,7 @@ def segment_token_count(llm, paragraph_lines):
     return len(llm.tokenize("\n".join(paragraph_lines).encode("utf-8"), add_bos=False))
 
 def prompt_overhead_tokens(llm):
-    return len(llm.tokenize((f"Input content: \"\"\n{settings.BASE}\n[This is the instruction, the response should carry out the following task: {settings.REQUEST}]\nResponse:").encode("utf-8"), add_bos=False))
+    return len(llm.tokenize((f"Input content: \"\"\n{settings.BASE}\n[{settings.TASK_LINE}: {settings.REQUEST}]\nResponse:").encode("utf-8"), add_bos=False))
 
 def compute_budget(llm, n_ctx):
     overhead = prompt_overhead_tokens(llm)
@@ -163,7 +163,7 @@ def process_lines(llm, lines, outfile):
 
 def pick_request():
     manual_option = 1
-    print(f"{manual_option}: Enter custom instruction.")
+    print(f"{manual_option}: Enter instruction manually.")
     for i, request in enumerate(settings.REQUESTS, 2):
         sample = " ".join(request.split()[:10])
         print(f"{i}: {sample}...")
@@ -179,6 +179,7 @@ def pick_request():
         settings.REQUEST = custom if custom else settings.REQUESTS[0]
     else:
         settings.REQUEST = settings.REQUESTS[index - 1]
+    log_instruction_use(settings.REQUEST)
 
 def measure_required_ctx(model, segment_mode, segments, lines):
     tokenizer_llm = load_tokenizer(model)
