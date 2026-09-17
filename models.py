@@ -3,7 +3,7 @@ MODELS = [
         "repo_id": "yuxinlu1/gemma-4-12B-coder-fable5-composer2.5-v1-GGUF",
         "filename": "gemma4-coding-Q4_K_M.gguf",
         "thinking": False,
-        "comment": "Q4, 7.38GB, orig. gemma, works well, censored but can handle most text, in library, swaps",
+        "comment": "Q4, 7.38GB, orig. gemma, works well, can handle most requests, in library, swaps",
     },
     {
         "repo_id": "deadbydawn101/RavenX-OpenFable-Coder-Gemma-4-12B-GGUF",
@@ -63,7 +63,7 @@ MODELS = [
         "repo_id": "dphn/Dolphin3.0-Llama3.1-8B-GGUF",
         "filename": "Dolphin3.0-Llama3.1-8B-Q6_K.gguf", #smaller ones might fit Pi
         "thinking": False,
-        "comment": "Q6, 6.6GB, general, uncensored, not boring",
+        "comment": "Q6, 6.6GB, general, uncensored, not boring, in script",
     },
     {
         "repo_id": "squ11z1/Mythos-nano",
@@ -133,11 +133,6 @@ MODELS = [
         "filename": "gpt-oss-20b-Derestricted.Q3_K_M.gguf",
         "thinking": True,
         "comment": "Q3, 12.9GB, might be too big, MoE",
-    },
-    {
-        "repo_id": "MaziyarPanahi/Qwen3-14B-GGUF",
-        "filename": "Qwen3-14B.Q5_K_M.gguf", #depending on performance, check Q4_K_M or Q6_K
-        "comment": "Q5, 10.5GB",
     },
     {
         "repo_id": "MaziyarPanahi/Mistral-Small-Instruct-2409-GGUF",
@@ -259,6 +254,16 @@ MODELS = [
         "filename": "Qwen3.8-9B-Q5_K_M.gguf",
         "thinking": True,
         "comment": "Q5, 6.46GB, slow, too much thinking",
+    },
+    {
+        "repo_id": "ornith-ai/Ornith-1.5-9B-GGUF",
+        "filename": "Ornith-1.5-9B-Q5_K_M.gguf",
+        "comment": "Q5, 6.64GB",
+    },
+    {
+        "repo_id": "XHToken/Spark-X2.5-4B-GGUF",
+        "filename": "Spark-X2.5-4B-Q4_K_M.gguf", #Q8_0: 4.38GB
+        "comment": "Q4, 2.6GB, small",
     },
     {
         "repo_id": "",

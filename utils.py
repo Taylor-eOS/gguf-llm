@@ -84,8 +84,9 @@ def pick_model():
     thinking_symb= "T"
     nonthinking_symb = "n"
     neither_symb = " "
+    available = [m for m in models.MODELS if not (settings.HIDE_THINKING_MODELS and m.get("thinking") is True)]
     print(f"Available models ([{cached_symb}] = cached, [{nonthinking_symb}] = non-thinking):")
-    for i, m in enumerate(models.MODELS):
+    for i, m in enumerate(available):
         tag = f"[{cached_symb}]" if is_cached(m) else f"[{neither_symb}]"
         think_val = m.get("thinking")
         think_tag = f"[{thinking_symb}]" if think_val is True else (f"[{neither_symb}]" if think_val is None else f"[{nonthinking_symb}]")
@@ -99,8 +100,8 @@ def pick_model():
         except (KeyboardInterrupt, EOFError):
             print("\nExiting.")
             raise SystemExit
-        if choice.isdigit() and 1 <= int(choice) <= len(models.MODELS):
-            selected = models.MODELS[int(choice) - 1]
+        if choice.isdigit() and 1 <= int(choice) <= len(available):
+            selected = available[int(choice) - 1]
             if selected.get("thinking") is True:
                 try:
                     confirm = input("This is a thinking model, use it anyway? [Y/n]: ").strip().lower()
@@ -110,7 +111,7 @@ def pick_model():
                 if confirm == "n":
                     continue
             return selected
-        print(f"Enter a number between 1 and {len(models.MODELS)}.")
+        print(f"Enter a number between 1 and {len(available)}.")
 
 def split_lines_by_tokens(llm, lines, max_tokens):
     line_tokens = [len(llm.tokenize(line.encode("utf-8"), add_bos=False)) for line in lines]
