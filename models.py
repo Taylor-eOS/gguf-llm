@@ -146,11 +146,6 @@ MODELS = [
         "comment": "Q5, 14B, 10.6GB",
     },
     {
-        "repo_id": "bartowski/google_gemma-4-26B-A4B-it-GGUF",
-        "filename": "google_gemma-4-26B-A4B-it-IQ3_XXS.gguf",
-        "comment": "IQ3, 12.2GB, might be too big",
-    },
-    {
         "repo_id": "yuxinlu1/gemma-4-12B-it-Claude-4.6-4.8-Opus-GGUF",
         "filename": "gemma4-opus48-Q6_K.gguf", #Q4_K_M if slow
         "comment": "Q6, 9.79GB",
@@ -258,12 +253,28 @@ MODELS = [
     {
         "repo_id": "ornith-ai/Ornith-1.5-9B-GGUF",
         "filename": "Ornith-1.5-9B-Q5_K_M.gguf",
-        "comment": "Q5, 6.64GB",
+        "thinking": True,
+        "comment": "Q5, 6.64GB, popular, not too much thinking, refusals",
     },
     {
-        "repo_id": "XHToken/Spark-X2.5-4B-GGUF",
-        "filename": "Spark-X2.5-4B-Q4_K_M.gguf", #Q8_0: 4.38GB
-        "comment": "Q4, 2.6GB, small",
+        "repo_id": "MaziyarPanahi/Nemotron-Orchestrator-8B-GGUF",
+        "filename": "Nemotron-Orchestrator-8B.Q5_K_M.gguf",
+        "comment": "Q5, 5.85GB",
+    },
+    {
+        "repo_id": "bartowski/allura-forge_Llama-3.3-8B-Instruct-GGUF",
+        "filename": "allura-forge_Llama-3.3-8B-Instruct-Q5_K_M.gguf",
+        "comment": "Q5, 5.73GB",
+    },
+    {
+        "repo_id": "bartowski/gemma-2-9b-it-GGUF",
+        "filename": "gemma-2-9b-it-IQ4_XS.gguf",
+        "comment": "IQ4, 5.18GB",
+    },
+    {
+        "repo_id": "bartowski/Hermes-3-Llama-3.2-3B-GGUF",
+        "filename": "Hermes-3-Llama-3.2-3B-IQ4_XS.gguf",
+        "comment": "IQ4, 1.83GB",
     },
     {
         "repo_id": "",

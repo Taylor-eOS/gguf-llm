@@ -3,7 +3,6 @@ import settings
 
 input_file = "input.txt"
 output_file = "output.txt"
-truncate_safety_margin = settings.SAFETY_MARGIN
 
 def run_completion(llm, prompt):
     if settings.PRINT_PROCESSING_PROMPT:
@@ -14,7 +13,10 @@ def run_completion(llm, prompt):
         temperature=0.7,
         top_p=0.9,
     )
-    return strip_think(result["choices"][0]["message"]["content"].strip())
+    content = result["choices"][0]["message"]["content"].strip()
+    if settings.STRIP_THINKING:
+        content = strip_think(content)
+    return content
 
 def build_process_prompt(line, context=None):
     parts = [f"Input content: \"{line}\"", settings.BASE]
@@ -111,7 +113,7 @@ def check_oversized_segments(llm, segments, budget):
 def truncate_segment(llm, segment, budget):
     text = "\n".join(segment)
     tokens = llm.tokenize(text.encode("utf-8"), add_bos=False)
-    limit = max(budget - truncate_safety_margin, 0)
+    limit = max(budget - settings.SAFETY_MARGIN, 0)
     truncated_tokens = tokens[:limit]
     truncated_text = llm.detokenize(truncated_tokens).decode("utf-8", errors="ignore")
     return truncated_text
