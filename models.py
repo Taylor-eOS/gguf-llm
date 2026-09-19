@@ -39,7 +39,7 @@ MODELS = [
         "repo_id": "LiquidAI/LFM2.5-2.6B-GGUF",
         "filename": "LFM2.5-2.6B-Q5_K_M.gguf",
         "thinking": True,
-        "comment": "Q5, 1.94GB",
+        "comment": "Q5, 1.94GB, popular, sub-4GB agentic tool-use",
     },
     {
         "repo_id": "tvall43/Qwen3.6-14B-A3B-FableVibes-GGUF",
@@ -271,6 +271,7 @@ MODELS = [
     {
         "repo_id": "bartowski/gemma-2-9b-it-GGUF",
         "filename": "gemma-2-9b-it-IQ4_XS.gguf",
+        "thinking": False,
         "comment": "IQ4, 5.18GB",
     },
     {
@@ -280,14 +281,20 @@ MODELS = [
         "comment": "IQ4, 1.83GB",
     },
     {
-        "repo_id": "PeppX/Ornith-1.0-9B-Uncensored-GGUF",
-        "filename": "ornith-9b-uncensored-Q4_K_M.gguf",
-        "comment": "Q4, 5.63GB",
-    },
-    {
         "repo_id": "mradermacher/Ornith-1.5-9B-uncensored-GGUF",
         "filename": "Ornith-1.5-9B-uncensored.IQ4_XS.gguf",
-        "comment": "IQ4, 5.23GB",
+        "thinking": True,
+        "comment": "IQ4, 5.23GB, can't skip thinking, censored",
+    },
+    {
+        "repo_id": "legraphista/glm-4-9b-chat-IMat-GGUF",
+        "filename": "glm-4-9b-chat.IQ4_NL.gguf",
+        "comment": "IQ4, 5.64GB, popular",
+    },
+    {
+        "repo_id": "empero-ai/Qwen3.8-4B-Distill-GGUF",
+        "filename": "Qwen3.8-4B-Q5_K_M.gguf",
+        "comment": "Q5, 3.16GB",
     },
     {
         "repo_id": "",

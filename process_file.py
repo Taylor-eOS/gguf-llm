@@ -7,6 +7,13 @@ output_file = "output.txt"
 def run_completion(llm, prompt):
     if settings.PRINT_PROCESSING_PROMPT:
         print(prompt)
+    if settings.PRINT_TOKEN_USAGE:
+        prompt_tokens = len(llm.tokenize(prompt.encode("utf-8"), add_bos=False))
+        n_ctx = llm.n_ctx()
+        total = prompt_tokens + settings.MAX_TOKENS
+        print(f"Prompt tokens: {prompt_tokens}, n_ctx: {n_ctx}, prompt_tokens + MAX_TOKENS: {total}")
+        if total > n_ctx:
+            print(f"Warning: prompt_tokens + MAX_TOKENS exceeds n_ctx by {total - n_ctx} tokens, completion may be cut off.")
     result = llm.create_chat_completion(
         messages=[{"role": "user", "content": prompt}],
         max_tokens=settings.MAX_TOKENS,
