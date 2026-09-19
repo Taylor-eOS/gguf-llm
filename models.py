@@ -254,16 +254,18 @@ MODELS = [
         "repo_id": "ornith-ai/Ornith-1.5-9B-GGUF",
         "filename": "Ornith-1.5-9B-Q5_K_M.gguf",
         "thinking": True,
-        "comment": "Q5, 6.64GB, popular, not too much thinking, refusals",
+        "comment": "Q5, 6.64GB, popular, not too much thinking, refusals, can't skip thinking",
     },
     {
         "repo_id": "MaziyarPanahi/Nemotron-Orchestrator-8B-GGUF",
         "filename": "Nemotron-Orchestrator-8B.Q5_K_M.gguf",
-        "comment": "Q5, 5.85GB",
+        "thinking": True,
+        "comment": "Q5, 5.85GB, can skip thinking, fast",
     },
     {
         "repo_id": "bartowski/allura-forge_Llama-3.3-8B-Instruct-GGUF",
         "filename": "allura-forge_Llama-3.3-8B-Instruct-Q5_K_M.gguf",
+        "thinking": False,
         "comment": "Q5, 5.73GB",
     },
     {
@@ -274,7 +276,18 @@ MODELS = [
     {
         "repo_id": "bartowski/Hermes-3-Llama-3.2-3B-GGUF",
         "filename": "Hermes-3-Llama-3.2-3B-IQ4_XS.gguf",
+        "thinking": False,
         "comment": "IQ4, 1.83GB",
+    },
+    {
+        "repo_id": "PeppX/Ornith-1.0-9B-Uncensored-GGUF",
+        "filename": "ornith-9b-uncensored-Q4_K_M.gguf",
+        "comment": "Q4, 5.63GB",
+    },
+    {
+        "repo_id": "mradermacher/Ornith-1.5-9B-uncensored-GGUF",
+        "filename": "Ornith-1.5-9B-uncensored.IQ4_XS.gguf",
+        "comment": "IQ4, 5.23GB",
     },
     {
         "repo_id": "",

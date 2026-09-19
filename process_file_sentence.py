@@ -1,7 +1,7 @@
 import pysbd
 from utils import load_model, pick_model, strip_think
+from process_file import read_segments, write_output
 import settings
-from process_file import read_segments
 
 input_file = "input.txt"
 output_file = "output.txt"
@@ -43,12 +43,6 @@ def process_sentence(llm, context, last_output, sentence):
         top_p=0.9,
     )
     return strip_think(result["choices"][0]["message"]["content"].strip())
-
-def write_output(outfile, output):
-    output = "\n".join(line for line in output.split("\n") if line.strip() != "")
-    print(output)
-    outfile.write(output + "\n")
-    outfile.flush()
 
 def check_oversized_sentences(llm, segments, budget):
     oversized = []
