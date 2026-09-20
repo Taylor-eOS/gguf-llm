@@ -1,17 +1,19 @@
 N_THREADS = 6
-N_CTX = 6 * 1024 #Total context window given to the model
+N_CTX = 6 * 1024 #Total context window given to the model, models total memory, used in run.py
 MAX_TOKENS = 4 * 1024 #Cap on how many tokens the model is allowed to generate per call, used in other scripts
 SAFETY_MARGIN = 32
 RESERVE_TOKENS = MAX_TOKENS + SAFETY_MARGIN #Used in the process_file script
 N_CTX_MIN = 1024 #Floor in dynamic token allocation
-N_CTX_MAX = 12 * 1024 #Upper limit on dynamic token allocation
+N_CTX_MAX = 12 * 1024 #Upper limit on dynamic token allocation, used in process_file.py
+TOKENIZER_N_BATCH = 32
+MODEL_N_BATCH = 2048
 PRINT_PROCESSING_PROMPT = False
 HIDE_THINKING_MODELS = False
 STRIP_THINKING = True
 PRINT_TOKEN_USAGE = True
 
 SYSTEM_INSTRUCTION = " [Style instruction: Omit formatting.]"
-BASE = 'Role: You are a sequential text processing tool that is run locally from a script. Output only the requested text itself. Provide the requested content directly without any introductory phrases. Do not add other comments. Write linear sentences without em dashes.'
+BASE = 'Role: You are a sequential text processing tool that is run locally from a script. Provide the requested content directly without any introductory phrases. Output only the requested text itself without other comments. Your style instruction is to omit formatting and write linear sentences without em dashes.'
 TASK_LINE = "Instruction; carry out the following task"
 REQUESTS = [
     'Write this segment into a slightly less difficult language, while preserving exactly the same meaning, nuance, tone, implications, qualifications, and level of detail. Replace heavily burdened vocabulary or excessively difficult words when more common alternatives would express the same meaning, but do this conservatively. Leave sentences unchanged unless they contain wording that is unusually complex, formal, or cumbersome for an adult general reader. Split up sentences that are overloaded with multiple distinct ideas. Do not summarize or remove information. Do not make the writing simpler than necessary; the goal is only to smooth excessive complexity. When a choice is uncertain, preserve the original wording.',

@@ -11,7 +11,6 @@ WRITE_LOG = False
 PERFORMANCE_METRICS = False
 MODEL_LOG_PATH = Path(__file__).resolve().parent / "llm_use.log"
 INSTRUCTION_LOG_PATH = Path(__file__).resolve().parent / "instruction_use.log"
-tokenizer_n_batch = 32
 
 def is_cached(model):
     repo_slug = "models--" + model["repo_id"].replace("/", "--")
@@ -53,11 +52,12 @@ def load_model(model, c_ntx=None, redirect_logs=WRITE_LOG):
         c_ntx = settings.N_CTX
     log_model_use(model)
     path = hf_hub_download(repo_id=model["repo_id"], filename=model["filename"])
+    batch_size = min(c_ntx, settings.MODEL_N_BATCH)
     llama_kwargs = {
         "n_ctx": c_ntx,
         "n_threads": settings.N_THREADS,
-        "n_batch": c_ntx,
-        "n_ubatch": c_ntx,
+        "n_batch": batch_size,
+        "n_ubatch": batch_size,
         "use_mmap": True,
         "use_mlock": False,
         "verbose": PERFORMANCE_METRICS,
@@ -69,7 +69,7 @@ def load_tokenizer(model, redirect_logs=WRITE_LOG):
     llama_kwargs = {
         "n_ctx": 32,
         "n_threads": settings.N_THREADS,
-        "n_batch": tokenizer_n_batch,
+        "n_batch": settings.TOKENIZER_N_BATCH,
         "use_mmap": True,
         "use_mlock": False,
         "vocab_only": True,
@@ -123,7 +123,7 @@ def pick_model():
     current = available
     print(f"Available models ([{cached_symb}] = cached, [{nonthinking_symb}] = non-thinking):")
     print_model_list(current)
-    print("Type keywords to search, a number to select, or * to reset the list.")
+    print("Type keywords to search, a number to select, * to reset.")
     while True:
         try:
             raw = input("Search / select: ").strip()
