@@ -1,3 +1,4 @@
+import time
 from utils import is_cached, load_model, load_tokenizer, log_instruction_use, pick_model, split_lines_by_tokens, strip_think
 import settings
 
@@ -14,12 +15,17 @@ def run_completion(llm, prompt):
         print(f"Prompt tokens: {prompt_tokens}, n_ctx: {n_ctx}, prompt_tokens + MAX_TOKENS: {total}")
         if total > n_ctx:
             print(f"Warning: prompt_tokens + MAX_TOKENS exceeds n_ctx by {total - n_ctx} tokens, completion may be cut off.")
+    start_time = time.perf_counter()
     result = llm.create_chat_completion(
         messages=[{"role": "user", "content": prompt}],
         max_tokens=settings.MAX_TOKENS,
         temperature=0.7,
         top_p=0.9,
     )
+    elapsed = time.perf_counter() - start_time
+    completion_tokens = result["usage"]["completion_tokens"]
+    tokens_per_second = completion_tokens / elapsed if elapsed > 0 else 0.0
+    print(f"Generated {completion_tokens} tokens in {elapsed:.2f}s ({tokens_per_second:.2f} tok/s)")
     content = result["choices"][0]["message"]["content"].strip()
     if settings.STRIP_THINKING:
         content = strip_think(content)

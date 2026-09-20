@@ -77,16 +77,14 @@ def load_tokenizer(model, redirect_logs=WRITE_LOG):
     }
     return construct_llama(path, llama_kwargs, redirect_logs)
 
-def pick_model():
+def print_model_list(models_list):
     DIM = "\033[2m"
     RESET = "\033[0m"
     cached_symb = "x"
-    thinking_symb= "T"
+    thinking_symb = "T"
     nonthinking_symb = "n"
     neither_symb = " "
-    available = [m for m in models.MODELS if not (settings.HIDE_THINKING_MODELS and m.get("thinking") is True)]
-    print(f"Available models ([{cached_symb}] = cached, [{nonthinking_symb}] = non-thinking):")
-    for i, m in enumerate(available):
+    for i, m in enumerate(models_list):
         tag = f"[{cached_symb}]" if is_cached(m) else f"[{neither_symb}]"
         think_val = m.get("thinking")
         think_tag = f"[{thinking_symb}]" if think_val is True else (f"[{neither_symb}]" if think_val is None else f"[{nonthinking_symb}]")
@@ -94,24 +92,81 @@ def pick_model():
         print(f"{i + 1:2d} {tag}{think_tag} {m['repo_id']}")
         if comment != "":
             print(f"        {comment}")
+
+def filter_models(models_list, query):
+    tokens = query.lower().split()
+    if not tokens:
+        return models_list
+    filtered = []
+    for m in models_list:
+        haystack = m["repo_id"].lower()
+        if m.get("comment"):
+            haystack += " " + m["comment"].lower()
+        if all(tok in haystack for tok in tokens):
+            filtered.append(m)
+    return filtered
+
+def confirm_thinking_model(selected):
+    if selected.get("thinking") is not True:
+        return True
+    try:
+        confirm = input("This is a thinking model, use it anyway? [Y/n]: ").strip().lower()
+    except (KeyboardInterrupt, EOFError):
+        print("\nExiting.")
+        raise SystemExit
+    return confirm != "n"
+
+def pick_model():
+    cached_symb = "x"
+    nonthinking_symb = "n"
+    available = [m for m in models.MODELS if not (settings.HIDE_THINKING_MODELS and m.get("thinking") is True)]
+    current = available
+    print(f"Available models ([{cached_symb}] = cached, [{nonthinking_symb}] = non-thinking):")
+    print_model_list(current)
+    print("Type keywords to search, a number to select, or * to reset the list.")
     while True:
         try:
-            choice = input("Select model number: ").strip()
+            raw = input("Search / select: ").strip()
         except (KeyboardInterrupt, EOFError):
             print("\nExiting.")
             raise SystemExit
-        if choice.isdigit() and 1 <= int(choice) <= len(available):
-            selected = available[int(choice) - 1]
-            if selected.get("thinking") is True:
-                try:
-                    confirm = input("This is a thinking model, use it anyway? [Y/n]: ").strip().lower()
-                except (KeyboardInterrupt, EOFError):
-                    print("\nExiting.")
-                    raise SystemExit
-                if confirm == "n":
-                    continue
-            return selected
-        print(f"Enter a number between 1 and {len(available)}.")
+        if raw == "*":
+            current = available
+            print_model_list(current)
+            continue
+        if raw.isdigit():
+            idx = int(raw)
+            if 1 <= idx <= len(current):
+                selected = current[idx - 1]
+                if confirm_thinking_model(selected):
+                    return selected
+                continue
+            print(f"Enter a number between 1 and {len(current)}.")
+            continue
+        if raw == "" and len(current) == 1:
+            selected = current[0]
+            if confirm_thinking_model(selected):
+                return selected
+            continue
+        if raw == "":
+            print_model_list(current)
+            continue
+        narrowed = filter_models(current, raw)
+        if not narrowed:
+            print("No matches. List unchanged, try different keywords or * to reset.")
+            continue
+        current = narrowed
+        print_model_list(current)
+        if len(current) == 1:
+            try:
+                confirm = input(f"Use {current[0]['repo_id']}? [Y/n]: ").strip().lower()
+            except (KeyboardInterrupt, EOFError):
+                print("\nExiting.")
+                raise SystemExit
+            if confirm != "n":
+                selected = current[0]
+                if confirm_thinking_model(selected):
+                    return selected
 
 def split_lines_by_tokens(llm, lines, max_tokens):
     line_tokens = [len(llm.tokenize(line.encode("utf-8"), add_bos=False)) for line in lines]

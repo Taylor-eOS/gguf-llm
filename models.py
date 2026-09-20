@@ -81,7 +81,7 @@ MODELS = [
         "repo_id": "DreamFast/qwen3-8b-heretic",
         "filename": "gguf/qwen3-8b-heretic-Q4_K_M.gguf",
         "thinking": True,
-        "comment": "Q4, 5.03GB, not too much thinking, very uncensored, overly agreeable",
+        "comment": "Q4, 5.03GB, not too much thinking, very uncensored, overly agreeable, good summaries",
     },
     {
         "repo_id": "mlabonne/Meta-Llama-3.1-8B-Instruct-abliterated-GGUF",
@@ -160,7 +160,7 @@ MODELS = [
         "repo_id": "dominguesm/NVIDIA-Nemotron-Nano-9B-v2-GGUF",
         "filename": "nemotron-nano-9b-v2-q5_k_m.gguf", #or q4_k_s for speed
         "thinking": True,
-        "comment": "Q5, 7.07GB, does not swap, not as good at code description as 12B, limited thinking",
+        "comment": "Q5, 7.07GB, no swap, worse code desc. than 12B, limited thinking, good summary, not fast",
     },
     {
         "repo_id": "VLTX/VertaLily-1.2-1B-GGUF",
@@ -236,7 +236,7 @@ MODELS = [
         "repo_id": "openbmb/MiniCPM5-2B-GGUF",
         "filename": "MiniCPM5-2B-Q4_K_M.gguf", #Only other: Q8_0 is 2.68GB
         "thinking": True,
-        "comment": "Q4, 1.56GB",
+        "comment": "Q4, 1.56GB, seems coherent, not too much thinking",
     },
     {
         "repo_id": "HauhauCS/Qwen3.8-27B-Uncensored-HauhauCS-Aggressive-MTP-GGUF",
@@ -284,12 +284,7 @@ MODELS = [
         "repo_id": "mradermacher/Ornith-1.5-9B-uncensored-GGUF",
         "filename": "Ornith-1.5-9B-uncensored.IQ4_XS.gguf",
         "thinking": True,
-        "comment": "IQ4, 5.23GB, can't skip thinking, censored",
-    },
-    {
-        "repo_id": "legraphista/glm-4-9b-chat-IMat-GGUF",
-        "filename": "glm-4-9b-chat.IQ4_NL.gguf",
-        "comment": "IQ4, 5.64GB, popular",
+        "comment": "IQ4, 5.23GB, can't skip thinking, censored, gets done, fine summaries",
     },
     {
         "repo_id": "empero-ai/Qwen3.8-4B-Distill-GGUF",
