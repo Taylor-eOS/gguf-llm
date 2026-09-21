@@ -4,6 +4,7 @@ import settings
 
 input_file = "input.txt"
 output_file = "output.txt"
+PREV_OUTPUT_CONTEXT_CHARS = 400
 
 def run_completion(llm, prompt):
     if settings.PRINT_PROCESSING_PROMPT:
@@ -16,12 +17,7 @@ def run_completion(llm, prompt):
         if total > n_ctx:
             print(f"Warning: prompt_tokens + MAX_TOKENS exceeds n_ctx by {total - n_ctx} tokens, completion may be cut off.")
     start_time = time.perf_counter()
-    result = llm.create_chat_completion(
-        messages=[{"role": "user", "content": prompt}],
-        max_tokens=settings.MAX_TOKENS,
-        temperature=0.7,
-        top_p=0.9,
-    )
+    result = llm.create_chat_completion(messages=[{"role": "user", "content": prompt}], max_tokens=settings.MAX_TOKENS, temperature=0.7, top_p=0.9,)
     elapsed = time.perf_counter() - start_time
     completion_tokens = result["usage"]["completion_tokens"]
     tokens_per_second = completion_tokens / elapsed if elapsed > 0 else 0.0
@@ -32,9 +28,11 @@ def run_completion(llm, prompt):
     return content
 
 def build_process_prompt(line, context=None):
-    parts = [f"Input content: \"{line}\"", settings.BASE]
+    parts = []
     if context:
         parts.append(context)
+    parts.append(f"Input content: \"{line}\"")
+    parts.append(settings.BASE)
     parts.append(f"{settings.TASK_LINE}: {settings.REQUEST}\nProcessed:")
     return "\n".join(parts)
 
@@ -131,6 +129,18 @@ def truncate_segment(llm, segment, budget):
     truncated_text = llm.detokenize(truncated_tokens).decode("utf-8", errors="ignore")
     return truncated_text
 
+def truncate_prev_output(prev_output):
+    if prev_output is None:
+        return None
+    truncated = prev_output[:PREV_OUTPUT_CONTEXT_CHARS]
+    return truncated
+
+def build_prev_output_context(prev_output):
+    truncated = truncate_prev_output(prev_output)
+    if not truncated:
+        return None
+    return f"Previous output: \"{truncated}\""
+
 def build_context(part_number, summaries):
     lines = [f"Part {part_number} of {len(summaries)}."]
     for other_number, summary in summaries.items():
@@ -150,7 +160,8 @@ def process_chunks_with_summaries(llm, chunks, outfile):
         context = build_context(part_number, summaries)
         write_output(outfile, process_line(llm, "\n".join(chunk), context))
 
-def process_segments(llm, segments, outfile, budget, allow_split, use_summaries):
+def process_segments(llm, segments, outfile, budget, allow_split, use_summaries, use_prev_output):
+    last_output = None
     for segment in segments:
         if segment is None:
             outfile.write("\n")
@@ -165,17 +176,27 @@ def process_segments(llm, segments, outfile, budget, allow_split, use_summaries)
                 for chunk in chunks:
                     write_output(outfile, process_line(llm, "\n".join(chunk)))
         elif tokens > budget:
-            write_output(outfile, process_line(llm, truncate_segment(llm, segment, budget)))
+            context = build_prev_output_context(last_output) if use_prev_output else None
+            output = process_line(llm, truncate_segment(llm, segment, budget), context)
+            write_output(outfile, output)
+            last_output = output
         else:
-            write_output(outfile, process_line(llm, "\n".join(segment)))
+            context = build_prev_output_context(last_output) if use_prev_output else None
+            output = process_line(llm, "\n".join(segment), context)
+            write_output(outfile, output)
+            last_output = output
 
-def process_lines(llm, lines, outfile):
+def process_lines(llm, lines, outfile, use_prev_output):
+    last_output = None
     for line in lines:
         if line.strip() == "":
             outfile.write("\n")
             outfile.flush()
         else:
-            write_output(outfile, process_line(llm, line))
+            context = build_prev_output_context(last_output) if use_prev_output else None
+            output = process_line(llm, line, context)
+            write_output(outfile, output)
+            last_output = output
 
 def pick_request():
     manual_option = 1
@@ -213,6 +234,8 @@ def main():
     _segment_mode = _segment_mode if _segment_mode in ("y", "yes", "") else "n"
     _segment_mode = _segment_mode in ("y", "yes", "")
     pick_request()
+    _use_prev_output = input("Include previous output as context? [y/N]: ").strip().lower()
+    use_prev_output = _use_prev_output in ("y", "yes")
     with open(input_file, "r", encoding="utf-8") as infile:
         if _segment_mode:
             segments = read_segments(infile)
@@ -230,17 +253,17 @@ def main():
             allow_split = True
             use_summaries = False
             if oversized:
-                print(f"\n{len(oversized)} segment(s) exceed the token budget of {budget}:")
+                print(f"\n{len(oversized)} segments exceed the token budget of {budget}:")
                 for index, tokens, preview in oversized:
                     print(f"{tokens}: \"{preview}...\"")
-                choice = input("\nSplit oversized segments? [Y/n] (n truncates them instead): ").strip().lower()
+                choice = input("\nSplit oversized segments? [Y/n] (n truncates instead): ").strip().lower()
                 allow_split = choice in ("y", "yes", "")
                 if allow_split:
-                    _use_summaries = input("When splitting, summarize each part for the others? [y/N]: ").strip().lower()
+                    _use_summaries = input("Summarize split parts for the others? [y/N]: ").strip().lower()
                     use_summaries = _use_summaries in ("y", "yes")
-            process_segments(llm, segments, outfile, budget, allow_split, use_summaries)
+            process_segments(llm, segments, outfile, budget, allow_split, use_summaries, use_prev_output)
         else:
-            process_lines(llm, lines, outfile)
+            process_lines(llm, lines, outfile, use_prev_output)
 
 if __name__ == "__main__":
     main()
