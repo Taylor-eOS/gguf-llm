@@ -1,5 +1,5 @@
-from utils import load_model, log_instruction_use, pick_model, split_lines_by_tokens, strip_think
-from process_file import read_segments, segment_token_count, write_output
+from utils import load_model, load_tokenizer, log_instruction_use, pick_model, split_lines_by_tokens, strip_think
+from process_file import compute_required_ctx, prompt_overhead_tokens, read_segments, segment_token_count, write_output
 import settings
 
 input_file = "input.txt"
@@ -72,7 +72,31 @@ def neighbor_summaries(aligned_summaries, segment_index):
             break
     return prev_summary, next_summary
 
-def compute_budget(llm, prev_summary, next_summary):
+def longest_segment_with_summaries_tokens(llm, segments, aligned_summaries):
+    longest = 0
+    for i, segment in enumerate(segments):
+        if segment is None:
+            continue
+        prev_summary, next_summary = neighbor_summaries(aligned_summaries, i)
+        extra_parts = []
+        if prev_summary is not None:
+            extra_parts.append(f"Summary of previous segment: \"{prev_summary}\"")
+        if next_summary is not None:
+            extra_parts.append(f"Summary of following segment: \"{next_summary}\"")
+        extra_tokens = len(llm.tokenize("\n".join(extra_parts).encode("utf-8"), add_bos=False)) if extra_parts else 0
+        tokens = segment_token_count(llm, segment) + extra_tokens
+        if tokens > longest:
+            longest = tokens
+    return longest
+
+def measure_required_ctx(model, segments, aligned_summaries):
+    tokenizer_llm = load_tokenizer(model)
+    longest_tokens = longest_segment_with_summaries_tokens(tokenizer_llm, segments, aligned_summaries)
+    required_ctx = compute_required_ctx(tokenizer_llm, longest_tokens)
+    del tokenizer_llm
+    return required_ctx
+
+def compute_budget(llm, n_ctx, prev_summary, next_summary):
     parts = []
     if prev_summary is not None:
         parts.append(f"Summary of previous segment: \"{prev_summary}\"")
@@ -82,9 +106,9 @@ def compute_budget(llm, prev_summary, next_summary):
     parts.append(settings.BASE)
     parts.append(f"Task: {settings.REQUEST}\nProcessed:")
     overhead = len(llm.tokenize("\n".join(parts).encode("utf-8"), add_bos=False))
-    return settings.N_CTX - settings.MAX_TOKENS - overhead
+    return n_ctx - settings.MAX_TOKENS - overhead
 
-def check_oversized_segments(llm, segments, aligned_summaries):
+def check_oversized_segments(llm, n_ctx, segments, aligned_summaries):
     oversized = []
     segment_index = 0
     for i, segment in enumerate(segments):
@@ -92,21 +116,21 @@ def check_oversized_segments(llm, segments, aligned_summaries):
             continue
         segment_index += 1
         prev_summary, next_summary = neighbor_summaries(aligned_summaries, i)
-        budget = compute_budget(llm, prev_summary, next_summary)
+        budget = compute_budget(llm, n_ctx, prev_summary, next_summary)
         tokens = segment_token_count(llm, segment)
         if tokens > budget:
             preview = " ".join(" ".join(segment).split()[:10])
             oversized.append((segment_index, tokens, budget, preview))
     return oversized
 
-def process_segments(llm, segments, aligned_summaries, outfile, allow_split):
+def process_segments(llm, n_ctx, segments, aligned_summaries, outfile, allow_split):
     for i, segment in enumerate(segments):
         if segment is None:
             outfile.write("\n")
             outfile.flush()
             continue
         prev_summary, next_summary = neighbor_summaries(aligned_summaries, i)
-        budget = compute_budget(llm, prev_summary, next_summary)
+        budget = compute_budget(llm, n_ctx, prev_summary, next_summary)
         tokens = segment_token_count(llm, segment)
         if tokens > budget and allow_split:
             for chunk in split_lines_by_tokens(llm, segment, budget):
@@ -137,14 +161,16 @@ def pick_request():
 def main():
     model = pick_model()
     pick_request()
-    llm = load_model(model)
     with open(input_file, "r", encoding="utf-8") as infile, \
-         open(summaries_file, "r", encoding="utf-8") as sumfile, \
-         open(output_file, "w", encoding="utf-8") as outfile:
+         open(summaries_file, "r", encoding="utf-8") as sumfile:
         segments = read_segments(infile)
         summaries = read_summaries(sumfile)
-        aligned_summaries = align_summaries_to_segments(segments, summaries)
-        oversized = check_oversized_segments(llm, segments, aligned_summaries)
+    aligned_summaries = align_summaries_to_segments(segments, summaries)
+    required_ctx = measure_required_ctx(model, segments, aligned_summaries)
+    print(f"Using context window of {required_ctx} tokens.")
+    llm = load_model(model, c_ntx=required_ctx)
+    with open(output_file, "w", encoding="utf-8") as outfile:
+        oversized = check_oversized_segments(llm, required_ctx, segments, aligned_summaries)
         allow_split = True
         if oversized:
             print(f"\n{len(oversized)} segment(s) exceed their token budget:")
@@ -154,7 +180,7 @@ def main():
             if choice not in ("y", "yes"):
                 print("Aborted")
                 return
-        process_segments(llm, segments, aligned_summaries, outfile, allow_split)
+        process_segments(llm, required_ctx, segments, aligned_summaries, outfile, allow_split)
 
 if __name__ == "__main__":
     main()

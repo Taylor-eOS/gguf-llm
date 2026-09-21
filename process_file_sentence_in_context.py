@@ -1,12 +1,10 @@
-import pysbd
-from utils import load_model, pick_model, strip_think
-from process_file import read_segments, write_output
+from utils import load_model, load_tokenizer, pick_model, strip_think
+from process_file import compute_required_ctx, read_segments, write_output
 import settings
 
 input_file = "input.txt"
 output_file = "output.txt"
 use_line_shifts = True
-_segmenter = pysbd.Segmenter(language="en", clean=False)
 starting_output = input("Starting output: ") or ""
 
 def split_segment_sentences(segment_lines):
@@ -29,8 +27,32 @@ def prompt_token_count(llm, context, last_output, sentence):
     prompt = build_prompt(context, last_output, sentence)
     return len(llm.tokenize(prompt.encode("utf-8"), add_bos=False))
 
-def compute_budget():
-    return settings.N_CTX - settings.MAX_TOKENS
+def longest_context_and_sentence(llm, segments):
+    longest_context_tokens = 0
+    longest_sentence_tokens = 0
+    for segment in segments:
+        if segment is None:
+            continue
+        context = "\n".join(segment)
+        context_tokens = len(llm.tokenize(context.encode("utf-8"), add_bos=False))
+        if context_tokens > longest_context_tokens:
+            longest_context_tokens = context_tokens
+        for sentence in split_segment_sentences(segment):
+            sentence_tokens = len(llm.tokenize(sentence.encode("utf-8"), add_bos=False))
+            if sentence_tokens > longest_sentence_tokens:
+                longest_sentence_tokens = sentence_tokens
+    return longest_context_tokens, longest_sentence_tokens
+
+def measure_required_ctx(model, segments):
+    tokenizer_llm = load_tokenizer(model)
+    longest_context_tokens, longest_sentence_tokens = longest_context_and_sentence(tokenizer_llm, segments)
+    longest_input_tokens = longest_context_tokens + longest_sentence_tokens
+    required_ctx = compute_required_ctx(tokenizer_llm, longest_input_tokens)
+    del tokenizer_llm
+    return required_ctx
+
+def compute_budget(n_ctx):
+    return n_ctx - settings.MAX_TOKENS
 
 def process_sentence(llm, context, last_output, sentence):
     prompt = build_prompt(context, last_output, sentence)
@@ -94,10 +116,13 @@ def pick_request():
 def main():
     model = pick_model()
     pick_request()
-    llm = load_model(model)
-    with open(input_file, "r", encoding="utf-8") as infile, open(output_file, "w", encoding="utf-8") as outfile:
+    with open(input_file, "r", encoding="utf-8") as infile:
         segments = read_segments(infile)
-        budget = compute_budget()
+    required_ctx = measure_required_ctx(model, segments)
+    print(f"Using context window of {required_ctx} tokens.")
+    llm = load_model(model, c_ntx=required_ctx)
+    with open(output_file, "w", encoding="utf-8") as outfile:
+        budget = compute_budget(required_ctx)
         oversized = check_oversized_sentences(llm, segments, budget)
         if oversized:
             print(f"\n{len(oversized)} sentence(s) exceed the token budget of {budget}:")
