@@ -1,5 +1,5 @@
 from functools import partial
-import translate_utils as tu
+import utils_translate as tu
 
 #REPO_ID = "mradermacher/translategemma-12b-it-i1-GGUF"
 #FILENAME = "translategemma-12b-it.i1-IQ4_NL.gguf"

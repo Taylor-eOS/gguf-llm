@@ -1,5 +1,5 @@
 from functools import partial
-import translate_utils as tu
+import utils_translate as tu
 
 REPO_ID = "tencent/HY-MT1.5-7B-GGUF"
 FILENAME = "HY-MT1.5-7B-Q8_0.gguf"
@@ -18,7 +18,6 @@ def translate(llm, source_lang, target_lang, text):
 def main():
     source_lang = input("Source language (e.g. English, German, Spanish, French, Japanese, Korean): ") or "English"
     target_lang = input("Target language (e.g. German, English, Spanish, French, Japanese, Korean): ") or "German"
-
     llm = tu.load_model(REPO_ID, FILENAME)
     translate_fn = partial(translate, llm, source_lang, target_lang)
     tu.translate_file(translate_fn, INPUT_FILE, OUTPUT_FILE, segment_mode=SEGMENT_MODE)
