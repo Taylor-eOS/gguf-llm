@@ -168,34 +168,10 @@ def pick_model():
                 if confirm_thinking_model(selected):
                     return selected
 
-def split_lines_by_tokens(llm, lines, max_tokens):
-    line_tokens = [len(llm.tokenize(line.encode("utf-8"), add_bos=False)) for line in lines]
-    total_tokens = sum(line_tokens)
-    if total_tokens == 0:
-        return [lines] if lines else []
-    num_chunks = max(1, -(-total_tokens // max_tokens))
-    target_tokens = -(-total_tokens // num_chunks)
-    chunks = []
-    current = []
-    current_tokens = 0
-    for line, tokens in zip(lines, line_tokens):
-        if current and current_tokens + tokens > max_tokens:
-            chunks.append(current)
-            current = []
-            current_tokens = 0
-        elif current and current_tokens >= target_tokens and len(chunks) < num_chunks - 1:
-            chunks.append(current)
-            current = []
-            current_tokens = 0
-        current.append(line)
-        current_tokens += tokens
-    if current:
-        chunks.append(current)
-    return chunks
-
 def strip_think(text):
     marker = "</think>"
     idx = text.find(marker)
     if idx == -1:
         return text
     return text[idx + len(marker):].strip()
+

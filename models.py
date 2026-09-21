@@ -154,7 +154,7 @@ MODELS = [
         "repo_id": "MaziyarPanahi/NVIDIA-Nemotron-Nano-12B-v2-GGUF",
         "filename": "NVIDIA-Nemotron-Nano-12B-v2.Q2_K.gguf", #Q3_K_M 6GB, Q5_K_M 8.8GB, Q6_K 10.1GB
         "thinking": True,
-        "comment": "Q2, 4.7GB, try this low quant",
+        "comment": "Q2, 4.7GB, low quant seems coherent, does overthink on a difficult request",
     },
     {
         "repo_id": "dominguesm/NVIDIA-Nemotron-Nano-9B-v2-GGUF",
