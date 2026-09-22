@@ -1,4 +1,5 @@
 import time
+from pathlib import Path
 from utils import is_cached, load_model, load_tokenizer, log_instruction_use, pick_model, strip_think
 import settings
 
@@ -23,7 +24,7 @@ def run_completion(llm, prompt):
     tokens_per_second = completion_tokens / elapsed if elapsed > 0 else 0.0
     print(f"Generated {completion_tokens} tokens in {elapsed:.2f}s ({tokens_per_second:.2f} tok/s)")
     content = result["choices"][0]["message"]["content"].strip()
-    if settings.STRIP_THINKING:
+    if not Path(settings.KEEP_THINKING_FLAG).is_file():
         content = strip_think(content)
     return content
 
@@ -110,7 +111,7 @@ def build_prev_output_context(prev_output):
     truncated = prev_output[:PREV_OUTPUT_CONTEXT_CHARS]
     if not truncated:
         return None
-    return f"Previous output: \"{truncated}\""
+    return f"Output from previous request (as context): \"{truncated}\""
 
 def abort_oversized_segment(segment, tokens, budget):
     preview = " ".join(" ".join(segment).split()[:10])
