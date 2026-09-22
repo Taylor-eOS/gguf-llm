@@ -3,14 +3,15 @@ import utils_translate as tu
 
 REPO_ID = "tencent/HY-MT1.5-7B-GGUF"
 FILENAME = "HY-MT1.5-7B-Q8_0.gguf"
-#REPO_ID = "mradermacher/Huihui-HY-MT1.5-7B-abliterated-i1-GGUF"
-#FILENAME = "Huihui-HY-MT1.5-7B-abliterated.i1-Q6_K.gguf"
 INPUT_FILE = "input.txt"
 OUTPUT_FILE = "output_translate.txt"
 SEGMENT_MODE = True
 
 def translate(llm, source_lang, target_lang, text):
-    prompt = f"Translate the following text from {source_lang} to {target_lang}.\nText: {text}"
+    if target_lang.strip().lower() in ("chinese", "zh", "mandarin", "中文"):
+        prompt = f"将以下文本翻译为{target_lang},注意只需要输出翻译后的结果,不要额外解释: {text}"
+    else:
+        prompt = f"Translate the following segment into {target_lang}, without additional explanation. {text}"
     messages = [{"role": "user", "content": prompt}]
     result = llm.create_chat_completion(messages=messages, stream=False)
     return result["choices"][0]["message"]["content"]
