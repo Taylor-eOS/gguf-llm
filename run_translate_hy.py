@@ -20,7 +20,7 @@ def main():
     target_lang = input("Target language (e.g. German, English, Spanish, French, Japanese, Korean): ") or "German"
     llm = tu.load_model(REPO_ID, FILENAME)
     translate_fn = partial(translate, llm, source_lang, target_lang)
-    tu.translate_file(translate_fn, INPUT_FILE, OUTPUT_FILE, segment_mode=SEGMENT_MODE)
+    tu.translate_file(llm, translate_fn, INPUT_FILE, OUTPUT_FILE, segment_mode=SEGMENT_MODE)
 
 if __name__ == "__main__":
     main()

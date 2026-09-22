@@ -24,6 +24,12 @@ MODELS = [
         "comment": "IQ4, 5.2GB, not fast, censored, claims class leader, good responses, too much thinking",
     },
     {
+        "repo_id": "Jackrong/Qwopus3.5-9B-Coder-MTP-GGUF",
+        "filename": "Qwopus3.5-9B-Coder-MTP-Q4_K_M.gguf",
+        "thinking": True,
+        "comment": "Q4, 5.8GB, multi-token prediction",
+    },
+    {
         "repo_id": "LiquidAI/LFM2.5-230M-GGUF",
         "filename": "LFM2.5-230M-Q8_0.gguf",
         "thinking": False,
@@ -158,15 +164,15 @@ MODELS = [
     },
     {
         "repo_id": "dominguesm/NVIDIA-Nemotron-Nano-9B-v2-GGUF",
-        "filename": "nemotron-nano-9b-v2-q2_k.gguf",
+        "filename": "nemotron-nano-9b-v2-q5_k_m.gguf", #better q4_k_s 6.2GB
         "thinking": True,
-        "comment": "Q2, 5GB, smaller quant of the below",
+        "comment": "Q5, 7.1GB, no swap, worse code desc. than 12B, limited thinking, good summary",
     },
     {
         "repo_id": "dominguesm/NVIDIA-Nemotron-Nano-9B-v2-GGUF",
-        "filename": "nemotron-nano-9b-v2-q5_k_m.gguf", #better q4_k_s 6.2GB
+        "filename": "nemotron-nano-9b-v2-q2_k.gguf",
         "thinking": True,
-        "comment": "Q5, 7.1GB, no swap, worse code desc. than 12B, limited thinking, good summary, not fast",
+        "comment": "Q2 of the above, 5GB",
     },
     {
         "repo_id": "VLTX/VertaLily-1.2-1B-GGUF",
@@ -178,7 +184,7 @@ MODELS = [
         "repo_id": "VLTX/VertaLily-1.2-1B-GGUF",
         "filename": "VertaLily-1.2-1B-Q4_K_M-stable.gguf",
         "thinking": False,
-        "comment": "Q4, 731MB, low quant of the above, insanely fast, censored, kind of wrong",
+        "comment": "Q4 of the above, 731MB, insanely fast, censored, kind of wrong",
     },
     {
         "repo_id": "MaziyarPanahi/Phi-3.5-mini-instruct-GGUF",
@@ -229,9 +235,20 @@ MODELS = [
         "comment": "Q5, 5.4GB, in library, fairly good, summarizes well",
     },
     {
-        "repo_id": "nguyenmanhd93/phi-4-unsloth-bnb-4bit-gguf-Q4_K_M", #this is very obscure, maybe try the original unsloth/phi-4-unsloth-bnb-4bit
+        "repo_id": "unsloth/gemma-4-E4B-it-GGUF",
+        "filename": "gemma-4-E4B-it-IQ4_NL.gguf",
+        "thinking": False,
+        "comment": "IQ4 of the above, 4.8GB",
+    },
+    {
+        "repo_id": "shafire/Zero-Gemma4-E4B-OpenZero-GGUF",
+        "filename": "Zero-Gemma4-E4B-OpenZero-Q5_K_M-F16-Merged.gguf", #only one
+        "comment": "Q5, 5.9GB, obscure",
+    },
+    {
+        "repo_id": "nguyenmanhd93/phi-4-unsloth-bnb-4bit-gguf-Q4_K_M",
         "filename": "unsloth.Q4_K_M.gguf",
-        "comment": "Q4, 8.9GB",
+        "comment": "Q4, 8.9GB, very obscure", #original: unsloth/phi-4-unsloth-bnb-4bit
     },
     {
         "repo_id": "mradermacher/Arsh-V1-GGUF",
@@ -260,7 +277,13 @@ MODELS = [
         "repo_id": "ornith-ai/Ornith-1.5-9B-GGUF",
         "filename": "Ornith-1.5-9B-Q5_K_M.gguf",
         "thinking": True,
-        "comment": "Q5, 6.7GB, popular, not too much thinking, refusals, can't skip thinking",
+        "comment": "Q5, 6.7GB, popular, refusals, can't skip thinking, good at complex text",
+    },
+    {
+        "repo_id": "ornith-ai/Ornith-1.5-9B-GGUF",
+        "filename": "Ornith-1.5-9B-Q4_K_M.gguf", #smallest
+        "thinking": True,
+        "comment": "Q4 of the above, 5.8GB",
     },
     {
         "repo_id": "MaziyarPanahi/Nemotron-Orchestrator-8B-GGUF",
@@ -273,7 +296,7 @@ MODELS = [
         #"filename": "allura-forge_Llama-3.3-8B-Instruct-Q5_K_M.gguf",
         "filename": "allura-forge_Llama-3.3-8B-Instruct-IQ4_NL.gguf",
         "thinking": False,
-        #"comment": "Q5, 5.7GB, seems to work",
+        #"comment": "Q5, 5.7GB",
         "comment": "IQ4, 4.7GB, seems to work",
     },
     {
@@ -331,7 +354,7 @@ MODELS = [
         "repo_id": "MaziyarPanahi/DeepSeek-R1-0528-Qwen3-8B-GGUF",
         "filename": "DeepSeek-R1-0528-Qwen3-8B.Q2_K.gguf", #Q3_K_L, Q4_K_M
         "thinking": True,
-        "comment": "Q2, 3.3GB",
+        "comment": "Q2, 3.3GB, small one",
     },
     {
         "repo_id": "CMSManhattan/JiRackUltra_14b",

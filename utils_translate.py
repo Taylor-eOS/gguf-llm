@@ -3,8 +3,9 @@ from llama_cpp import Llama
 import json
 
 PARAGRAPH_PLACEHOLDER = "\x00"
+SEGMENT_TOKEN_LIMIT = 5000
 
-def load_model(repo_id, filename, n_ctx=8 * 1024, n_threads=6):
+def load_model(repo_id, filename, n_ctx=16 * 1024, n_threads=6):
     path = hf_hub_download(repo_id=repo_id, filename=filename)
     return Llama(model_path=path, n_ctx=n_ctx, n_threads=n_threads, verbose=False)
 
@@ -22,6 +23,18 @@ def read_elements(input_file, segment_mode=True):
         else:
             elements.extend(line for line in paragraph.splitlines() if line.strip())
     return elements
+
+def warn_long_segments(llm, elements, token_limit=SEGMENT_TOKEN_LIMIT):
+    found_warning = False
+    for counter, element in enumerate(elements):
+        if element == PARAGRAPH_PLACEHOLDER:
+            continue
+        token_count = len(llm.tokenize(element.encode("utf-8")))
+        if token_count > token_limit:
+            found_warning = True
+            print(f"Warning: segment {counter} is {token_count} tokens, exceeding the {token_limit} token limit")
+            print(element[:80])
+    return found_warning
 
 def make_pair(counter, original, translation):
     if original == PARAGRAPH_PLACEHOLDER:
@@ -52,9 +65,15 @@ def write_txt(pairs, output_file):
     with open(output_file, "w", encoding="utf-8") as f:
         f.write("\n\n".join(paragraphs))
 
-def translate_file(translate_fn, input_file, output_file, segment_mode=True):
+def translate_file(llm, translate_fn, input_file, output_file, segment_mode=True):
     elements = read_elements(input_file, segment_mode=segment_mode)
+    has_long_segments = warn_long_segments(llm, elements)
+    if has_long_segments:
+        answer = input("Some segments exceed the token limit. Continue anyway? (y/n): ").strip().lower()
+        if answer != "y":
+            print("Translation aborted.")
+            return
     json_file = output_file.replace(".txt", ".json")
     pairs = build_translation_pairs(translate_fn, elements, json_file)
     write_txt(pairs, output_file)
-    print("Translation written to output files")
+    print("Translation written to output files.")
