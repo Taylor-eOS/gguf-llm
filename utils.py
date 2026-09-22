@@ -97,8 +97,16 @@ def filter_models(models_list, query):
     tokens = query.lower().split()
     if not tokens:
         return models_list
+    thinking_only = "t" in tokens
+    nonthinking_only = "n" in tokens
+    tokens = [tok for tok in tokens if tok not in ("t", "n")]
     filtered = []
     for m in models_list:
+        think_val = m.get("thinking")
+        if thinking_only and think_val is not True:
+            continue
+        if nonthinking_only and think_val is not False:
+            continue
         haystack = m["repo_id"].lower()
         if m.get("comment"):
             haystack += " " + m["comment"].lower()
@@ -106,48 +114,31 @@ def filter_models(models_list, query):
             filtered.append(m)
     return filtered
 
-def confirm_thinking_model(selected):
-    if selected.get("thinking") is not True:
-        return True
-    try:
-        confirm = input("This is a thinking model, use it anyway? [Y/n]: ").strip().lower()
-    except (KeyboardInterrupt, EOFError):
-        print("\nExiting.")
-        raise SystemExit
-    return confirm != "n"
-
 def pick_model():
     cached_symb = "x"
     nonthinking_symb = "n"
-    available = [m for m in models.MODELS if not (settings.HIDE_THINKING_MODELS and m.get("thinking") is True)]
-    current = available
+    current = models.MODELS
     print(f"Available models ([{cached_symb}] = cached, [{nonthinking_symb}] = non-thinking):")
     print_model_list(current)
-    print("Type keywords to search, a number to select, * to reset.")
+    print("Type keywords to filter, a number to select, * to reset.")
     while True:
         try:
-            raw = input("Search / select: ").strip()
+            raw = input("Filter / select: ").strip()
         except (KeyboardInterrupt, EOFError):
             print("\nExiting.")
             raise SystemExit
         if raw == "*":
-            current = available
+            current = models.MODELS
             print_model_list(current)
             continue
         if raw.isdigit():
             idx = int(raw)
             if 1 <= idx <= len(current):
-                selected = current[idx - 1]
-                if confirm_thinking_model(selected):
-                    return selected
-                continue
+                return current[idx - 1]
             print(f"Enter a number between 1 and {len(current)}.")
             continue
         if raw == "" and len(current) == 1:
-            selected = current[0]
-            if confirm_thinking_model(selected):
-                return selected
-            continue
+            return current[0]
         if raw == "":
             print_model_list(current)
             continue
@@ -164,9 +155,7 @@ def pick_model():
                 print("\nExiting.")
                 raise SystemExit
             if confirm != "n":
-                selected = current[0]
-                if confirm_thinking_model(selected):
-                    return selected
+                return current[0]
 
 def strip_think(text):
     marker = "</think>"
@@ -174,4 +163,3 @@ def strip_think(text):
     if idx == -1:
         return text
     return text[idx + len(marker):].strip()
-
