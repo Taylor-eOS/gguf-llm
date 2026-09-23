@@ -9,7 +9,7 @@ TOKENIZER_N_BATCH = 32
 MODEL_N_BATCH = 2048
 PRINT_PROCESSING_PROMPT = False
 PRINT_TOKEN_USAGE = True
-KEEP_THINKING_FLAG = "thinking"
+KEEP_THINKING_FLAG = "think"
 
 SYSTEM_INSTRUCTION = " [Style instruction: Omit formatting.]"
 BASE = 'Role: You are a sequential text processing tool that is run locally from a script. Provide the requested content directly without any introductory phrases. Output only the requested text itself without other comments. Your style instruction is to omit formatting and write linear sentences without em dashes.'

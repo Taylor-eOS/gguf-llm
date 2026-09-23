@@ -3,8 +3,6 @@ import utils_translate as tu
 
 REPO_ID = "tencent/HY-MT1.5-7B-GGUF"
 FILENAME = "HY-MT1.5-7B-Q8_0.gguf"
-#REPO_ID = "mradermacher/Huihui-HY-MT1.5-7B-abliterated-i1-GGUF"
-#FILENAME = "Huihui-HY-MT1.5-7B-abliterated.i1-Q6_K.gguf"
 INPUT_FILE = "input.txt"
 OUTPUT_FILE = "output_translate.txt"
 SEGMENT_MODE = True
@@ -18,11 +16,8 @@ def translate(llm, target_lang, text):
     result = llm.create_chat_completion(messages=messages, stream=False)
     return result["choices"][0]["message"]["content"]
 
-def main():
-    target_lang = input("Target language (e.g. English, German, Spanish, French, Japanese, Korean): ") or "English"
+if __name__ == "__main__":
+    target_lang = input("Target language (e.g. English, German, Spanish, Korean): ") or "English"
     llm = tu.load_model(REPO_ID, FILENAME)
     translate_fn = partial(translate, llm, target_lang)
-    tu.translate_file(llm, translate_fn, INPUT_FILE, OUTPUT_FILE, segment_mode=SEGMENT_MODE)
-
-if __name__ == "__main__":
-    main()
+    tu.translate_file(translate_fn, INPUT_FILE, OUTPUT_FILE, segment_mode=SEGMENT_MODE)
