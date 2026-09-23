@@ -30,6 +30,7 @@ if __name__ == "__main__":
     records = read_records(INPUT_FILE)
     elements = [record["text"] for record in records]
     progress_file = OUTPUT_FILE.replace(".json", FILE_ENDING)
-    pairs = tu.build_translation_pairs(translate_fn, elements, progress_file)
+    on_progress = lambda pairs: write_json_lines(records, pairs, OUTPUT_FILE)
+    pairs = tu.build_translation_pairs(translate_fn, elements, progress_file, on_progress=on_progress)
     write_json_lines(records, pairs, OUTPUT_FILE)
     print(f"Translation written to {OUTPUT_FILE}.")

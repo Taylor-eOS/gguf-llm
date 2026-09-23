@@ -28,7 +28,7 @@ def make_pair(counter, original, translation):
         return {"number": counter, "original": "[PARAGRAPH_BREAK]", "translation": "[PARAGRAPH_BREAK]", "advice": "", "corrected": True}
     return {"number": counter, "original": original, "translation": translation, "advice": "", "corrected": False}
 
-def build_translation_pairs(translate_fn, elements, json_file):
+def build_translation_pairs(translate_fn, elements, json_file, on_progress=None):
     pairs = []
     for counter, element in enumerate(elements):
         translation = PARAGRAPH_PLACEHOLDER if element == PARAGRAPH_PLACEHOLDER else translate_fn(element)
@@ -37,6 +37,8 @@ def build_translation_pairs(translate_fn, elements, json_file):
         pairs.append(make_pair(counter, element, translation))
         with open(json_file, "w", encoding="utf-8") as f:
             json.dump(pairs, f, ensure_ascii=False, indent=4)
+        if on_progress is not None:
+            on_progress(pairs)
     return pairs
 
 def write_txt(pairs, output_file):
@@ -55,6 +57,7 @@ def write_txt(pairs, output_file):
 def translate_file(translate_fn, input_file, output_file, segment_mode=True):
     elements = read_elements(input_file, segment_mode=segment_mode)
     json_file = output_file.replace(".txt", ".json")
-    pairs = build_translation_pairs(translate_fn, elements, json_file)
+    on_progress = lambda pairs: write_txt(pairs, output_file)
+    pairs = build_translation_pairs(translate_fn, elements, json_file, on_progress=on_progress)
     write_txt(pairs, output_file)
     print("Translation written to output files.")
