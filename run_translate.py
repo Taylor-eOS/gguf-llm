@@ -20,12 +20,9 @@ def translate(llm, source_lang, target_lang, text):
     result = llm.create_chat_completion(messages=messages, stream=False)
     return result["choices"][0]["message"]["content"]
 
-def main():
+if __name__ == "__main__":
     source_lang = input("Source language (e.g. en, de, da, es): ") or "en"
     target_lang = input("Target language (e.g. de, en, da, es): ") or "de"
     llm = tu.load_model(REPO_ID, FILENAME)
     translate_fn = partial(translate, llm, source_lang, target_lang)
     tu.translate_file(translate_fn, INPUT_FILE, OUTPUT_FILE, segment_mode=SEGMENT_MODE)
-
-if __name__ == "__main__":
-    main()
