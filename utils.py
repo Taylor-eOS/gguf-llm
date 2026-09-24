@@ -11,6 +11,7 @@ WRITE_LOG = False
 PERFORMANCE_METRICS = False
 MODEL_LOG_PATH = Path(__file__).resolve().parent / "llm_use.log"
 INSTRUCTION_LOG_PATH = Path(__file__).resolve().parent / "instruction_use.log"
+os.environ["HF_HUB_OFFLINE"] = "1"
 
 def is_cached(model):
     repo_slug = "models--" + model["repo_id"].replace("/", "--")
@@ -84,14 +85,18 @@ def print_model_list(models_list):
     thinking_symb = "T"
     nonthinking_symb = "n"
     neither_symb = " "
+    repo_id_counts = {}
+    for m in models_list:
+        repo_id_counts[m["repo_id"]] = repo_id_counts.get(m["repo_id"], 0) + 1
     for i, m in enumerate(models_list):
         tag = f"[{cached_symb}]" if is_cached(m) else f"[{neither_symb}]"
         think_val = m.get("thinking")
         think_tag = f"[{thinking_symb}]" if think_val is True else (f"[{neither_symb}]" if think_val is None else f"[{nonthinking_symb}]")
-        comment = f"  {DIM}{m['comment']}{RESET}" if m.get("comment") else "  "
-        print(f"{i + 1:2d} {tag}{think_tag} {m['repo_id']}")
+        comment = f"{DIM}{m['comment']}{RESET}" if m.get("comment") else "  "
+        dup_marker = "*" if repo_id_counts[m["repo_id"]] > 1 else ""
+        print(f"{i + 1:2d} {tag}{think_tag} {m['repo_id']}{dup_marker}")
         if comment != "":
-            print(f"        {comment}")
+            print(f"          {comment}")
 
 def filter_models(models_list, query):
     tokens = query.lower().split()

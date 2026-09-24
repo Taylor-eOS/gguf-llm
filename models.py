@@ -15,43 +15,37 @@ MODELS = [
         "repo_id": "Qwen/Qwen2.5-Coder-7B-Instruct-GGUF",
         "filename": "qwen2.5-coder-7b-instruct-q5_k_m.gguf", #q4_k_m 4.7GB
         "thinking": False,
-        "comment": "Q5, 5.4GB, fast coding, refuses",
+        "comment": "Q5, 5.4GB coding, refuses, short responses, useful",
     },
     {
         "repo_id": "Jackrong/Qwopus3.5-9B-Coder-GGUF",
         "filename": "Qwopus3.5-9B-coder-Exp-Q4_K_M.gguf",
         "thinking": True,
-        "comment": "IQ4, 5.2GB, not fast, censored, claims class leader, good responses, too much thinking",
-    },
-    {
-        "repo_id": "Jackrong/Qwopus3.5-9B-Coder-MTP-GGUF",
-        "filename": "Qwopus3.5-9B-Coder-MTP-Q4_K_M.gguf",
-        "thinking": True,
-        "comment": "Q4, 5.8GB, multi-token prediction",
-    },
-    {
-        "repo_id": "LiquidAI/LFM2.5-230M-GGUF",
-        "filename": "LFM2.5-230M-Q8_0.gguf",
-        "thinking": False,
-        "comment": "Q8, 247MB, small, coherent, stops, overly censored",
-    },
-    {
-        "repo_id": "LiquidAI/LFM2.5-2.6B-GGUF",
-        "filename": "LFM2.5-2.6B-Q5_K_M.gguf",
-        "thinking": True,
-        "comment": "Q5, 1.9GB, popular, sub-4GB agentic tool-use, small",
+        "comment": "IQ4, 5.2GB, class leader, censored, good responses, too much thinking, few downloads",
     },
     {
         "repo_id": "LiquidAI/LFM2.5-8B-A1B-GGUF",
         "filename": "LFM2.5-8B-A1B-Q4_K_M.gguf",
         "thinking": True,
-        "comment": "Q4, 5.2GB, fast MoE, refuses, ok answers",
+        "comment": "Q4, 5.2GB MoE, refuses, ok answers",
+    },
+    {
+        "repo_id": "LiquidAI/LFM2.5-2.6B-GGUF",
+        "filename": "LFM2.5-2.6B-Q5_K_M.gguf",
+        "thinking": True,
+        "comment": "Q5, 1.9GB, popular, sub-4GB agentic tool-use, small, does finish thinking",
+    },
+    {
+        "repo_id": "LiquidAI/LFM2.5-230M-GGUF",
+        "filename": "LFM2.5-230M-Q8_0.gguf",
+        "thinking": False,
+        "comment": "Q8, 247MB, too small, coherent, stops, refuses most, incoherent",
     },
     {
         "repo_id": "bartowski/ibm-granite_granite-4.1-8b-GGUF",
         "filename": "ibm-granite_granite-4.1-8b-IQ4_NL.gguf",
         "thinking": False,
-        "comment": "IQ4, 5.2GB, in library, fast, concise, good at translation, censored",
+        "comment": "IQ4, 5.2GB, in library, concise, good at translation, censored",
     },
     {
         "repo_id": "DavidAU/Llama-3.2-8X3B-MOE-Dark-Champion-Instruct-uncensored-abliterated-18.4B-GGUF",
@@ -69,19 +63,19 @@ MODELS = [
         "repo_id": "squ11z1/Mythos-nano",
         "filename": "mythos-nano-Q4_K_M.gguf",
         "thinking": True,
-        "comment": "Q4, 1.9GB, 3B, small, fast, censored",
+        "comment": "Q4, 1.9GB, 3B, small, censored",
     },
     {
         "repo_id": "DreamFast/gemma-3-12b-it-heretic-v2",
         "filename": "gguf/gemma-3-12b-it-heretic-v2-Q4_K_M.gguf",
         "thinking": False,
-        "comment": "Q4, 7.3GB, for rewriting censored material, short, slow, verbose, swaps",
+        "comment": "Q4, 7.3GB, can rewrite contraband, short, slow, verbose, swaps",
     },
     {
         "repo_id": "DreamFast/qwen3-8b-heretic",
-        "filename": "qwen3-8b-heretic-Q4_K_M.gguf",
+        "filename": "gguf/qwen3-8b-heretic-Q4_K_M.gguf",
         "thinking": True,
-        "comment": "Q4, 5GB, not too much thinking, very uncensored, overly agreeable, good summaries",
+        "comment": "Q4, 5GB, very agreeable, ok thinking, good summaries",
     },
     {
         "repo_id": "mlabonne/Meta-Llama-3.1-8B-Instruct-abliterated-GGUF",
@@ -93,25 +87,25 @@ MODELS = [
         "repo_id": "bartowski/Mistral-7B-Instruct-v0.3-GGUF",
         "filename": "Mistral-7B-Instruct-v0.3-IQ3_M.gguf", #not recommended in description
         "thinking": False,
-        "comment": "IQ3, 3.3GB, in library, workhorse, fast, limited censorship, does summaries well",
+        "comment": "IQ3, 3.3GB, in library, workhorse, limited censorship, does summaries well",
     },
     {
         "repo_id": "bartowski/SmolLM2-1.7B-Instruct-GGUF",
         "filename": "SmolLM2-1.7B-Instruct-Q6_K_L.gguf", #IQ4 didn't limit output to requested words
         "thinking": False,
-        "comment": "Q6, 1.4GB, in library, small",
+        "comment": "Q6, 1.4GB, in library, good small, ok thinking",
     },
     {
         "repo_id": "Qwen/Qwen2.5-1.5B-Instruct-GGUF",
         "filename": "qwen2.5-1.5b-instruct-q6_k.gguf",
         "thinking": False,
-        "comment": "Q6, 1.5GB, in library, concise, can stop, precise, small",
+        "comment": "Q6, 1.5GB, in library, concise, can stop, precise, small, refuses joke",
     },
     {
         "repo_id": "janhq/Jan-v3.5-4B-gguf",
         "filename": "Jan-v3.5-4B-Q5_K_M.gguf", #Q4 loops
         "thinking": False,
-        "comment": "Q5, 3.2GB, personality, kind of fun, fast, refuses",
+        "comment": "Q5, 3.2GB, personality, kind of fun, refuses",
     },
     {
         "repo_id": "bartowski/aya-expanse-8b-GGUF",
@@ -184,7 +178,7 @@ MODELS = [
         "repo_id": "VLTX/VertaLily-1.2-1B-GGUF",
         "filename": "VertaLily-1.2-1B-Q4_K_M-stable.gguf",
         "thinking": False,
-        "comment": "Q4 of the above, 731MB, insanely fast, small, censored, kind of wrong",
+        "comment": "Q4 of the above, 731MB, extremely small, censored, kind of wrong",
     },
     {
         "repo_id": "MaziyarPanahi/Phi-3.5-mini-instruct-GGUF",
@@ -226,7 +220,7 @@ MODELS = [
         "repo_id": "unsloth/gemma-4-E2B-it-GGUF",
         "filename": "gemma-4-E2B-it-IQ4_NL.gguf", #check out Q6_K or Q5_K_M
         "thinking": False,
-        "comment": "IQ4, 3GB, in library, fast, seems ok",
+        "comment": "IQ4, 3GB, in library, seems ok",
     },
     {
         "repo_id": "unsloth/gemma-4-E4B-it-GGUF",
@@ -259,7 +253,7 @@ MODELS = [
         "repo_id": "openbmb/MiniCPM5-2B-GGUF",
         "filename": "MiniCPM5-2B-Q4_K_M.gguf", #Only other: Q8_0 is 2.7GB
         "thinking": True,
-        "comment": "Q4, 1.6GB, small, seems coherent, not too much thinking",
+        "comment": "Q4, 1.6GB, small, seems coherent, ok thinking",
     },
     {
         "repo_id": "HauhauCS/Qwen3.8-27B-Uncensored-HauhauCS-Aggressive-MTP-GGUF",
@@ -295,7 +289,7 @@ MODELS = [
         "repo_id": "MaziyarPanahi/Nemotron-Orchestrator-8B-GGUF",
         "filename": "Nemotron-Orchestrator-8B.Q5_K_M.gguf",
         "thinking": True,
-        "comment": "Q5, 5.9GB, can skip thinking, fast",
+        "comment": "Q5, 5.9GB, can skip thinking",
     },
     {
         "repo_id": "bartowski/allura-forge_Llama-3.3-8B-Instruct-GGUF",
@@ -333,12 +327,18 @@ MODELS = [
         "repo_id": "empero-ai/Qwen3.8-4B-Distill-GGUF",
         "filename": "Qwen3.8-4B-Q5_K_M.gguf",
         "thinking": True,
-        "comment": "Q5, 3.2GB, popular, small, seems ok, not very fast, not too much thinking",
+        "comment": "Q5, 3.2GB, popular, small, seems ok, ok thinking",
     },
     {
         "repo_id": "OBLITERATUS/Ornith-1.5-9B-OBLITERATED",
         "filename": "Ornith-1.5-9B-OBLITERATED-IQ4_XS.gguf",
         "comment": "IQ4, 5.4GB",
+    },
+    {
+        "repo_id": "Jackrong/Qwopus3.5-9B-Coder-MTP-GGUF",
+        "filename": "Qwopus3.5-9B-Coder-MTP-Q4_K_M.gguf", #Q3 4.7GB, Q5 6.6
+        "thinking": True,
+        "comment": "Q4, 5.8GB, multi-token prediction, works, thinking loops, refuses",
     },
     {
         "repo_id": "yuxinlu1/gemma-4-12B-agentic-fable5-composer2.5-v2-3.5x-tau2-GGUF",
