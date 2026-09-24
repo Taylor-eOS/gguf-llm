@@ -21,7 +21,7 @@ def run_chat_loop(llm):
             break
         if not prompt:
             continue
-        stream_response(llm, prompt + settings.SYSTEM_INSTRUCTION)
+        stream_response(llm, settings.SYSTEM_INSTRUCTION + prompt)
 
 if __name__ == "__main__":
     model = pick_model()
