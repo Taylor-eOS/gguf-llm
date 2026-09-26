@@ -1,6 +1,6 @@
 import time
 from pathlib import Path
-from utils import is_cached, load_model, load_tokenizer, log_instruction_use, pick_model, strip_think
+from utils import is_cached, load_model, load_tokenizer, log_instruction_use, pick_model, strip_think, wait_while_stopped
 import settings
 
 input_file = "input.txt"
@@ -127,6 +127,7 @@ def process_segments(llm, segments, outfile, budget, use_prev_output):
             outfile.write("\n")
             outfile.flush()
             continue
+        wait_while_stopped()
         tokens = segment_token_count(llm, segment)
         if tokens > budget:
             abort_oversized_segment(segment, tokens, budget)
@@ -142,6 +143,7 @@ def process_lines(llm, lines, outfile, use_prev_output):
             outfile.write("\n")
             outfile.flush()
         else:
+            wait_while_stopped()
             context = build_prev_output_context(last_output) if use_prev_output else None
             output = process_line(llm, line, context)
             write_output(outfile, output)
@@ -179,10 +181,10 @@ def measure_required_ctx(model, segment_mode, segments, lines):
 
 def main():
     model = pick_model()
+    pick_request()
     _segment_mode = input("Use segment mode? [Y/n]: ").strip().lower()
     _segment_mode = _segment_mode if _segment_mode in ("y", "yes", "") else "n"
     _segment_mode = _segment_mode in ("y", "yes", "")
-    pick_request()
     _use_prev_output = input("Include previous output as context? [y/N]: ").strip().lower()
     use_prev_output = _use_prev_output in ("y", "yes")
     with open(input_file, "r", encoding="utf-8") as infile:

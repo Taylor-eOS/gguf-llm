@@ -258,7 +258,7 @@ MODELS = [
         "repo_id": "ornith-ai/Ornith-1.5-9B-GGUF",
         "filename": "Ornith-1.5-9B-Q5_K_M.gguf", #Q4 5.8GB, Q6 7.6GB
         "thinking": True,
-        "comment": "Q5, 6.7GB, popular, good at long text, quite restricted, can't skip thinking",
+        "comment": "Q5, 6.7GB, popular, good at long text, quite restricted, annoyingly opinionated",
     },
     {
         "repo_id": "MaziyarPanahi/Nemotron-Orchestrator-8B-GGUF",

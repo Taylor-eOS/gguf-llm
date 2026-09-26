@@ -1,5 +1,6 @@
 import os
 import sys
+import time
 from datetime import datetime
 from huggingface_hub import hf_hub_download
 from llama_cpp import Llama
@@ -125,7 +126,7 @@ def pick_model():
     current = models.MODELS
     print(f"Available models ([{cached_symb}] = cached, [{nonthinking_symb}] = non-thinking):")
     print_model_list(current)
-    print("Type keywords to filter, a number to select, * to reset.")
+    print("Type keywords to filter, a number to select, * to reset, n for non-thinking models.")
     while True:
         try:
             raw = input("Filter / select: ").strip()
@@ -149,7 +150,7 @@ def pick_model():
             continue
         narrowed = filter_models(current, raw)
         if not narrowed:
-            print("No matches. List unchanged, try different keywords or * to reset.")
+            print("No matches.")
             continue
         current = narrowed
         print_model_list(current)
@@ -168,3 +169,11 @@ def strip_think(text):
     if idx == -1:
         return text
     return text[idx + len(marker):].strip()
+
+def wait_while_stopped():
+    if not Path(settings.PAUSE_FLAG).is_file():
+        return
+    print("Stop file detected, pausing.")
+    while Path(settings.PAUSE_FLAG).is_file():
+        time.sleep(10)
+    print("Stop file removal detected, resuming.")
