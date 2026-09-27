@@ -105,13 +105,16 @@ def filter_models(models_list, query):
         return models_list
     thinking_only = "t" in tokens
     nonthinking_only = "n" in tokens
-    tokens = [tok for tok in tokens if tok not in ("t", "n")]
+    cached_only = "x" in tokens
+    tokens = [tok for tok in tokens if tok not in ("t", "n", "x")]
     filtered = []
     for m in models_list:
         think_val = m.get("thinking")
         if thinking_only and think_val is not True:
             continue
         if nonthinking_only and think_val is not False:
+            continue
+        if cached_only and not is_cached(m):
             continue
         haystack = m["repo_id"].lower()
         if m.get("comment"):
@@ -126,7 +129,7 @@ def pick_model():
     current = models.MODELS
     print(f"Available models ([{cached_symb}] = cached, [{nonthinking_symb}] = non-thinking):")
     print_model_list(current)
-    print("Type keywords to filter, a number to select, * to reset, n for non-thinking models.")
+    print("Keywords to filter, number to select, * to reset, t thinking models, n non-thinking, x downloaded.")
     while True:
         try:
             raw = input("Filter / select: ").strip()

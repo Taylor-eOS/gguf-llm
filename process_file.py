@@ -153,8 +153,8 @@ def pick_request():
     manual_option = 1
     print(f"{manual_option}: Enter instruction manually.")
     for i, request in enumerate(settings.REQUESTS, 2):
-        sample = " ".join(request.split()[:10])
-        print(f"{i}: {sample}...")
+        sample = " ".join(request.split()[:12])
+        print(f"{i}: {sample}")
     choice = input(f"Pick an instruction [1-{len(settings.REQUESTS) + 1}]: ").strip()
     try:
         index = int(choice) - 1
