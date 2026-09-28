@@ -11,16 +11,16 @@ PRINT_GENERATION_SPEED = False
 def run_completion(llm, prompt):
     if settings.PRINT_PROCESSING_PROMPT:
         print(prompt)
+    raw_tokens = len(llm.tokenize(prompt.encode("utf-8"), add_bos=False))
+    n_ctx = llm.n_ctx()
     if settings.PRINT_TOKEN_USAGE:
-        prompt_tokens = len(llm.tokenize(prompt.encode("utf-8"), add_bos=False))
-        n_ctx = llm.n_ctx()
-        total = prompt_tokens + settings.MAX_TOKENS
-        print(f"Prompt tokens: {prompt_tokens}, n_ctx: {n_ctx}, prompt_tokens + MAX_TOKENS: {total}")
-        if total > n_ctx:
-            print(f"Warning: prompt_tokens + MAX_TOKENS exceeds n_ctx by {total - n_ctx} tokens, completion may be cut off.")
+        print(f"Raw prompt tokens: {raw_tokens}, n_ctx: {n_ctx}, raw + MAX_TOKENS: {raw_tokens + settings.MAX_TOKENS}")
     start_time = time.perf_counter()
-    result = llm.create_chat_completion(messages=[{"role": "user", "content": prompt}], max_tokens=settings.MAX_TOKENS, temperature=0.7, top_p=0.9,)
-    if PRINT_GENERATION_SPEED: 
+    result = llm.create_chat_completion(messages=[{"role": "user", "content": prompt}], max_tokens=settings.MAX_TOKENS, temperature=0.7, top_p=0.9)
+    consumed = result["usage"]["prompt_tokens"]
+    if consumed < raw_tokens:
+        print(f"Warning: the model consumed {consumed} prompt tokens but the raw prompt has {raw_tokens}. The input was truncated.")
+    if PRINT_GENERATION_SPEED:
         elapsed = time.perf_counter() - start_time
         completion_tokens = result["usage"]["completion_tokens"]
         tokens_per_second = completion_tokens / elapsed if elapsed > 0 else 0.0

@@ -9,7 +9,7 @@ MODELS = [
         "repo_id": "deadbydawn101/RavenX-OpenFable-Coder-Gemma-4-12B-GGUF",
         "filename": "RavenX-OpenFable-Coder-Gemma-4-12B-Q4_K_M.gguf",
         "thinking": False,
-        "comment": "Q4, 7.4GB, seems to work, good at code description, good at advice",
+        "comment": "Q4, 7.4GB, seems to work, good code description, good advice",
     },
     {
         "repo_id": "Qwen/Qwen2.5-Coder-7B-Instruct-GGUF",
@@ -45,7 +45,7 @@ MODELS = [
         "repo_id": "bartowski/ibm-granite_granite-4.1-8b-GGUF",
         "filename": "ibm-granite_granite-4.1-8b-IQ4_NL.gguf",
         "thinking": False,
-        "comment": "IQ4, 5.2GB, in library, concise, good at translation, censored",
+        "comment": "IQ4, 5.2GB, in library, concise, good translation, censored",
     },
     {
         "repo_id": "DavidAU/Llama-3.2-8X3B-MOE-Dark-Champion-Instruct-uncensored-abliterated-18.4B-GGUF",
@@ -135,9 +135,11 @@ MODELS = [
     },
     {
         "repo_id": "MaziyarPanahi/phi-4-GGUF",
-        "filename": "phi-4.Q5_K_M.gguf", #Q4_K_M 9GB if Q5 is too slow
+        #"filename": "phi-4.Q5_K_M.gguf",
+        "filename": "phi-4.Q4_K_M.gguf",
         "thinking": False,
-        "comment": "Q5, 10.6GB, 14B, big, censored, a tad boring, swaps, slow but useful, didn't refuse all",
+        #"comment": "Q5, 10.6GB, 14B, big, censored, a tad boring, swaps, slow but useful, didn't refuse all",
+        "comment": "Q4, 9GB, 14B, a tad boring, didn't refuse all",
     },
     {
         "repo_id": "yuxinlu1/gemma-4-12B-it-Claude-4.6-4.8-Opus-GGUF",
@@ -171,7 +173,7 @@ MODELS = [
         "repo_id": "MaziyarPanahi/Phi-3.5-mini-instruct-GGUF",
         "filename": "Phi-3.5-mini-instruct.IQ4_XS.gguf",
         "thinking": False,
-        "comment": "IQ4, 2GB, 3.8B, small, seems to work, censored, spams lineshifts, didn't refuse",
+        "comment": "IQ4, 2GB, 3.8B, small, seems to work, censored, lineshifts spam, didn't refuse",
     },
     {
         "repo_id": "dphn/Dolphin3.0-Llama3.1-8B-GGUF",
@@ -201,7 +203,7 @@ MODELS = [
         "repo_id": "jica98/qwen3.5-4B-super-coder",
         "filename": "qwen3.5-4B-super-coder.Q4_0.gguf",
         "thinking": True,
-        "comment": "Q4, 2.6GB, small, bad at code description, fine at summaried chat",
+        "comment": "Q4, 2.6GB, small, bad code description, fine summaried chat",
     },
     {
         "repo_id": "DavidAU/Qwen3.5-9B-The-Defiant-Fable-Uncensored-Heretic-NEO-IMATRIX-MAX-MTP-GGUF",
@@ -217,9 +219,11 @@ MODELS = [
     },
     {
         "repo_id": "unsloth/gemma-4-E4B-it-GGUF",
-        "filename": "gemma-4-E4B-it-IQ4_NL.gguf",
+        #"filename": "gemma-4-E4B-it-IQ4_NL.gguf", #no more IQs
+        "filename": "gemma-4-E4B-it-UD-IQ3_XXS.gguf", #might be a sweet spot
         "thinking": False,
-        "comment": "IQ4, 4.8GB, in library, good workhorse, summarizes well",
+        #"comment": "IQ4, 4.8GB, in library, better workhorse, summarizes well",
+        "comment": "IQ3, 3.7GB, in library, better workhorse",
     },
     {
         "repo_id": "shafire/Zero-Gemma4-E4B-OpenZero-GGUF",
@@ -261,9 +265,9 @@ MODELS = [
     },
     {
         "repo_id": "ornith-ai/Ornith-1.5-9B-GGUF",
-        "filename": "Ornith-1.5-9B-Q5_K_M.gguf", #Q4 5.8GB, Q6 7.6GB
+        "filename": "Ornith-1.5-9B-Q5_K_M.gguf", #Q4 5.8GB is probably better
         "thinking": True,
-        "comment": "Q5, 6.7GB, popular, good at long text, quite restricted, annoyingly opinionated",
+        "comment": "Q5, 6.7GB, popular, good long text, quite restricted, annoyingly opinionated",
     },
     {
         "repo_id": "MaziyarPanahi/Nemotron-Orchestrator-8B-GGUF",
@@ -311,7 +315,7 @@ MODELS = [
     },
     {
         "repo_id": "OBLITERATUS/Ornith-1.5-9B-OBLITERATED",
-        "filename": "Ornith-1.5-9B-OBLITERATED-IQ4_XS.gguf",
+        "filename": "Ornith-1.5-9B-OBLITERATED-IQ4_XS.gguf", #only IQ
         "thinking": True,
         "comment": "IQ4, 5.4GB, original, much thinking, not censored, good, went insane",
     },
@@ -352,21 +356,21 @@ MODELS = [
     },
     {
         "repo_id": "CMSManhattan/JiRackUltra_14b",
-        "filename": "JiRackUltra_14b_Q3_K_M.gguf", #Q4_K_M (9GB)
+        "filename": "JiRackUltra_14b_Q3_K_M.gguf", #Q4_K_M 9GB
         "thinking": True,
         "comment": "Q3, 7.3GB, for CPU, limited thinking",
     },
     {
         "repo_id": "ukisai/Swift-1.5-Qwen3.8-27B-GSQ-RCO-GGUF",
-        "filename": "Swift-1.5-Qwen3.8-27B-GSQ-RCO-IQ3_XXS-mtp.gguf", #IQ3_S-mtp 12.1GB
+        "filename": "Swift-1.5-Qwen3.8-27B-GSQ-RCO-IQ3_XXS-mtp.gguf", #IQ3_S-mtp 12.1GB too big
         "thinking": True,
-        "comment": "IQ3, 10.4GB, big, MTP, slow, swaps but seems to work, funny, ok thinking",
+        "comment": "IQ3, 10.4GB, big, MTP, slow, 100% CPU, funny, ok thinking, takes forever, can't cancel",
     },
     {
         "repo_id": "JonathanColetti/Qwen3.8-27B-Uncensored-GGUF",
         "filename": "Qwen3.8-27B-Uncensored-IQ2_M.gguf", #no other IQ
         "thinking": True,
-        "comment": "IQ2, 10.6GB, big, MTP, popular, ok thinking, not fast",
+        "comment": "IQ2, 10.6GB, big, MTP, popular, ok thinking, not fast, good full segment, thinks to limit",
     },
     {
         "repo_id": "bartowski/Altworld_Hemmingway-1-GGUF",

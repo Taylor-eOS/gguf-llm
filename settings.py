@@ -9,7 +9,7 @@ TOKENIZER_N_BATCH = 32
 MODEL_N_BATCH = 2048
 PRINT_PROCESSING_PROMPT = False
 PRINT_TOKEN_USAGE = True
-KEEP_THINKING_FLAG = "think"
+KEEP_THINKING_FLAG = "thoughts"
 PAUSE_FLAG = "pause"
 
 SYSTEM_INSTRUCTION = " [You are a local language model run from a script. Your style instruction is to omit formatting markup.] Request: "
@@ -28,7 +28,6 @@ REQUESTS = [
     'Describe what single image should accompany this sentence in a video, given the surrounding context. The image must depict exactly one historical moment, as if it were a single historical photograph; not a montage, not a split screen, not multiple juxtaposed scenes, even if the sentence itself touches on several ideas or themes. The image does not need to capture every aspect of the content, but only needs to serve as one plausible background visual for that moment in the narration. If the sentence spans multiple ideas, pick one single visually concrete moment to represent it and describe only that. Do not combine disjointed content that would not realistically have been in the same photograph. Exclusively describe one historical moment as it could have existed at one point in time. Choose simple, visually easy to understand scenes, that are still distinct enough to represent the particular era or concept in question. Output a description of the scene so that it can be used in an image generator prompt with no further comment. Do not mention the art style, image type, or camera framing; only describe the content itself. Briefly mention the desired evocative effect of the image, so that the image generator gets an indication what the intention is.',
     'Sum up in at most four words what this segment is conceptually about. Capture the core conceptual lesson or unique historical moment being presented. This is meant to be a small subchapter title for the segment. Only respond those four words or less.',
     'This segment is an attempt to express certain ideas, but it was written in a somewhat cumbersome way. Rewrite what it appears to convey into better prose, while making the output true to the intention and nuance of the input. This means not sanitizing the content into a more socially appropriate variant. Do largely apply the terms that the original used, while fixing sentence structure, order, and amount of sentences. Where helpful for comprehension, add explanatory content rather than shortening the explanation.',
-    'Write an analysis of what you think this history segment represents as a emotional-symbolic psychologism for the writer. Try to infer and describe the emotional state of the writer.',
     'Please repeat the last three words that you are seeing from the textbook content above. I need to test whether there is a technical problem where the input is silently truncated.',
     'Rewrite this book segment into cleaner grammar and sentence structure, while trying to maintain its nuance. Try to infer what it was trying to say and say that in a better way, without sanitizing it. Choose better words where that would improve understanding. Extend the presentation rather than shortening the content.',
     'Expand on the topic creatively with aspects that would be interesting to the user, considering his prompts so far.',
