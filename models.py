@@ -39,7 +39,7 @@ MODELS = [
         "repo_id": "LiquidAI/LFM2.5-230M-GGUF",
         "filename": "LFM2.5-230M-Q8_0.gguf",
         "thinking": False,
-        "comment": "Q8, 247MB, too small, coherent, stops, refuses most, incoherent",
+        "comment": "Q8, 247MB, too small, stops, refuses most, incoherent",
     },
     {
         "repo_id": "bartowski/ibm-granite_granite-4.1-8b-GGUF",
@@ -51,13 +51,7 @@ MODELS = [
         "repo_id": "DavidAU/Llama-3.2-8X3B-MOE-Dark-Champion-Instruct-uncensored-abliterated-18.4B-GGUF",
         "filename": "L3.2-8X3B-MOE-Dark-Champion-Inst-18.4B-uncen-ablit_D_AU-Q4_k_s.gguf",
         "thinking": False,
-        "comment": "Q4, 10.7GB, censored, ?",
-    },
-    {
-        "repo_id": "dphn/Dolphin3.0-Llama3.1-8B-GGUF",
-        "filename": "Dolphin3.0-Llama3.1-8B-Q6_K.gguf", #smaller ones might fit Pi
-        "thinking": False,
-        "comment": "Q6, 6.6GB, general, uncensored, not boring, in separate script",
+        "comment": "Q4, 10.7GB, big, censored, ?",
     },
     {
         "repo_id": "squ11z1/Mythos-nano",
@@ -115,13 +109,23 @@ MODELS = [
     },
     {
         "repo_id": "MaziyarPanahi/aya-expanse-8b-abliterated-GGUF",
-        "filename": "aya-expanse-8b-abliterated.Q5_K_M.gguf",
-        "comment": "Q5, 5.8GB",
+        "filename": "aya-expanse-8b-abliterated.Q5_K_M.gguf", #Q5_K_S 5.7GB is the smallest
+        "comment": "Q5, 5.8GB, obscure",
+    },
+    {
+        "repo_id": "mradermacher/aya-expanse-8b-abliterated-i1-GGUF",
+        "filename": "aya-expanse-8b-abliterated.i1-IQ4_XS.gguf",
+        "comment": "IQ4, 4.6GB",
     },
     {
         "repo_id": "MaziyarPanahi/mistral-small-3.1-24b-instruct-2503-hf-GGUF",
         "filename": "mistral-small-3.1-24b-instruct-2503-hf.Q3_K_M.gguf",
         "comment": "Q3, 11.5GB, big",
+    },
+    {
+        "repo_id": "MaziyarPanahi/Mistral-Small-Instruct-2409-GGUF",
+        "filename": "Mistral-Small-Instruct-2409.IQ4_XS.gguf", #IQ3_XS 9.2GB
+        "comment": "IQ4, 11.9GB, 22B, maybe too big",
     },
     {
         "repo_id": "MaziyarPanahi/gpt-oss-20b-Derestricted-GGUF",
@@ -130,15 +134,10 @@ MODELS = [
         "comment": "Q3, 12.9GB, maybe too big, MoE",
     },
     {
-        "repo_id": "MaziyarPanahi/Mistral-Small-Instruct-2409-GGUF",
-        "filename": "Mistral-Small-Instruct-2409.IQ4_XS.gguf",
-        "comment": "IQ4, 11.9GB, 22B, maybe too big",
-    },
-    {
         "repo_id": "MaziyarPanahi/phi-4-GGUF",
         "filename": "phi-4.Q5_K_M.gguf", #Q4_K_M 9GB if Q5 is too slow
         "thinking": False,
-        "comment": "Q5, 10.6GB, 14B, censored, a tad boring, swaps, slow but useful, didn't refuse all",
+        "comment": "Q5, 10.6GB, 14B, big, censored, a tad boring, swaps, slow but useful, didn't refuse all",
     },
     {
         "repo_id": "yuxinlu1/gemma-4-12B-it-Claude-4.6-4.8-Opus-GGUF",
@@ -172,7 +171,13 @@ MODELS = [
         "repo_id": "MaziyarPanahi/Phi-3.5-mini-instruct-GGUF",
         "filename": "Phi-3.5-mini-instruct.IQ4_XS.gguf",
         "thinking": False,
-        "comment": "IQ4, 2GB, small, seems to work, censored, keeps sending lineshifts, didn't refuse",
+        "comment": "IQ4, 2GB, 3.8B, small, seems to work, censored, spams lineshifts, didn't refuse",
+    },
+    {
+        "repo_id": "dphn/Dolphin3.0-Llama3.1-8B-GGUF",
+        "filename": "Dolphin3.0-Llama3.1-8B-Q6_K.gguf", #smaller ones might fit Pi
+        "thinking": False,
+        "comment": "Q6, 6.6GB, general, uncensored, not boring, in separate script",
     },
     {
         "repo_id": "second-state/dolphin-2.6-mistral-7B-GGUF",
@@ -246,7 +251,7 @@ MODELS = [
         "repo_id": "HauhauCS/Qwen3.8-27B-Uncensored-HauhauCS-Aggressive-MTP-GGUF",
         "filename": "Qwen3.8-27B-Uncensored-HauhauCS-Aggressive-IQ2_M.gguf", #IQ3_XS might fit
         "thinking": True,
-        "comment": "IQ2, 10.3GB, slow",
+        "comment": "IQ2, 10.3GB, big, slow",
     },
     {
         "repo_id": "empero-ai/Qwen3.8-9B-Distill-GGUF",
@@ -308,13 +313,13 @@ MODELS = [
         "repo_id": "OBLITERATUS/Ornith-1.5-9B-OBLITERATED",
         "filename": "Ornith-1.5-9B-OBLITERATED-IQ4_XS.gguf",
         "thinking": True,
-        "comment": "IQ4, 5.4GB, original, much thinking, not censored, good",
+        "comment": "IQ4, 5.4GB, original, much thinking, not censored, good, went insane",
     },
     {
         "repo_id": "Jackrong/Qwopus3.5-9B-Coder-MTP-GGUF",
         "filename": "Qwopus3.5-9B-Coder-MTP-Q4_K_M.gguf", #Q3 4.7GB, Q5 6.6
         "thinking": True,
-        "comment": "Q4, 5.8GB, multi-token prediction, works, thinking loops, refuses",
+        "comment": "Q4, 5.8GB, works, thinking loops, refuses",
     },
     {
         "repo_id": "yuxinlu1/gemma-4-12B-agentic-fable5-composer2.5-v2-3.5x-tau2-GGUF",
@@ -350,6 +355,52 @@ MODELS = [
         "filename": "JiRackUltra_14b_Q3_K_M.gguf", #Q4_K_M (9GB)
         "thinking": True,
         "comment": "Q3, 7.3GB, for CPU, limited thinking",
+    },
+    {
+        "repo_id": "ukisai/Swift-1.5-Qwen3.8-27B-GSQ-RCO-GGUF",
+        "filename": "Swift-1.5-Qwen3.8-27B-GSQ-RCO-IQ3_XXS-mtp.gguf", #IQ3_S-mtp 12.1GB
+        "thinking": True,
+        "comment": "IQ3, 10.4GB, big, MTP, slow, swaps but seems to work, funny, ok thinking",
+    },
+    {
+        "repo_id": "JonathanColetti/Qwen3.8-27B-Uncensored-GGUF",
+        "filename": "Qwen3.8-27B-Uncensored-IQ2_M.gguf", #no other IQ
+        "thinking": True,
+        "comment": "IQ2, 10.6GB, big, MTP, popular, ok thinking, not fast",
+    },
+    {
+        "repo_id": "bartowski/Altworld_Hemmingway-1-GGUF",
+        "filename": "Altworld_Hemmingway-1-IQ2_M.gguf", #IQ3_XXS 12.3GB
+        "thinking": True,
+        "comment": "IQ2, 10.5GB, big, MTP, faster, overthinking, slow",
+    },
+    {
+        "repo_id": "unsloth/Qwen3-30B-A3B-Instruct-2507-GGUF",
+        "filename": "Qwen3-30B-A3B-Instruct-2507-UD-TQ1_0.gguf", #IQ2_M 10.8GB
+        "thinking": False,
+        "comment": "TQ1, 8GB, fast, can da, good, loops",
+    },
+    {
+        "repo_id": "CMSManhattan/JiRackDeltaNet_27b",
+        "filename": "JiRackDeltaNet_27b.Q2_K.gguf", #only one small enough
+        "comment": "Q2, 10.9GB, big",
+    },
+    {
+        "repo_id": "bytkim/Qwen3.6-27B-MTP-pi-tune-GGUF",
+        "filename": "Qwen3.6-27B-MTP-pi-tune-Q2_K.gguf", #Q3_K_S 12.3GB
+        "thinking": False,
+        "comment": "Q2, 10.9GB, big",
+    },
+    {
+        "repo_id": "unsloth/Qwen3.8-27B-GGUF",
+        "filename": "Qwen3.8-27B-UD-IQ3_S.gguf", #IQ3_XXS 10.9GB, IQ2_S 8.4GB
+        "comment": "IQ3, 12GB, big",
+    },
+    {
+        "repo_id": "DavidAU/Qwen3.8-27B-TURBO-Fable-Cold-Fusion-735-882-Heretic-Uncensored-NEO-CODER-MAX-MTP-GGUF",
+        "filename": "Qwen3.8-27B-TurboFCFusion-735-882-Here-Uncen-NEO-CODER-MAX-MTP-IQ2_M.gguf", #seems like only fit
+        "thinking": True,
+        "comment": "IQ2, 12.1GB, big, claims best, slow, limited thinking, loops",
     },
     {
         "repo_id": "",

@@ -6,6 +6,7 @@ import settings
 input_file = "input.txt"
 output_file = "output.txt"
 PREV_OUTPUT_CONTEXT_CHARS = 400
+PRINT_GENERATION_SPEED = False
 
 def run_completion(llm, prompt):
     if settings.PRINT_PROCESSING_PROMPT:
@@ -19,10 +20,11 @@ def run_completion(llm, prompt):
             print(f"Warning: prompt_tokens + MAX_TOKENS exceeds n_ctx by {total - n_ctx} tokens, completion may be cut off.")
     start_time = time.perf_counter()
     result = llm.create_chat_completion(messages=[{"role": "user", "content": prompt}], max_tokens=settings.MAX_TOKENS, temperature=0.7, top_p=0.9,)
-    elapsed = time.perf_counter() - start_time
-    completion_tokens = result["usage"]["completion_tokens"]
-    tokens_per_second = completion_tokens / elapsed if elapsed > 0 else 0.0
-    print(f"Generated {completion_tokens} tokens in {elapsed:.2f}s ({tokens_per_second:.2f} tok/s)")
+    if PRINT_GENERATION_SPEED: 
+        elapsed = time.perf_counter() - start_time
+        completion_tokens = result["usage"]["completion_tokens"]
+        tokens_per_second = completion_tokens / elapsed if elapsed > 0 else 0.0
+        print(f"Generated {completion_tokens} tokens in {elapsed:.2f}s ({tokens_per_second:.2f} tok/s)")
     content = result["choices"][0]["message"]["content"].strip()
     if not Path(settings.KEEP_THINKING_FLAG).is_file():
         content = strip_think(content)

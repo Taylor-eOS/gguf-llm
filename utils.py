@@ -95,7 +95,7 @@ def print_model_list(models_list):
         think_tag = f"[{thinking_symb}]" if think_val is True else (f"[{neither_symb}]" if think_val is None else f"[{nonthinking_symb}]")
         comment = f"{DIM}{m['comment']}{RESET}" if m.get("comment") else "  "
         dup_marker = "*" if repo_id_counts[m["repo_id"]] > 1 else ""
-        print(f"{i + 1:2d} {tag}{think_tag} {m['repo_id']}{dup_marker}")
+        print(f"{i + 1:2d} {tag}{think_tag} {m['repo_id'][:88]}{dup_marker}")
         if comment != "":
             print(f"          {comment}")
 

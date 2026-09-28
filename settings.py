@@ -12,7 +12,7 @@ PRINT_TOKEN_USAGE = True
 KEEP_THINKING_FLAG = "think"
 PAUSE_FLAG = "pause"
 
-SYSTEM_INSTRUCTION = " [You are a local language model run from a script. Your style instruction is to omit formatting markup.]"
+SYSTEM_INSTRUCTION = " [You are a local language model run from a script. Your style instruction is to omit formatting markup.] Request: "
 BASE = '[Role: You are a sequential text processing tool that is run locally from a script. Output only the requested text itself without other comments. Omit introductory phrases. Your style instruction is to omit formatting markup and write linear sentences without em dashes.]'
 TASK_LINE = "The following is the instruction"
 REQUESTS = [
@@ -32,6 +32,7 @@ REQUESTS = [
     'Please repeat the last three words that you are seeing from the textbook content above. I need to test whether there is a technical problem where the input is silently truncated.',
     'Rewrite this book segment into cleaner grammar and sentence structure, while trying to maintain its nuance. Try to infer what it was trying to say and say that in a better way, without sanitizing it. Choose better words where that would improve understanding. Extend the presentation rather than shortening the content.',
     'Expand on the topic creatively with aspects that would be interesting to the user, considering his prompts so far.',
+    'This segment for a book roughly expresses the ideas it should, but the writing is imperfect. Can you rewrite it to be more coherent and formal, add what would round it out, and optimize the wording and presentation. Do not shorten it, but extend it to include a better explanation of what the provided content implies. I will later adit this, so you can think of a few additions that I can remove agasint if they do not work out. Do not make the writing overly drawn out. Try to maintain the original uniqueness in terminology and stay true to that presentation rather than sanitizing it.',
 ]
 SUMMARY_INSTRUCTION = "Now generate the context from this conversation for the next prompt. Write key facts from the exchange between a user and assistant as compressed context. Good grammar is not needed. Write this as one continuous unformatted text without segmentation. Don't analyze or comment. The purpose is to provicde a truncation of the previous conversation that includes its factual data. Keep mor edetail from the later parts and truncate the earlier parts of the conversation more. Keep most of what the user said while truncating assistant answers more. Grow the length of the summary in line with the content.\n\n"
 CODE_TASK = "Instruction: This is a generated description about a function from the source code from the video game Rome Total War. Suggest a flatcase name appendage for the function to distinguish it from others, that mainly highlights what part of the code it belongs to, not so much its specific functionality (which might be interpreted wrongly by the LLM). Output just this name in one combined string."
