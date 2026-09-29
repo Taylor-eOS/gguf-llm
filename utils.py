@@ -3,18 +3,16 @@ import sys
 import time
 import json
 from datetime import datetime
+os.environ["HF_HUB_OFFLINE"] = "1"
 from huggingface_hub import hf_hub_download
 from llama_cpp import Llama
 from pathlib import Path
-import settings
 import models
+import settings
 
-WRITE_LOG = False
-PERFORMANCE_METRICS = False
 MODEL_LOG_PATH = Path(__file__).resolve().parent / "llm_use.log"
 INSTRUCTION_LOG_PATH = Path(__file__).resolve().parent / "instruction_use.log"
 LAST_INSTRUCTION_PATH = Path(__file__).resolve().parent / "last_instruction.json"
-os.environ["HF_HUB_OFFLINE"] = "1"
 
 def is_cached(model):
     repo_slug = "models--" + model["repo_id"].replace("/", "--")
@@ -51,7 +49,7 @@ def construct_llama(path, llama_kwargs, redirect_logs):
         log_file.close()
     return llm
 
-def load_model(model, c_ntx=None, redirect_logs=WRITE_LOG):
+def load_model(model, c_ntx=None, redirect_logs=settings.WRITE_LOG):
     if c_ntx is None:
         c_ntx = settings.N_CTX
     log_model_use(model)
@@ -64,11 +62,11 @@ def load_model(model, c_ntx=None, redirect_logs=WRITE_LOG):
         "n_ubatch": batch_size,
         "use_mmap": True,
         "use_mlock": False,
-        "verbose": PERFORMANCE_METRICS,
+        "verbose": settings.PERFORMANCE_METRICS,
     }
     return construct_llama(path, llama_kwargs, redirect_logs)
 
-def load_tokenizer(model, redirect_logs=WRITE_LOG):
+def load_tokenizer(model, redirect_logs=settings.WRITE_LOG):
     path = hf_hub_download(repo_id=model["repo_id"], filename=model["filename"])
     llama_kwargs = {
         "n_ctx": 32,
@@ -77,7 +75,7 @@ def load_tokenizer(model, redirect_logs=WRITE_LOG):
         "use_mmap": True,
         "use_mlock": False,
         "vocab_only": True,
-        "verbose": PERFORMANCE_METRICS,
+        "verbose": settings.PERFORMANCE_METRICS,
     }
     return construct_llama(path, llama_kwargs, redirect_logs)
 

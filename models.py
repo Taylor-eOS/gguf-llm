@@ -92,7 +92,7 @@ MODELS = [
     {
         "repo_id": "bartowski/SmolLM2-1.7B-Instruct-GGUF",
         "filename": "SmolLM2-1.7B-Instruct-Q6_K_L.gguf",
-        "comment": "Q6 1.4GB, in library, good small, didn't refuse",
+        "comment": "Q6 1.4GB, in library, good small, didn't refuse, limited creativity",
         "thinking": False,
     },
     {
