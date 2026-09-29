@@ -1,6 +1,6 @@
 import time
 from pathlib import Path
-from utils import is_cached, load_model, load_tokenizer, log_instruction_use, pick_model, strip_think, wait_while_stopped
+from utils import is_cached, load_model, load_tokenizer, log_instruction_use, pick_model, strip_think, wait_while_stopped, load_last_instruction, save_last_instruction
 import settings
 
 input_file = "input.txt"
@@ -153,22 +153,33 @@ def process_lines(llm, lines, outfile, use_prev_output):
 
 def pick_request():
     manual_option = 1
+    last_option = 2
+    last_instruction = load_last_instruction()
+    last_sample = " ".join(last_instruction.split()[:12]) if last_instruction else "none saved"
     print(f"{manual_option}: Enter instruction manually.")
-    for i, request in enumerate(settings.REQUESTS, 2):
-        sample = " ".join(request.split()[:12])
+    print(f"{last_option}: Last used instruction: {last_sample[:70]}")
+    for i, request in enumerate(settings.REQUESTS, 3):
+        sample = " ".join(request.split()[:13])
         print(f"{i}: {sample}")
-    choice = input(f"Pick an instruction [1-{len(settings.REQUESTS) + 1}]: ").strip()
+    choice = input(f"Pick an instruction [1-{len(settings.REQUESTS) + 2}]: ").strip()
     try:
         index = int(choice) - 1
-        if index < 0 or index > len(settings.REQUESTS):
+        if index < 0 or index > len(settings.REQUESTS) + 1:
             raise ValueError
     except ValueError:
-        index = 1
+        index = 2
     if index == 0:
         custom = input("Enter instruction: ").strip()
         settings.REQUEST = custom if custom else settings.REQUESTS[0]
+    elif index == 1:
+        if last_instruction is None:
+            print("No last used instruction saved, using the first predefined one.")
+            settings.REQUEST = settings.REQUESTS[0]
+        else:
+            settings.REQUEST = last_instruction
     else:
-        settings.REQUEST = settings.REQUESTS[index - 1]
+        settings.REQUEST = settings.REQUESTS[index - 2]
+    save_last_instruction(settings.REQUEST)
     log_instruction_use(settings.REQUEST)
 
 def measure_required_ctx(model, segment_mode, segments, lines):

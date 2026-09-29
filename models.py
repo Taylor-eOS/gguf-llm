@@ -382,7 +382,13 @@ MODELS = [
         "repo_id": "unsloth/Qwen3-30B-A3B-Instruct-2507-GGUF",
         "filename": "Qwen3-30B-A3B-Instruct-2507-UD-TQ1_0.gguf", #IQ2_M 10.8GB
         "thinking": False,
-        "comment": "TQ1, 8GB, fast, can da, good, loops",
+        "comment": "TQ1, 8GB, fast, can da, good, loops, bland",
+    },
+    {
+        "repo_id": "unsloth/Qwen3-Coder-30B-A3B-Instruct-GGUF",
+        "filename": "Qwen3-Coder-30B-A3B-Instruct-UD-IQ2_M.gguf", #IQ3_XXS 12.8GB
+        "thinking": False,
+        "comment": "IQ2, 10.8GB, feels fast, good",
     },
     {
         "repo_id": "CMSManhattan/JiRackDeltaNet_27b",

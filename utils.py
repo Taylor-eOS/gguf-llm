@@ -13,6 +13,7 @@ PERFORMANCE_METRICS = False
 MODEL_LOG_PATH = Path(__file__).resolve().parent / "llm_use.log"
 INSTRUCTION_LOG_PATH = Path(__file__).resolve().parent / "instruction_use.log"
 os.environ["HF_HUB_OFFLINE"] = "1"
+LAST_INSTRUCTION_PATH = Path(__file__).resolve().parent / "last_instruction.txt"
 
 def is_cached(model):
     repo_slug = "models--" + model["repo_id"].replace("/", "--")
@@ -180,3 +181,11 @@ def wait_while_stopped():
     while Path(settings.PAUSE_FLAG).is_file():
         time.sleep(10)
     print("Stop file removal detected, resuming.")
+
+def load_last_instruction():
+    if not LAST_INSTRUCTION_PATH.is_file():
+        return None
+    return LAST_INSTRUCTION_PATH.read_text(encoding="utf-8").strip() or None
+
+def save_last_instruction(instruction):
+    LAST_INSTRUCTION_PATH.write_text(instruction, encoding="utf-8")
