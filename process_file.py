@@ -155,11 +155,11 @@ def pick_request():
     manual_option = 1
     last_option = 2
     last_instruction = load_last_instruction()
-    last_sample = " ".join(last_instruction.split()[:12]) if last_instruction else "none saved"
+    last_sample = " ".join(last_instruction.split())[:65] if last_instruction else "none saved"
     print(f"{manual_option}: Enter instruction manually.")
-    print(f"{last_option}: Last used instruction: {last_sample[:70]}")
+    print(f"{last_option}: Last used instruction: {last_sample}")
     for i, request in enumerate(settings.REQUESTS, 3):
-        sample = " ".join(request.split()[:13])
+        sample = " ".join(request.split())[:92]
         print(f"{i}: {sample}")
     choice = input(f"Pick an instruction [1-{len(settings.REQUESTS) + 2}]: ").strip()
     try:

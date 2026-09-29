@@ -1,6 +1,7 @@
 import os
 import sys
 import time
+import json
 from datetime import datetime
 from huggingface_hub import hf_hub_download
 from llama_cpp import Llama
@@ -12,8 +13,8 @@ WRITE_LOG = False
 PERFORMANCE_METRICS = False
 MODEL_LOG_PATH = Path(__file__).resolve().parent / "llm_use.log"
 INSTRUCTION_LOG_PATH = Path(__file__).resolve().parent / "instruction_use.log"
+LAST_INSTRUCTION_PATH = Path(__file__).resolve().parent / "last_instruction.json"
 os.environ["HF_HUB_OFFLINE"] = "1"
-LAST_INSTRUCTION_PATH = Path(__file__).resolve().parent / "last_instruction.txt"
 
 def is_cached(model):
     repo_slug = "models--" + model["repo_id"].replace("/", "--")
@@ -185,7 +186,18 @@ def wait_while_stopped():
 def load_last_instruction():
     if not LAST_INSTRUCTION_PATH.is_file():
         return None
-    return LAST_INSTRUCTION_PATH.read_text(encoding="utf-8").strip() or None
+    try:
+        data = json.loads(LAST_INSTRUCTION_PATH.read_text(encoding="utf-8"))
+    except (OSError, ValueError):
+        return None
+    if not isinstance(data, dict):
+        return None
+    instruction = data.get("instruction")
+    if not isinstance(instruction, str):
+        return None
+    return instruction.strip() or None
 
 def save_last_instruction(instruction):
-    LAST_INSTRUCTION_PATH.write_text(instruction, encoding="utf-8")
+    temp_path = LAST_INSTRUCTION_PATH.with_suffix(".tmp")
+    temp_path.write_text(json.dumps({"instruction": instruction}, ensure_ascii=False, indent=2), encoding="utf-8")
+    temp_path.replace(LAST_INSTRUCTION_PATH)
