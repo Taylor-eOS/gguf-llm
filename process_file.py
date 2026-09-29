@@ -3,11 +3,6 @@ from pathlib import Path
 from utils import is_cached, load_model, load_tokenizer, log_instruction_use, pick_model, strip_think, wait_while_stopped, load_last_instruction, save_last_instruction
 import settings
 
-input_file = "input.txt"
-output_file = "output.txt"
-PREV_OUTPUT_CONTEXT_CHARS = 400
-PRINT_GENERATION_SPEED = False
-
 def run_completion(llm, prompt):
     if settings.PRINT_PROCESSING_PROMPT:
         print(prompt)
@@ -20,7 +15,7 @@ def run_completion(llm, prompt):
     consumed = result["usage"]["prompt_tokens"]
     if consumed < raw_tokens:
         print(f"Warning: the model consumed {consumed} prompt tokens but the raw prompt has {raw_tokens}. The input was truncated.")
-    if PRINT_GENERATION_SPEED:
+    if settings.PRINT_GENERATION_SPEED:
         elapsed = time.perf_counter() - start_time
         completion_tokens = result["usage"]["completion_tokens"]
         tokens_per_second = completion_tokens / elapsed if elapsed > 0 else 0.0
@@ -49,13 +44,6 @@ def write_output(outfile, output):
         outfile.write(output + "\n")
         outfile.flush()
 
-def read_lines(infile):
-    lines = []
-    for raw_line in infile:
-        line = raw_line.rstrip("\n")
-        lines.append(line)
-    return lines
-
 def read_segments(infile):
     segments = []
     paragraph_lines = []
@@ -70,6 +58,13 @@ def read_segments(infile):
             paragraph_lines.append(line)
     if paragraph_lines:
         segments.append(paragraph_lines)
+    return segments
+
+def read_line_segments(infile):
+    segments = []
+    for raw_line in infile:
+        line = raw_line.rstrip("\n")
+        segments.append(None if line.strip() == "" else [line])
     return segments
 
 def segment_token_count(llm, paragraph_lines):
@@ -92,14 +87,6 @@ def longest_segment_tokens(llm, segments):
             longest = tokens
     return longest
 
-def longest_line_tokens(llm, lines):
-    longest = 0
-    for line in lines:
-        tokens = len(llm.tokenize(line.encode("utf-8"), add_bos=False))
-        if tokens > longest:
-            longest = tokens
-    return longest
-
 def compute_required_ctx(llm, longest_input_tokens):
     overhead = prompt_overhead_tokens(llm)
     required = overhead + settings.RESERVE_TOKENS + longest_input_tokens
@@ -110,7 +97,7 @@ def compute_required_ctx(llm, longest_input_tokens):
 def build_prev_output_context(prev_output):
     if prev_output is None:
         return None
-    truncated = prev_output[:PREV_OUTPUT_CONTEXT_CHARS]
+    truncated = prev_output[:settings.PREV_OUTPUT_CONTEXT_CHARS]
     if not truncated:
         return None
     return f"Output from previous request (as context): \"{truncated}\""
@@ -137,19 +124,6 @@ def process_segments(llm, segments, outfile, budget, use_prev_output):
         output = process_line(llm, "\n".join(segment), context)
         write_output(outfile, output)
         last_output = output
-
-def process_lines(llm, lines, outfile, use_prev_output):
-    last_output = None
-    for line in lines:
-        if line.strip() == "":
-            outfile.write("\n")
-            outfile.flush()
-        else:
-            wait_while_stopped()
-            context = build_prev_output_context(last_output) if use_prev_output else None
-            output = process_line(llm, line, context)
-            write_output(outfile, output)
-            last_output = output
 
 def pick_request():
     manual_option = 1
@@ -182,12 +156,9 @@ def pick_request():
     save_last_instruction(settings.REQUEST)
     log_instruction_use(settings.REQUEST)
 
-def measure_required_ctx(model, segment_mode, segments, lines):
+def measure_required_ctx(model, segments):
     tokenizer_llm = load_tokenizer(model)
-    if segment_mode:
-        longest_tokens = longest_segment_tokens(tokenizer_llm, segments)
-    else:
-        longest_tokens = longest_line_tokens(tokenizer_llm, lines)
+    longest_tokens = longest_segment_tokens(tokenizer_llm, segments)
     required_ctx = compute_required_ctx(tokenizer_llm, longest_tokens)
     del tokenizer_llm
     return required_ctx
@@ -195,27 +166,16 @@ def measure_required_ctx(model, segment_mode, segments, lines):
 def main():
     model = pick_model()
     pick_request()
-    _segment_mode = input("Use segment mode? [Y/n]: ").strip().lower()
-    _segment_mode = _segment_mode if _segment_mode in ("y", "yes", "") else "n"
-    _segment_mode = _segment_mode in ("y", "yes", "")
-    _use_prev_output = input("Include previous output as context? [y/N]: ").strip().lower()
-    use_prev_output = _use_prev_output in ("y", "yes")
-    with open(input_file, "r", encoding="utf-8") as infile:
-        if _segment_mode:
-            segments = read_segments(infile)
-            lines = None
-        else:
-            segments = None
-            lines = read_lines(infile)
-    required_ctx = measure_required_ctx(model, _segment_mode, segments, lines)
+    segment_mode = input("Use segment mode? [Y/n]: ").strip().lower() in ("y", "yes", "")
+    use_prev_output = input("Include previous output as context? [y/N]: ").strip().lower() in ("y", "yes")
+    with open(settings.INPUT_FILE, "r", encoding="utf-8") as infile:
+        segments = read_segments(infile) if segment_mode else read_line_segments(infile)
+    required_ctx = measure_required_ctx(model, segments)
     print(f"Using context window of {required_ctx} tokens.")
     llm = load_model(model, c_ntx=required_ctx)
-    with open(output_file, "w", encoding="utf-8") as outfile:
-        if _segment_mode:
-            budget = compute_budget(llm, required_ctx)
-            process_segments(llm, segments, outfile, budget, use_prev_output)
-        else:
-            process_lines(llm, lines, outfile, use_prev_output)
+    budget = compute_budget(llm, required_ctx)
+    with open(settings.OUTPUT_FILE, "w", encoding="utf-8") as outfile:
+        process_segments(llm, segments, outfile, budget, use_prev_output)
 
 if __name__ == "__main__":
     main()

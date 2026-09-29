@@ -2,8 +2,6 @@ import readline
 from utils import is_cached, load_model, pick_model
 import settings
 
-REPORT_RECEIVED = False
-
 def stream_response(llm, prompt):
     print()
     stream = llm.create_chat_completion(messages=[{"role": "user", "content": prompt}], stream=True)
@@ -24,7 +22,7 @@ def run_chat_loop(llm):
             break
         if not prompt:
             continue
-        if REPORT_RECEIVED:
+        if settings.RUN_REPORT_RECEIVED:
             tokens = len(llm.tokenize(prompt.encode("utf-8"), add_bos=False))
             print(f"Received {len(prompt)} characters, {tokens} tokens, ending with: \"{prompt[-40:]}\"")
         stream_response(llm, settings.SYSTEM_INSTRUCTION + prompt)

@@ -1,3 +1,5 @@
+INPUT_FILE = "input.txt"
+OUTPUT_FILE = "output.txt"
 N_THREADS = 6
 N_CTX = 8 * 1024 #Total context window given to the model, models total memory, used in run.py
 MAX_TOKENS = 4 * 1024 #Cap on how many tokens the model is allowed to generate per call, used in process_file.py, caps finishing thinking
@@ -7,8 +9,11 @@ N_CTX_MIN = 1024 #Floor in dynamic token allocation
 N_CTX_MAX = 12 * 1024 #Upper limit on dynamic token allocation, used in process_file.py
 TOKENIZER_N_BATCH = 32
 MODEL_N_BATCH = 2048
+PREV_OUTPUT_CONTEXT_CHARS = 400
+PRINT_GENERATION_SPEED = False
 PRINT_PROCESSING_PROMPT = False
 PRINT_TOKEN_USAGE = True
+RUN_REPORT_RECEIVED = False
 KEEP_THINKING_FLAG = "thought"
 PAUSE_FLAG = "pause"
 

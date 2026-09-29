@@ -14,21 +14,21 @@ MODELS = [
     {
         "repo_id": "Qwen/Qwen2.5-Coder-7B-Instruct-GGUF",
         "filename": "qwen2.5-coder-7b-instruct-q5_k_m.gguf",
-        "comment": "Q5 5.4GB, refuses, useful, short responses, funny, history",
+        "comment": "Q5 5.4GB, useful, short responses, funny, history",
         #"filename": "qwen2.5-coder-7b-instruct-q4_k_m.gguf",
-        #"comment": "Q4 4.7GB, refuses, useful, short responses",
+        #"comment": "Q4 4.7GB, useful, short responses",
         "thinking": False,
     },
     {
         "repo_id": "Jackrong/Qwopus3.5-9B-Coder-GGUF",
         "filename": "Qwopus3.5-9B-coder-Exp-Q4_K_M.gguf",
-        "comment": "Q4 5.2GB, class leader, censored, good responses, too much thinking, few dl",
+        "comment": "Q4 5.2GB, class leader, good responses, too much thinking, few dl",
         "thinking": True,
     },
     {
         "repo_id": "LiquidAI/LFM2.5-8B-A1B-GGUF",
         "filename": "LFM2.5-8B-A1B-Q4_K_M.gguf",
-        "comment": "Q4 5.2GB, MoE, refuses, ok answers",
+        "comment": "Q4 5.2GB, MoE, ok answers",
         "thinking": True,
     },
     {
@@ -46,21 +46,21 @@ MODELS = [
     {
         "repo_id": "bartowski/ibm-granite_granite-4.1-8b-GGUF",
         #"filename": "ibm-granite_granite-4.1-8b-IQ4_NL.gguf",
-        #"comment": "IQ4 5.2GB, concise, good translation, censored",
+        #"comment": "IQ4 5.2GB, concise, good translation",
         "filename": "ibm-granite_granite-4.1-8b-Q4_K_M.gguf",
-        "comment": "Q4 5.5GB, in library, concise, good translation, censored",
+        "comment": "Q4 5.5GB, in library, concise, good translation",
         "thinking": False,
     },
     {
         "repo_id": "DavidAU/Llama-3.2-8X3B-MOE-Dark-Champion-Instruct-uncensored-abliterated-18.4B-GGUF",
         "filename": "L3.2-8X3B-MOE-Dark-Champion-Inst-18.4B-uncen-ablit_D_AU-Q4_k_s.gguf",
-        "comment": "Q4 10.7GB, big, censored, ?",
+        "comment": "Q4 10.7GB, big, ?",
         "thinking": False,
     },
     {
         "repo_id": "squ11z1/Mythos-nano",
         "filename": "mythos-nano-Q4_K_M.gguf",
-        "comment": "Q4 1.9GB, 3B, small, censored",
+        "comment": "Q4 1.9GB, 3B, small",
         "thinking": True,
     },
     {
@@ -104,7 +104,7 @@ MODELS = [
     {
         "repo_id": "janhq/Jan-v3.5-4B-gguf",
         "filename": "Jan-v3.5-4B-Q5_K_M.gguf", #Q4 loops
-        "comment": "Q5 3.2GB, personality, kind of fun, refuses",
+        "comment": "Q5 3.2GB, personality, kind of fun",
         "thinking": False,
     },
     {
@@ -138,7 +138,7 @@ MODELS = [
     {
         "repo_id": "MaziyarPanahi/phi-4-GGUF",
         #"filename": "phi-4.Q5_K_M.gguf",
-        #"comment": "Q5 10.6GB, 14B, big, censored, a tad boring, swaps, slow but useful, didn't refuse all",
+        #"comment": "Q5 10.6GB, 14B, big, a tad boring, swaps, slow but useful, didn't refuse all",
         "filename": "phi-4.Q4_K_M.gguf",
         "comment": "Q4 9GB, 14B, a tad boring, didn't refuse all",
         "thinking": False,
@@ -320,9 +320,9 @@ MODELS = [
     {
         "repo_id": "mradermacher/Ornith-1.5-9B-uncensored-GGUF",
         #"filename": "Ornith-1.5-9B-uncensored.IQ4_XS.gguf",
-        #"comment": "IQ4 5.2GB, fine summaries, gets done, censored",
+        #"comment": "IQ4 5.2GB, fine summaries, gets done",
         "filename": "Ornith-1.5-9B-uncensored.Q4_K_M.gguf",
-        "comment": "Q4 5.6GB, fine summaries, gets done, censored",
+        "comment": "Q4 5.6GB, fine summaries, gets done",
         "thinking": True,
     },
     {
@@ -346,20 +346,20 @@ MODELS = [
     {
         "repo_id": "Jackrong/Qwopus3.5-9B-Coder-MTP-GGUF",
         "filename": "Qwopus3.5-9B-Coder-MTP-Q4_K_M.gguf", #Q3 4.7GB, Q5 6.6
-        "comment": "Q4 5.8GB, works, thinking loops, refuses",
+        "comment": "Q4 5.8GB, works, thinking loops",
         "thinking": True,
     },
     {
         "repo_id": "yuxinlu1/gemma-4-12B-agentic-fable5-composer2.5-v2-3.5x-tau2-GGUF",
         "filename": "gemma4-v2-Q4_K_M.gguf", #Q3_K_M 6.1GB
         "comment": "Q4 7.4GB",
-        #"thinking": ,
+        "thinking": True,
     },
     {
         "repo_id": "AnkitAI/Parable-Qwen3-8B-Claude-Fable-5-GGUF",
         "filename": "Parable-Qwen3-8B-Claude-Fable-5-GGUF-Q4_K_M.gguf",
         "comment": "Q4 5GB",
-        #"thinking": ,
+        "thinking": True,
     },
     {
         "repo_id": "Jackrong/Qwen3.5-9B-DeepSeek-V4-Flash-GGUF",
@@ -376,8 +376,8 @@ MODELS = [
     {
         "repo_id": "bartowski/DeepSeek-Coder-V2-Lite-Instruct-GGUF",
         "filename": "DeepSeek-Coder-V2-Lite-Instruct-Q4_K_M.gguf",
-        "comment": "Q4 10.4GB, big",
-        #"thinking": ,
+        "comment": "Q4 10.4GB, big, says less thinking",
+        "thinking": True,
     },
     {
         "repo_id": "CMSManhattan/JiRackUltra_14b",
@@ -427,7 +427,7 @@ MODELS = [
         "repo_id": "CMSManhattan/JiRackDeltaNet_27b",
         "filename": "JiRackDeltaNet_27b.Q2_K.gguf", #only one small enough
         "comment": "Q2 10.9GB, big",
-        #"thinking": ,
+        "thinking": True,
     },
     {
         "repo_id": "bytkim/Qwen3.6-27B-MTP-pi-tune-GGUF",
