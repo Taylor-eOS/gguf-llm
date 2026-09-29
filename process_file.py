@@ -100,7 +100,7 @@ def build_prev_output_context(prev_output):
     truncated = prev_output[:settings.PREV_OUTPUT_CONTEXT_CHARS]
     if not truncated:
         return None
-    return f"Output from previous request (as context): \"{truncated}\""
+    return f"Output from previous request as context: \"{truncated}\""
 
 def abort_oversized_segment(segment, tokens, budget):
     preview = " ".join(" ".join(segment).split()[:10])
@@ -126,33 +126,31 @@ def process_segments(llm, segments, outfile, budget, use_prev_output):
         last_output = output
 
 def pick_request():
-    manual_option = 1
-    last_option = 2
     last_instruction = load_last_instruction()
     last_sample = " ".join(last_instruction.split())[:65] if last_instruction else "none saved"
-    print(f"{manual_option}: Enter instruction manually.")
-    print(f"{last_option}: Last used instruction: {last_sample}")
-    for i, request in enumerate(settings.REQUESTS, 3):
+    print("M: Enter instruction manually.")
+    print(f"L: Last used instruction: {last_sample}")
+    for i, request in enumerate(settings.REQUESTS, 1):
         sample = " ".join(request.split())[:92]
         print(f"{i}: {sample}")
-    choice = input(f"Pick an instruction [1-{len(settings.REQUESTS) + 2}]: ").strip()
-    try:
-        index = int(choice) - 1
-        if index < 0 or index > len(settings.REQUESTS) + 1:
-            raise ValueError
-    except ValueError:
-        index = 2
-    if index == 0:
+    choice = input(f"Pick an instruction [1-{len(settings.REQUESTS)}, M, L]: ").strip().lower()
+    if choice == "m":
         custom = input("Enter instruction: ").strip()
         settings.REQUEST = custom if custom else settings.REQUESTS[0]
-    elif index == 1:
+    elif choice == "l":
         if last_instruction is None:
             print("No last used instruction saved, using the first predefined one.")
             settings.REQUEST = settings.REQUESTS[0]
         else:
             settings.REQUEST = last_instruction
     else:
-        settings.REQUEST = settings.REQUESTS[index - 2]
+        try:
+            index = int(choice) - 1
+            if index < 0 or index >= len(settings.REQUESTS):
+                raise ValueError
+        except ValueError:
+            index = 0
+        settings.REQUEST = settings.REQUESTS[index]
     save_last_instruction(settings.REQUEST)
     log_instruction_use(settings.REQUEST)
 

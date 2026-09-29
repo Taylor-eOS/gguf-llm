@@ -3,8 +3,8 @@ import sys
 import time
 import json
 from datetime import datetime
-os.environ["HF_HUB_OFFLINE"] = "1"
 from huggingface_hub import hf_hub_download
+from huggingface_hub.utils import LocalEntryNotFoundError
 from llama_cpp import Llama
 from pathlib import Path
 import models
@@ -49,11 +49,18 @@ def construct_llama(path, llama_kwargs, redirect_logs):
         log_file.close()
     return llm
 
+def resolve_model_path(model):
+    try:
+        return hf_hub_download(repo_id=model["repo_id"], filename=model["filename"], local_files_only=True)
+    except LocalEntryNotFoundError:
+        print(f"{model['filename']} is not cached, downloading.")
+        return hf_hub_download(repo_id=model["repo_id"], filename=model["filename"])
+
 def load_model(model, c_ntx=None, redirect_logs=settings.WRITE_LOG):
     if c_ntx is None:
         c_ntx = settings.N_CTX
     log_model_use(model)
-    path = hf_hub_download(repo_id=model["repo_id"], filename=model["filename"])
+    path = resolve_model_path(model)
     batch_size = min(c_ntx, settings.MODEL_N_BATCH)
     llama_kwargs = {
         "n_ctx": c_ntx,
@@ -67,7 +74,7 @@ def load_model(model, c_ntx=None, redirect_logs=settings.WRITE_LOG):
     return construct_llama(path, llama_kwargs, redirect_logs)
 
 def load_tokenizer(model, redirect_logs=settings.WRITE_LOG):
-    path = hf_hub_download(repo_id=model["repo_id"], filename=model["filename"])
+    path = resolve_model_path(model)
     llama_kwargs = {
         "n_ctx": 32,
         "n_threads": settings.N_THREADS,
