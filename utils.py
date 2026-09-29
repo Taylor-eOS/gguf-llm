@@ -130,10 +130,17 @@ def filter_models(models_list, query):
             filtered.append(m)
     return filtered
 
+def available_models():
+    return [m for m in models.MODELS if m.get("repo_id") and m.get("filename")]
+
 def pick_model():
     cached_symb = "x"
     nonthinking_symb = "n"
-    current = models.MODELS
+    all_models = available_models()
+    if not all_models:
+        print("No usable models defined.")
+        raise SystemExit
+    current = all_models
     print(f"Available models ([{cached_symb}] = cached, [{nonthinking_symb}] = non-thinking):")
     print_model_list(current)
     print("Keywords to filter, number to select, * to reset, t thinking models, n non-thinking, x downloaded.")
@@ -144,7 +151,7 @@ def pick_model():
             print("\nExiting.")
             raise SystemExit
         if raw == "*":
-            current = models.MODELS
+            current = all_models
             print_model_list(current)
             continue
         if raw.isdigit():
