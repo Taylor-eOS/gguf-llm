@@ -128,13 +128,13 @@ def process_segments(llm, segments, outfile, budget, use_prev_output):
 def pick_request():
     last_instruction = load_last_instruction()
     last_sample = " ".join(last_instruction.split())[:65] if last_instruction else "none saved"
-    print("M: Enter instruction manually.")
-    print(f"L: Last used instruction: {last_sample}")
+    print("m/c: Enter instruction manually.")
+    print(f"l: Last used instruction: {last_sample}")
     for i, request in enumerate(settings.REQUESTS, 1):
         sample = " ".join(request.split())[:92]
         print(f"{i}: {sample}")
-    choice = input(f"Pick an instruction [1-{len(settings.REQUESTS)}, M, L]: ").strip().lower()
-    if choice == "m":
+    choice = input(f"Pick an instruction [1-{len(settings.REQUESTS)}, m/c, l]: ").strip().lower()
+    if choice == "m" or choice == "c":
         custom = input("Enter instruction: ").strip()
         settings.REQUEST = custom if custom else settings.REQUESTS[0]
     elif choice == "l":
@@ -164,7 +164,7 @@ def measure_required_ctx(model, segments):
 def main():
     model = pick_model()
     pick_request()
-    segment_mode = input("Use segment mode? [Y/n]: ").strip().lower() in ("y", "yes", "")
+    segment_mode = input("Use segment mode or line mode? [Y/n]: ").strip().lower() in ("y", "yes", "")
     use_prev_output = input("Include previous output as context? [y/N]: ").strip().lower() in ("y", "yes")
     with open(settings.INPUT_FILE, "r", encoding="utf-8") as infile:
         segments = read_segments(infile) if segment_mode else read_line_segments(infile)
