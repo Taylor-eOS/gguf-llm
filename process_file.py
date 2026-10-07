@@ -29,7 +29,7 @@ def build_process_prompt(line, context=None):
     parts = []
     if context:
         parts.append(context)
-    parts.append(f"Input content: \"{line}\"")
+    parts.append(f"Input content: <context>\"{line}\"</context>")
     parts.append(settings.BASE)
     parts.append(f"{settings.TASK_LINE}: {settings.REQUEST}\nProcessed:")
     return "\n".join(parts)
@@ -75,7 +75,7 @@ def prompt_overhead_tokens(llm):
 
 def compute_budget(llm, n_ctx):
     overhead = prompt_overhead_tokens(llm)
-    return n_ctx - settings.RESERVE_TOKENS - overhead
+    return n_ctx - settings.RESERVE_TOKENS - overhead + settings.EXTRA_BUDGET
 
 def longest_segment_tokens(llm, segments):
     longest = 0
