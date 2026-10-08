@@ -444,14 +444,18 @@ MODELS = [
     {
         "repo_id": "unsloth/Qwen3-30B-A3B-Instruct-2507-GGUF",
         "thinking": False,
-        "filename": "Qwen3-30B-A3B-Instruct-2507-UD-TQ1_0.gguf", #try if UD-Q3_K_XL 13.8GB can be made to run, UD-Q2_K_XL 11.8GB
-        "comment": "UD-TQ1, 8GB, fast, can da, good, loops, bland, old",
+        "filename": "Qwen3-30B-A3B-Instruct-2507-UD-TQ1_0.gguf",
+        "comment": "UD-TQ1, 8GB, fast, can da, good, loops, bland, old, fine advice, goes along",
+        #"filename": "Qwen3-30B-A3B-Instruct-2507-UD-Q2_K_XL.gguf",
+        #"comment": "UD-TQ2, 11.8GB, fast, can da, good, bland, old, fine advice",
+        #"filename": "Qwen3-30B-A3B-Instruct-2507-UD-Q3_K_XL.gguf", #try if this can be made to run
+        #"comment": "UD-TQ3, 13.8GB, fast, can da, good, bland, old, fine advice",
     },
     {
         "repo_id": "unsloth/Qwen3-Coder-30B-A3B-Instruct-GGUF",
         "thinking": False,
         "filename": "Qwen3-Coder-30B-A3B-Instruct-UD-IQ2_M.gguf",
-        "comment": "UD-IQ2, 10.8GB, big, popular, fast, fine analysis, old, bland", #speed test this
+        "comment": "UD-IQ2, 10.8GB, big, popular, fast, fine analysis, old, bland, repeats", #speed test this
         #"filename": "Qwen3-Coder-30B-A3B-Instruct-UD-Q2_K_XL.gguf",
         #"comment": "UD-Q2, 11.8GB, big, popular, fine analysis, old",
         #"filename": "Qwen3-Coder-30B-A3B-Instruct-UD-Q3_K_XL.gguf",

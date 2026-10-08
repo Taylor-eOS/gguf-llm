@@ -7,7 +7,7 @@ def stream_response(llm, prompt):
     stream = llm.create_chat_completion(messages=[{"role": "user", "content": prompt}], stream=True)
     for chunk in stream:
         delta = chunk["choices"][0]["delta"]
-        token = delta.get("content", "")
+        token = (delta.get("content") or "").replace("*", "")
         if token:
             print(token, end="", flush=True)
     print()

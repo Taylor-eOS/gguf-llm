@@ -10,18 +10,25 @@ def load_model(repo_id, filename, n_ctx=16 * 1024, n_threads=6):
 
 def read_elements(input_file, segment_mode=True):
     with open(input_file, "r", encoding="utf-8") as f:
-        text = f.read()
+        lines = f.read().splitlines()
     elements = []
-    for i, paragraph in enumerate(text.split("\n\n")):
-        if i > 0:
+    block = []
+    for line in lines:
+        if not line.strip():
+            if block:
+                elements.append("\n".join(block))
+                block = []
             elements.append(PARAGRAPH_PLACEHOLDER)
-        if segment_mode:
-            segment = "\n".join(line for line in paragraph.splitlines() if line.strip())
-            if segment:
-                elements.append(segment)
+        elif segment_mode:
+            block.append(line)
         else:
-            elements.extend(line for line in paragraph.splitlines() if line.strip())
+            elements.append(line)
+    if block:
+        elements.append("\n".join(block))
     return elements
+
+def clean_translation(translation):
+    return "\n".join(line for line in translation.splitlines() if line.strip())
 
 def make_pair(counter, original, translation):
     if original == PARAGRAPH_PLACEHOLDER:
@@ -31,8 +38,10 @@ def make_pair(counter, original, translation):
 def build_translation_pairs(translate_fn, elements, json_file, on_progress=None):
     pairs = []
     for counter, element in enumerate(elements):
-        translation = PARAGRAPH_PLACEHOLDER if element == PARAGRAPH_PLACEHOLDER else translate_fn(element)
-        if element != PARAGRAPH_PLACEHOLDER:
+        if element == PARAGRAPH_PLACEHOLDER:
+            translation = PARAGRAPH_PLACEHOLDER
+        else:
+            translation = clean_translation(translate_fn(element))
             print(translation)
         pairs.append(make_pair(counter, element, translation))
         with open(json_file, "w", encoding="utf-8") as f:
@@ -42,17 +51,9 @@ def build_translation_pairs(translate_fn, elements, json_file, on_progress=None)
     return pairs
 
 def write_txt(pairs, output_file):
-    paragraphs = []
-    current = []
-    for pair in pairs:
-        if pair["original"] == "[PARAGRAPH_BREAK]":
-            paragraphs.append("\n".join(current))
-            current = []
-        else:
-            current.append(pair["translation"])
-    paragraphs.append("\n".join(current))
+    lines = ["" if pair["original"] == "[PARAGRAPH_BREAK]" else pair["translation"] for pair in pairs]
     with open(output_file, "w", encoding="utf-8") as f:
-        f.write("\n\n".join(paragraphs))
+        f.write("\n".join(lines))
 
 def translate_file(translate_fn, input_file, output_file, segment_mode=True):
     elements = read_elements(input_file, segment_mode=segment_mode)
