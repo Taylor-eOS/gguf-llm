@@ -120,8 +120,9 @@ def memory_derived_ctx(model):
     if trained:
         n_ctx = min(n_ctx, trained)
     if n_ctx < 1024:
-        print(f"Only {n_ctx} tokens of context fit into the available memory for this model.")
-        raise SystemExit(1)
+        fallback = min(settings.N_CTX, trained) if trained else settings.N_CTX
+        print(f"The memory estimate allows only {n_ctx} tokens of context, using {fallback} instead.")
+        return fallback
     print(f"KV cache estimate: {per_token * n_ctx / 1024 ** 3:.2f} GiB for {n_ctx} tokens (memory would allow {memory_ctx}).")
     return n_ctx
 
