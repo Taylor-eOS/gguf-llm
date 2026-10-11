@@ -74,7 +74,7 @@ def read_line_segments(infile):
 def build_prev_output_context(prev_output):
     if prev_output is None:
         return None
-    truncated = prev_output[:settings.PREV_OUTPUT_CONTEXT_CHARS]
+    truncated = prev_output[max(0, len(prev_output) - settings.PREV_OUTPUT_CONTEXT_CHARS):]
     if not truncated:
         return None
     return f"Output from previous request as context: \"{truncated}\""
@@ -88,11 +88,12 @@ def abort_oversized_segment(segment, tokens, n_ctx):
 
 def check_segments_fit(llm, segments, use_prev_output):
     n_ctx = llm.n_ctx()
+    context = build_prev_output_context("x") if use_prev_output else None
     extra = settings.PREV_OUTPUT_CONTEXT_CHARS if use_prev_output else 0
     for segment in segments:
         if segment is None:
             continue
-        prompt = build_process_prompt("\n".join(segment))
+        prompt = build_process_prompt("\n".join(segment), context)
         tokens = len(llm.tokenize(prompt.encode("utf-8"), add_bos=False)) + extra
         if tokens >= n_ctx:
             abort_oversized_segment(segment, tokens, n_ctx)
