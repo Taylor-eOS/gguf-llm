@@ -3,8 +3,6 @@ from pathlib import Path
 from utils import load_model, log_instruction_use, memory_derived_ctx, pick_model, strip_think, wait_while_stopped, load_last_instruction, save_last_instruction
 import settings
 
-FAILED_MARKER = "[[GENERATION FILLED THE CONTEXT, SEGMENT NOT PROCESSED]]"
-
 def run_completion(llm, prompt):
     if settings.PRINT_PROCESSING_PROMPT:
         print(prompt)
@@ -23,7 +21,7 @@ def run_completion(llm, prompt):
         print(f"Generated {usage['completion_tokens']} tokens in {elapsed:.2f}s ({tokens_per_second:.2f} tok/s)")
     choice = result["choices"][0]
     if choice["finish_reason"] == "length":
-        return None
+        print("Warning: generation filled the context, output was cut off.")
     content = choice["message"]["content"].strip()
     if not Path(settings.KEEP_THINKING_FLAG).is_file():
         content = strip_think(content)
@@ -109,9 +107,7 @@ def process_segments(llm, segments, outfile, use_prev_output):
         context = build_prev_output_context(last_output) if use_prev_output else None
         output = process_line(llm, "\n".join(segment), context)
         if output is None:
-            print(f"Warning: generation filled the context for segment starting with \"{segment[0][:60]}\".")
-            outfile.write(FAILED_MARKER + "\n")
-            outfile.flush()
+            print(f"Warning: segment starting with \"{segment[0][:60]}\" could not be processed.")
             continue
         write_output(outfile, output)
         last_output = output
