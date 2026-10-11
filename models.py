@@ -129,7 +129,7 @@ MODELS = [
         "repo_id": "MaziyarPanahi/mistral-small-3.1-24b-instruct-2503-hf-GGUF",
         "thinking": False,
         "filename": "mistral-small-3.1-24b-instruct-2503-hf.Q3_K_M.gguf",
-        "comment": "Q3, 11.5GB, big, works, not fast, gets authors right, sanitized",
+        "comment": "Q3, 11.5GB, big, works, not fast, gets authors right, sanitized, boring repeats request",
     },
     {
         "repo_id": "unsloth/gpt-oss-20b-GGUF",
@@ -249,7 +249,7 @@ MODELS = [
         #"filename": "gemma-4-E4B-it-IQ4_NL.gguf", #UD-IQ3_XXS 3.7GB
         #"comment": "IQ4, 4.8GB, good workhorse, summarizes well",
         "filename": "gemma-4-E4B-it-UD-Q4_K_XL.gguf",
-        "comment": "UD-Q4, 5.1GB, in library, good workhorse",
+        "comment": "UD-Q4, 5.1GB, in library, good workhorse, can be rough if instructed",
     },
     {
         "repo_id": "shafire/Zero-Gemma4-E4B-OpenZero-GGUF",
@@ -261,7 +261,7 @@ MODELS = [
         "repo_id": "HauhauCS/Gemma-4-E4B-Uncensored-HauhauCS-Aggressive",
         "thinking": False,
         "filename": "Gemma-4-E4B-Uncensored-HauhauCS-Aggressive-Q4_K_M.gguf", #Q3_K_P 4.9GB, Q4_K_P 5.4GB, Q5_K_P 5.8GB (P = perfect)
-        "comment": "Q4, 5.3GB, popular, fast, hilarious, sarcastic, wrong details, can program",
+        "comment": "Q4, 5.3GB, popular, fast, hilarious, sarcastic, wrong details, agrees nonsense",
     },
     {
         "repo_id": "RusteddDDD/Gemma-4-E4B-Uncensored-HauhauCS-Aggressive",
@@ -405,7 +405,7 @@ MODELS = [
         "repo_id": "CMSManhattan/JiRackUltra_14b",
         "thinking": True,
         "filename": "JiRackUltra_14b_Q3_K_M.gguf",
-        "comment": "Q3, 7.3GB, for CPU, limited thinking",
+        "comment": "Q3, 7.3GB, for CPU, limited thinking, boring",
         #"filename": "JiRackUltra_14b_Q4_K_M.gguf", #try this
         #"comment": "Q4, 9GB, for CPU, limited thinking",
     },
@@ -413,7 +413,7 @@ MODELS = [
         "repo_id": "HauhauCS/Qwen3.8-27B-Uncensored-HauhauCS-Aggressive-MTP-GGUF",
         "thinking": True,
         "filename": "Qwen3.8-27B-Uncensored-HauhauCS-Aggressive-Q2_K_P.gguf", #only one small enough
-        "comment": "Q2, 10.7GB, big",
+        "comment": "Q2, 10.7GB, big, clever, not fast",
     },
     #{
     #    "repo_id": "ukisai/Swift-1.5-Qwen3.8-27B-GSQ-RCO-GGUF",
@@ -469,9 +469,9 @@ MODELS = [
     },
     {
         "repo_id": "mradermacher/Huihui-Qwen3-Coder-30B-A3B-Instruct-abliterated-i1-GGUF",
-        #"thinking": False,
+        "thinking": False,
         "filename": "Huihui-Qwen3-Coder-30B-A3B-Instruct-abliterated.i1-Q2_K.gguf",
-        "comment": "Q2, 11.3GB",
+        "comment": "Q2, 11.3GB, loops simple request",
     },
     {
         "repo_id": "CMSManhattan/JiRackDeltaNet_27b",
@@ -489,7 +489,7 @@ MODELS = [
         "repo_id": "unsloth/Qwen3.8-27B-GGUF",
         "thinking": True,
         "filename": "Qwen3.8-27B-UD-Q2_K_XL.gguf", #only Q small enough
-        "comment": "UD-Q2, 9.8GB, big, says it can skip thinking",
+        "comment": "UD-Q2, 9.8GB, big, says it can skip thinking, slow on long input",
     },
     {
         "repo_id": "tvall43/Qwen3.6-14B-A3B-FableVibes-GGUF",

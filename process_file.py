@@ -71,7 +71,11 @@ def segment_token_count(llm, paragraph_lines):
     return len(llm.tokenize("\n".join(paragraph_lines).encode("utf-8"), add_bos=False))
 
 def prompt_overhead_tokens(llm):
-    return len(llm.tokenize((f"Input content: \"\"\n{settings.BASE}\n[{settings.TASK_LINE}: {settings.REQUEST}]\nResponse:").encode("utf-8"), add_bos=False))
+    context = build_prev_output_context("x") if settings.USE_PREV_OUTPUT else None
+    tokens = len(llm.tokenize(build_process_prompt("", context).encode("utf-8"), add_bos=False))
+    if settings.USE_PREV_OUTPUT:
+        tokens += settings.PREV_OUTPUT_CONTEXT_CHARS
+    return tokens
 
 def compute_budget(llm, n_ctx):
     overhead = prompt_overhead_tokens(llm)
@@ -166,6 +170,7 @@ def main():
     pick_request()
     segment_mode = input("Use segment mode or line mode? [Y/n]: ").strip().lower() in ("y", "yes", "")
     use_prev_output = input("Include previous output as context? [y/N]: ").strip().lower() in ("y", "yes")
+    settings.USE_PREV_OUTPUT = use_prev_output
     with open(settings.INPUT_FILE, "r", encoding="utf-8") as infile:
         segments = read_segments(infile) if segment_mode else read_line_segments(infile)
     required_ctx = measure_required_ctx(model, segments)
