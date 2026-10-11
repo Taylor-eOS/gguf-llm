@@ -249,7 +249,7 @@ MODELS = [
         #"filename": "gemma-4-E4B-it-IQ4_NL.gguf", #UD-IQ3_XXS 3.7GB
         #"comment": "IQ4, 4.8GB, good workhorse, summarizes well",
         "filename": "gemma-4-E4B-it-UD-Q4_K_XL.gguf",
-        "comment": "UD-Q4, 5.1GB, in library, good workhorse, can be rough if instructed",
+        "comment": "UD-Q4, 5.1GB, in library, good workhorse, rough if instructed",
     },
     {
         "repo_id": "shafire/Zero-Gemma4-E4B-OpenZero-GGUF",
@@ -447,9 +447,9 @@ MODELS = [
         "filename": "Qwen3-30B-A3B-Instruct-2507-UD-TQ1_0.gguf",
         "comment": "UD-TQ1, 8GB, fast, can da, good, loops, bland, old, fine advice, goes along",
         #"filename": "Qwen3-30B-A3B-Instruct-2507-UD-Q2_K_XL.gguf",
-        #"comment": "UD-TQ2, 11.8GB, fast, can da, good, bland, old, fine advice",
-        #"filename": "Qwen3-30B-A3B-Instruct-2507-UD-Q3_K_XL.gguf", #try if this can be made to run
-        #"comment": "UD-TQ3, 13.8GB, fast, can da, good, bland, old, fine advice",
+        #"comment": "UD-TQ2, 11.8GB, big, fast, can da, good, bland, old, fine advice",
+        #"filename": "Qwen3-30B-A3B-Instruct-2507-UD-Q3_K_XL.gguf", #try if this runs
+        #"comment": "UD-TQ3, 13.8GB, big, fast, can da, good, bland, old, fine advice",
     },
     {
         "repo_id": "unsloth/Qwen3-Coder-30B-A3B-Instruct-GGUF",
@@ -471,7 +471,7 @@ MODELS = [
         "repo_id": "mradermacher/Huihui-Qwen3-Coder-30B-A3B-Instruct-abliterated-i1-GGUF",
         "thinking": False,
         "filename": "Huihui-Qwen3-Coder-30B-A3B-Instruct-abliterated.i1-Q2_K.gguf",
-        "comment": "Q2, 11.3GB, loops simple request",
+        "comment": "Q2, 11.3GB, big, loops simple request",
     },
     {
         "repo_id": "CMSManhattan/JiRackDeltaNet_27b",
@@ -501,35 +501,35 @@ MODELS = [
         "repo_id": "DevQuasar/amd.Instella-MoE-16B-A3B-Think-GGUF",
         "thinking": True,
         "filename": "Q4_K_M/amd.Instella-MoE-16B-A3B-Think.f16.gguf.Q4_K_M.gguf", #or go Q3 8.2GB
-        "comment": "Q4, 10.5GB, experimental",
+        "comment": "Q4, 10.5GB, big, experimental",
     },
     {
         "repo_id": "huihui-ai/Huihui-Qwen3.8-27B-abliterated-GGUF",
         "thinking": True,
         #"filename": "Huihui-Qwen3.8-27B-abliterated-Q2_K.gguf",
-        #"comment": "Q2, 10.9GB, works, ok thinking, not fast",
+        #"comment": "Q2, 10.9GB, big, works, ok thinking, not fast",
         "filename": "Huihui-Qwen3.8-27B-abliterated-UD-Q3_K_XL.gguf", #if this is too big use the next one
-        "comment": "Q3, 13.3GB",
+        "comment": "Q3, 13.3GB, big",
         #"filename": "Huihui-Qwen3.8-27B-abliterated-UD-Q2_K_XL.gguf",
-        #"comment": "Q2, 10GB",
+        #"comment": "Q2, 10GB, big",
     },
     {
         "repo_id": "XeyonAI/Helcyon-Solara-2-14b-v2.0-GGUF",
-        #"thinking": False,
+        "thinking": False,
         "filename": "Helcyon-Solara-2-14B-v2.0-Q4_K_M.gguf",
-        "comment": "Q4, 8.2GB, personality",
+        "comment": "Q4, 8.2GB, supposedly personality",
     },
     {
         "repo_id": "MaziyarPanahi/solar-pro-preview-instruct-GGUF",
         #"thinking": False,
         "filename": "solar-pro-preview-instruct.Q3_K_M.gguf", #many others
-        "comment": "Q3, 10.7GB",
+        "comment": "Q3, 10.7GB, big",
     },
     {
         "repo_id": "MaziyarPanahi/Mistral-Small-24B-Instruct-2501-GGUF",
         #"thinking": False,
         "filename": "Mistral-Small-24B-Instruct-2501.Q3_K_M.gguf",
-        "comment": "Q3, 11.5GB",
+        "comment": "Q3, 11.5GB, big",
     },
     {
         "repo_id": "JetBrains/Mellum2-12B-A2.5B-Instruct-GGUF-Q4_K_M",
@@ -553,7 +553,7 @@ MODELS = [
         "repo_id": "unsloth/GLM-4.7-Flash-REAP-23B-A3B-GGUF",
         #"thinking": False,
         "filename": "GLM-4.7-Flash-REAP-23B-A3B-Q3_K_M.gguf", #Q4 is too big, Q3_K_S 10.3GB
-        "comment": "Q3, 11.3GB",
+        "comment": "Q3, 11.3GB, big",
     },
     {
         "repo_id": "",

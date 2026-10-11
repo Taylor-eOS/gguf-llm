@@ -1,26 +1,30 @@
 import time
 from pathlib import Path
-from utils import is_cached, load_model, load_tokenizer, log_instruction_use, pick_model, strip_think, wait_while_stopped, load_last_instruction, save_last_instruction
+from utils import load_model, log_instruction_use, memory_derived_ctx, pick_model, strip_think, wait_while_stopped, load_last_instruction, save_last_instruction
 import settings
+
+FAILED_MARKER = "[[GENERATION FILLED THE CONTEXT, SEGMENT NOT PROCESSED]]"
 
 def run_completion(llm, prompt):
     if settings.PRINT_PROCESSING_PROMPT:
         print(prompt)
-    raw_tokens = len(llm.tokenize(prompt.encode("utf-8"), add_bos=False))
-    n_ctx = llm.n_ctx()
-    if settings.PRINT_TOKEN_USAGE:
-        print(f"Raw prompt tokens: {raw_tokens}, n_ctx: {n_ctx}, raw + MAX_TOKENS: {raw_tokens + settings.MAX_TOKENS}")
     start_time = time.perf_counter()
-    result = llm.create_chat_completion(messages=[{"role": "user", "content": prompt}], max_tokens=settings.MAX_TOKENS, temperature=0.7, top_p=0.9)
-    consumed = result["usage"]["prompt_tokens"]
-    if consumed < raw_tokens:
-        print(f"Warning: the model consumed {consumed} prompt tokens but the raw prompt has {raw_tokens}. The input was truncated.")
+    try:
+        result = llm.create_chat_completion(messages=[{"role": "user", "content": prompt}], max_tokens=None, temperature=0.7, top_p=0.9)
+    except ValueError as error:
+        print(f"Warning: {error}")
+        return None
+    usage = result["usage"]
+    if settings.PRINT_TOKEN_USAGE:
+        print(f"Prompt tokens: {usage['prompt_tokens']}, completion tokens: {usage['completion_tokens']}, n_ctx: {llm.n_ctx()}")
     if settings.PRINT_GENERATION_SPEED:
         elapsed = time.perf_counter() - start_time
-        completion_tokens = result["usage"]["completion_tokens"]
-        tokens_per_second = completion_tokens / elapsed if elapsed > 0 else 0.0
-        print(f"Generated {completion_tokens} tokens in {elapsed:.2f}s ({tokens_per_second:.2f} tok/s)")
-    content = result["choices"][0]["message"]["content"].strip()
+        tokens_per_second = usage["completion_tokens"] / elapsed if elapsed > 0 else 0.0
+        print(f"Generated {usage['completion_tokens']} tokens in {elapsed:.2f}s ({tokens_per_second:.2f} tok/s)")
+    choice = result["choices"][0]
+    if choice["finish_reason"] == "length":
+        return None
+    content = choice["message"]["content"].strip()
     if not Path(settings.KEEP_THINKING_FLAG).is_file():
         content = strip_think(content)
     return content
@@ -67,35 +71,6 @@ def read_line_segments(infile):
         segments.append(None if line.strip() == "" else [line])
     return segments
 
-def segment_token_count(llm, paragraph_lines):
-    return len(llm.tokenize("\n".join(paragraph_lines).encode("utf-8"), add_bos=False))
-
-def prompt_overhead_tokens(llm, use_prev_output):
-    context = build_prev_output_context("x") if use_prev_output else None
-    tokens = len(llm.tokenize(build_process_prompt("", context).encode("utf-8"), add_bos=False))
-    if use_prev_output:
-        tokens += settings.PREV_OUTPUT_CONTEXT_CHARS
-    return tokens
-
-def compute_budget(llm, n_ctx, use_prev_output):
-    return n_ctx - settings.RESERVE_TOKENS - prompt_overhead_tokens(llm, use_prev_output)
-
-def longest_segment_tokens(llm, segments):
-    longest = 0
-    for segment in segments:
-        if segment is None:
-            continue
-        tokens = segment_token_count(llm, segment)
-        if tokens > longest:
-            longest = tokens
-    return longest
-
-def compute_required_ctx(llm, longest_input_tokens, use_prev_output):
-    required = prompt_overhead_tokens(llm, use_prev_output) + settings.RESERVE_TOKENS + longest_input_tokens
-    required = max(required, settings.N_CTX_MIN)
-    required = min(required, settings.N_CTX_MAX)
-    return required
-
 def build_prev_output_context(prev_output):
     if prev_output is None:
         return None
@@ -104,14 +79,25 @@ def build_prev_output_context(prev_output):
         return None
     return f"Output from previous request as context: \"{truncated}\""
 
-def abort_oversized_segment(segment, tokens, budget):
+def abort_oversized_segment(segment, tokens, n_ctx):
     preview = " ".join(" ".join(segment).split()[:10])
-    print(f"\nSegment with {tokens} tokens exceeds the budget of {budget}:")
+    print(f"\nSegment with {tokens} prompt tokens does not fit into the context of {n_ctx}:")
     print(f"\"{preview}...\"")
     print("Cancel and rework the input file.")
     raise SystemExit(1)
 
-def process_segments(llm, segments, outfile, budget, use_prev_output):
+def check_segments_fit(llm, segments, use_prev_output):
+    n_ctx = llm.n_ctx()
+    extra = settings.PREV_OUTPUT_CONTEXT_CHARS if use_prev_output else 0
+    for segment in segments:
+        if segment is None:
+            continue
+        prompt = build_process_prompt("\n".join(segment))
+        tokens = len(llm.tokenize(prompt.encode("utf-8"), add_bos=False)) + extra
+        if tokens >= n_ctx:
+            abort_oversized_segment(segment, tokens, n_ctx)
+
+def process_segments(llm, segments, outfile, use_prev_output):
     last_output = None
     for segment in segments:
         if segment is None:
@@ -119,11 +105,13 @@ def process_segments(llm, segments, outfile, budget, use_prev_output):
             outfile.flush()
             continue
         wait_while_stopped()
-        tokens = segment_token_count(llm, segment)
-        if tokens > budget:
-            abort_oversized_segment(segment, tokens, budget)
         context = build_prev_output_context(last_output) if use_prev_output else None
         output = process_line(llm, "\n".join(segment), context)
+        if output is None:
+            print(f"Warning: generation filled the context for segment starting with \"{segment[0][:60]}\".")
+            outfile.write(FAILED_MARKER + "\n")
+            outfile.flush()
+            continue
         write_output(outfile, output)
         last_output = output
 
@@ -156,13 +144,6 @@ def pick_request():
     save_last_instruction(settings.REQUEST)
     log_instruction_use(settings.REQUEST)
 
-def measure_required_ctx(model, segments, use_prev_output):
-    tokenizer_llm = load_tokenizer(model)
-    longest_tokens = longest_segment_tokens(tokenizer_llm, segments)
-    required_ctx = compute_required_ctx(tokenizer_llm, longest_tokens, use_prev_output)
-    del tokenizer_llm
-    return required_ctx
-
 def main():
     model = pick_model()
     pick_request()
@@ -170,12 +151,12 @@ def main():
     use_prev_output = input("Include previous output as context? [y/N]: ").strip().lower() in ("y", "yes")
     with open(settings.INPUT_FILE, "r", encoding="utf-8") as infile:
         segments = read_segments(infile) if segment_mode else read_line_segments(infile)
-    required_ctx = measure_required_ctx(model, segments, use_prev_output)
-    print(f"Using context window of {required_ctx} tokens.")
-    llm = load_model(model, c_ntx=required_ctx)
-    budget = compute_budget(llm, required_ctx, use_prev_output)
+    n_ctx = memory_derived_ctx(model)
+    print(f"Using context window of {n_ctx} tokens.")
+    llm = load_model(model, c_ntx=n_ctx)
+    check_segments_fit(llm, segments, use_prev_output)
     with open(settings.OUTPUT_FILE, "w", encoding="utf-8") as outfile:
-        process_segments(llm, segments, outfile, budget, use_prev_output)
+        process_segments(llm, segments, outfile, use_prev_output)
 
 if __name__ == "__main__":
     main()

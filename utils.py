@@ -67,11 +67,63 @@ def load_model(model, c_ntx=None, redirect_logs=settings.WRITE_LOG):
         "n_threads": settings.N_THREADS,
         "n_batch": batch_size,
         "n_ubatch": batch_size,
+        "flash_attn": True,
         "use_mmap": True,
         "use_mlock": False,
         "verbose": settings.PERFORMANCE_METRICS,
     }
     return construct_llama(path, llama_kwargs, redirect_logs)
+
+def available_memory_bytes():
+    with open("/proc/meminfo", "r") as f:
+        for line in f:
+            if line.startswith("MemAvailable:"):
+                return int(line.split()[1]) * 1024
+    raise RuntimeError("MemAvailable not found in /proc/meminfo")
+
+def metadata_int(metadata, key):
+    value = metadata.get(key)
+    if value is None:
+        return None
+    try:
+        parsed = json.loads(value)
+    except ValueError:
+        return None
+    if isinstance(parsed, list):
+        parsed = max(parsed) if parsed else None
+    return parsed if isinstance(parsed, int) else None
+
+def kv_bytes_per_token(metadata):
+    arch = metadata["general.architecture"]
+    layers = metadata_int(metadata, f"{arch}.block_count")
+    heads = metadata_int(metadata, f"{arch}.attention.head_count")
+    heads_kv = metadata_int(metadata, f"{arch}.attention.head_count_kv") or heads
+    embd = metadata_int(metadata, f"{arch}.embedding_length")
+    key_len = metadata_int(metadata, f"{arch}.attention.key_length") or embd // heads
+    value_len = metadata_int(metadata, f"{arch}.attention.value_length") or key_len
+    return layers * heads_kv * (key_len + value_len) * 2
+
+def memory_derived_ctx(model):
+    tokenizer_llm = load_tokenizer(model)
+    metadata = dict(tokenizer_llm.metadata)
+    del tokenizer_llm
+    try:
+        per_token = kv_bytes_per_token(metadata)
+    except (KeyError, TypeError):
+        print(f"Could not read the KV cache geometry from the model metadata, falling back to N_CTX of {settings.N_CTX}.")
+        return settings.N_CTX
+    file_size = Path(resolve_model_path(model)).stat().st_size
+    usable = int((available_memory_bytes() - file_size) * settings.MEMORY_FRACTION)
+    memory_ctx = usable // per_token
+    trained = metadata_int(metadata, f"{metadata['general.architecture']}.context_length")
+    n_ctx = min(memory_ctx, settings.N_CTX_MAX)
+    if trained:
+        n_ctx = min(n_ctx, trained)
+    if n_ctx < 1024:
+        print(f"Only {n_ctx} tokens of context fit into the available memory for this model.")
+        raise SystemExit(1)
+    print(f"KV cache estimate: {per_token * n_ctx / 1024 ** 3:.2f} GiB for {n_ctx} tokens (memory would allow {memory_ctx}).")
+    return n_ctx
 
 def load_tokenizer(model, redirect_logs=settings.WRITE_LOG):
     path = resolve_model_path(model)
