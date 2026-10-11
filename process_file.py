@@ -70,16 +70,15 @@ def read_line_segments(infile):
 def segment_token_count(llm, paragraph_lines):
     return len(llm.tokenize("\n".join(paragraph_lines).encode("utf-8"), add_bos=False))
 
-def prompt_overhead_tokens(llm):
-    context = build_prev_output_context("x") if settings.USE_PREV_OUTPUT else None
+def prompt_overhead_tokens(llm, use_prev_output):
+    context = build_prev_output_context("x") if use_prev_output else None
     tokens = len(llm.tokenize(build_process_prompt("", context).encode("utf-8"), add_bos=False))
-    if settings.USE_PREV_OUTPUT:
+    if use_prev_output:
         tokens += settings.PREV_OUTPUT_CONTEXT_CHARS
     return tokens
 
-def compute_budget(llm, n_ctx):
-    overhead = prompt_overhead_tokens(llm)
-    return n_ctx - settings.RESERVE_TOKENS - overhead + settings.EXTRA_BUDGET
+def compute_budget(llm, n_ctx, use_prev_output):
+    return n_ctx - settings.RESERVE_TOKENS - prompt_overhead_tokens(llm, use_prev_output)
 
 def longest_segment_tokens(llm, segments):
     longest = 0
@@ -91,9 +90,8 @@ def longest_segment_tokens(llm, segments):
             longest = tokens
     return longest
 
-def compute_required_ctx(llm, longest_input_tokens):
-    overhead = prompt_overhead_tokens(llm)
-    required = overhead + settings.RESERVE_TOKENS + longest_input_tokens
+def compute_required_ctx(llm, longest_input_tokens, use_prev_output):
+    required = prompt_overhead_tokens(llm, use_prev_output) + settings.RESERVE_TOKENS + longest_input_tokens
     required = max(required, settings.N_CTX_MIN)
     required = min(required, settings.N_CTX_MAX)
     return required
@@ -158,10 +156,10 @@ def pick_request():
     save_last_instruction(settings.REQUEST)
     log_instruction_use(settings.REQUEST)
 
-def measure_required_ctx(model, segments):
+def measure_required_ctx(model, segments, use_prev_output):
     tokenizer_llm = load_tokenizer(model)
     longest_tokens = longest_segment_tokens(tokenizer_llm, segments)
-    required_ctx = compute_required_ctx(tokenizer_llm, longest_tokens)
+    required_ctx = compute_required_ctx(tokenizer_llm, longest_tokens, use_prev_output)
     del tokenizer_llm
     return required_ctx
 
@@ -170,13 +168,12 @@ def main():
     pick_request()
     segment_mode = input("Use segment mode or line mode? [Y/n]: ").strip().lower() in ("y", "yes", "")
     use_prev_output = input("Include previous output as context? [y/N]: ").strip().lower() in ("y", "yes")
-    settings.USE_PREV_OUTPUT = use_prev_output
     with open(settings.INPUT_FILE, "r", encoding="utf-8") as infile:
         segments = read_segments(infile) if segment_mode else read_line_segments(infile)
-    required_ctx = measure_required_ctx(model, segments)
+    required_ctx = measure_required_ctx(model, segments, use_prev_output)
     print(f"Using context window of {required_ctx} tokens.")
     llm = load_model(model, c_ntx=required_ctx)
-    budget = compute_budget(llm, required_ctx)
+    budget = compute_budget(llm, required_ctx, use_prev_output)
     with open(settings.OUTPUT_FILE, "w", encoding="utf-8") as outfile:
         process_segments(llm, segments, outfile, budget, use_prev_output)
 

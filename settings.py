@@ -10,7 +10,6 @@ N_CTX_MAX = 12 * 1024 #Upper limit on dynamic token allocation, used in process_
 TOKENIZER_N_BATCH = 32
 MODEL_N_BATCH = 2048
 PREV_OUTPUT_CONTEXT_CHARS = 400
-EXTRA_BUDGET = 6000 #kind of a cheat
 PRINT_GENERATION_SPEED = False
 PRINT_PROCESSING_PROMPT = False
 PRINT_TOKEN_USAGE = True
