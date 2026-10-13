@@ -1,12 +1,13 @@
 INPUT_FILE = "input.txt"
 OUTPUT_FILE = "output.txt"
 N_THREADS = 6
-N_CTX = 8 * 1024 #Total context window given to the model, models total memory, used in run.py
+N_CTX = 16 * 1024 #Total context window given to the model, models total memory, used in run.py
 MAX_TOKENS = 6 * 1024 #Cap on how many tokens the model is allowed to generate per call, used in process_file.py, caps finishing thinking
 SAFETY_MARGIN = 32
 RESERVE_TOKENS = MAX_TOKENS + SAFETY_MARGIN #Used in the process_file script
-N_CTX_MIN = 1024 #Floor in dynamic token allocation
+N_CTX_MIN = 8 * 1024 #Floor in dynamic token allocation
 N_CTX_MAX = 24 * 1024 #Upper limit on dynamic token allocation, used in process_file.py
+CTX_PER_PROMPT_TOKEN = 5
 TOKENIZER_N_BATCH = 32
 MODEL_N_BATCH = 2048
 MEMORY_FRACTION = 0.8

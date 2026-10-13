@@ -1,14 +1,5 @@
 import time
-from utils import (
-    load_model,
-    load_state_value,
-    log_instruction_use,
-    memory_derived_ctx,
-    pick_model,
-    save_state_value,
-    strip_think,
-    wait_while_stopped,
-)
+from utils import load_model, load_state_value, load_tokenizer, log_instruction_use, memory_derived_ctx, pick_model, save_state_value, strip_think, wait_while_stopped
 import settings
 
 def run_completion(llm, prompt):
@@ -92,16 +83,27 @@ def abort_oversized_segment(segment, tokens, n_ctx):
     print("Cancel and rework the input file.")
     raise SystemExit(1)
 
-def check_segments_fit(llm, segments, use_prev_output):
-    n_ctx = llm.n_ctx()
-    max_prompt = int(n_ctx * settings.PROMPT_MAX_FRACTION)
+def segment_token_counts(llm, segments, use_prev_output):
     context = build_prev_output_context("x") if use_prev_output else None
     extra = settings.PREV_OUTPUT_CONTEXT_CHARS if use_prev_output else 0
+    counts = []
     for segment in segments:
         if segment is None:
             continue
         prompt = build_process_prompt("\n".join(segment), context)
-        tokens = len(llm.tokenize(prompt.encode("utf-8"), add_bos=False)) + extra
+        counts.append((segment, len(llm.tokenize(prompt.encode("utf-8"), add_bos=False)) + extra))
+    return counts
+
+def longest_prompt_tokens(model, segments, use_prev_output):
+    tokenizer_llm = load_tokenizer(model)
+    counts = segment_token_counts(tokenizer_llm, segments, use_prev_output)
+    del tokenizer_llm
+    return max((tokens for _, tokens in counts), default=0)
+
+def check_segments_fit(llm, segments, use_prev_output):
+    n_ctx = llm.n_ctx()
+    max_prompt = int(n_ctx * settings.PROMPT_MAX_FRACTION)
+    for segment, tokens in segment_token_counts(llm, segments, use_prev_output):
         if tokens >= max_prompt:
             abort_oversized_segment(segment, tokens, n_ctx)
 
@@ -156,7 +158,7 @@ def main():
     use_prev_output = input("Include previous output as context? [y/N]: ").strip().lower() in ("y", "yes")
     with open(settings.INPUT_FILE, "r", encoding="utf-8") as infile:
         segments = read_segments(infile) if segment_mode else read_line_segments(infile)
-    n_ctx = memory_derived_ctx(model)
+    n_ctx = memory_derived_ctx(model, longest_prompt_tokens(model, segments, use_prev_output))
     print(f"Using context window of {n_ctx} tokens.")
     llm = load_model(model, c_ntx=n_ctx)
     check_segments_fit(llm, segments, use_prev_output)
