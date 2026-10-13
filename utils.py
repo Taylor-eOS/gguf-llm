@@ -13,6 +13,11 @@ import settings
 MODEL_LOG_PATH = Path(__file__).resolve().parent / "llm_use.log"
 INSTRUCTION_LOG_PATH = Path(__file__).resolve().parent / "instruction_use.log"
 LAST_INSTRUCTION_PATH = Path(__file__).resolve().parent / "last.json"
+STATE_SCHEMA = {
+    "instruction": str,
+    "model": dict,
+    "keep_thinking": bool,
+}
 
 def is_cached(model):
     repo_slug = "models--" + model["repo_id"].replace("/", "--")
@@ -23,7 +28,7 @@ def log_model_use(model):
     timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
     with open(MODEL_LOG_PATH, "a") as f:
         f.write(f"{timestamp} {model['repo_id']} {model['filename']}\n")
-    save_last_model(model)
+    save_state_value("model", {"repo_id": model["repo_id"], "filename": model["filename"]})
 
 def log_instruction_use(instruction):
     INSTRUCTION_LOG_PATH.parent.mkdir(parents=True, exist_ok=True)
@@ -257,23 +262,38 @@ def write_state(state):
     temp_path.replace(LAST_INSTRUCTION_PATH)
 
 def load_state_value(key, value_type):
+    expected = STATE_SCHEMA.get(key)
+    if expected is None:
+        raise KeyError(f"Unknown state key: {key}")
+    if expected is not value_type:
+        raise TypeError(f"State key {key!r} holds {expected.__name__}, not {value_type.__name__}")
     value = read_state().get(key)
     if value_type is bool:
-        return value if isinstance(value, bool) else None
-    if value_type is str:
-        return value if isinstance(value, str) else None
-    if value_type is int:
-        return value if isinstance(value, int) and not isinstance(value, bool) else None
-    if value_type is float:
-        return value if isinstance(value, (int, float)) and not isinstance(value, bool) else None
-    return value if isinstance(value, value_type) else None
-
+        if not isinstance(value, bool):
+            return None
+        return value
+    if not isinstance(value, value_type):
+        return None
+    if key == "instruction":
+        stripped = value.strip()
+        return stripped or None
+    if key == "model":
+        if not isinstance(value.get("repo_id"), str) or not isinstance(value.get("filename"), str):
+            return None
+    return value
 
 def save_state_value(key, value):
+    expected = STATE_SCHEMA.get(key)
+    if expected is None:
+        raise KeyError(f"Unknown state key: {key}")
+    if expected is bool:
+        if not isinstance(value, bool):
+            raise TypeError(f"State key {key!r} expects bool, got {type(value).__name__}")
+    elif not isinstance(value, expected):
+        raise TypeError(f"State key {key!r} expects {expected.__name__}, got {type(value).__name__}")
     state = read_state()
     state[key] = value
     write_state(state)
-
 
 def strip_think(text):
     marker = "</think>"
@@ -290,31 +310,11 @@ def wait_while_stopped():
         time.sleep(10)
     print("Stop file removal detected, resuming.")
 
-def load_last_instruction():
-    instruction = read_state().get("instruction")
-    if not isinstance(instruction, str):
-        return None
-    return instruction.strip() or None
-
-def save_last_instruction(instruction):
-    state = read_state()
-    state["instruction"] = instruction
-    write_state(state)
-
-def load_last_model():
-    model = read_state().get("model")
-    return model if isinstance(model, dict) else None
-
-def save_last_model(model):
-    state = read_state()
-    state["model"] = {"repo_id": model["repo_id"], "filename": model["filename"]}
-    write_state(state)
-
 def find_last_model(models_list):
-    last = load_last_model()
+    last = load_state_value("model", dict)
     if last is None:
         return None
     for m in models_list:
-        if m["repo_id"] == last.get("repo_id") and m["filename"] == last.get("filename"):
+        if m["repo_id"] == last["repo_id"] and m["filename"] == last["filename"]:
             return m
     return None

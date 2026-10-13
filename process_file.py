@@ -1,5 +1,14 @@
 import time
-from utils import load_model, load_state_value, log_instruction_use, memory_derived_ctx, pick_model, save_state_value, strip_think, wait_while_stopped
+from utils import (
+    load_model,
+    load_state_value,
+    log_instruction_use,
+    memory_derived_ctx,
+    pick_model,
+    save_state_value,
+    strip_think,
+    wait_while_stopped,
+)
 import settings
 
 def run_completion(llm, prompt):
@@ -36,7 +45,6 @@ def process_line(llm, line, context=None):
     return run_completion(llm, build_process_prompt(line, context))
 
 def write_output(outfile, output):
-    # Read the hand-edited JSON setting when this output is written.
     if not load_state_value("keep_thinking", bool):
         output = strip_think(output)
     output = "\n".join(line for line in output.split("\n") if line.strip() != "")
@@ -112,7 +120,7 @@ def process_segments(llm, segments, outfile, use_prev_output):
         last_output = write_output(outfile, output)
 
 def pick_request():
-    last_instruction = (load_state_value("instruction", str) or "").strip() or None
+    last_instruction = load_state_value("instruction", str)
     last_sample = " ".join(last_instruction.split())[:65] if last_instruction else "none saved"
     print("m/c: Enter instruction manually.")
     print(f"l: Last used instruction: {last_sample}")
