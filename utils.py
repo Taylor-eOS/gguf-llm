@@ -116,8 +116,7 @@ def memory_derived_ctx(model):
     except (KeyError, TypeError):
         print(f"Could not read the KV cache geometry from the model metadata, falling back to N_CTX of {settings.N_CTX}.")
         return settings.N_CTX
-    file_size = Path(resolve_model_path(model)).stat().st_size
-    usable = int((available_memory_bytes() - file_size) * settings.MEMORY_FRACTION)
+    usable = int(available_memory_bytes() * settings.MEMORY_FRACTION)
     memory_ctx = usable // per_token
     trained = metadata_int(metadata, f"{metadata['general.architecture']}.context_length")
     n_ctx = min(memory_ctx, settings.N_CTX_MAX)

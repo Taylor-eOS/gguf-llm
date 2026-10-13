@@ -87,13 +87,14 @@ def build_prev_output_context(prev_output):
 
 def abort_oversized_segment(segment, tokens, n_ctx):
     preview = " ".join(" ".join(segment).split()[:10])
-    print(f"\nSegment with {tokens} prompt tokens does not fit into the context of {n_ctx}:")
+    print(f"\nSegment with {tokens} prompt tokens leaves too little of the {n_ctx} token context for thinking and answer:")
     print(f"\"{preview}...\"")
     print("Cancel and rework the input file.")
     raise SystemExit(1)
 
 def check_segments_fit(llm, segments, use_prev_output):
     n_ctx = llm.n_ctx()
+    max_prompt = int(n_ctx * settings.PROMPT_MAX_FRACTION)
     context = build_prev_output_context("x") if use_prev_output else None
     extra = settings.PREV_OUTPUT_CONTEXT_CHARS if use_prev_output else 0
     for segment in segments:
@@ -101,7 +102,7 @@ def check_segments_fit(llm, segments, use_prev_output):
             continue
         prompt = build_process_prompt("\n".join(segment), context)
         tokens = len(llm.tokenize(prompt.encode("utf-8"), add_bos=False)) + extra
-        if tokens >= n_ctx:
+        if tokens >= max_prompt:
             abort_oversized_segment(segment, tokens, n_ctx)
 
 def process_segments(llm, segments, outfile, use_prev_output):
