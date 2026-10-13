@@ -253,8 +253,11 @@ def read_state():
 def write_state(state):
     LAST_INSTRUCTION_PATH.write_text(json.dumps(state, ensure_ascii=False, indent=2), encoding="utf-8")
 
-def load_state_value(key):
-    return read_state().get(key)
+def load_state_value(key, expected_type=None):
+    value = read_state().get(key)
+    if expected_type is not None and not isinstance(value, expected_type):
+        return None
+    return value
 
 def save_state_value(key, value):
     state = read_state()
