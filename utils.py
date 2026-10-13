@@ -12,7 +12,7 @@ import settings
 
 MODEL_LOG_PATH = Path(__file__).resolve().parent / "llm_use.log"
 INSTRUCTION_LOG_PATH = Path(__file__).resolve().parent / "instruction_use.log"
-LAST_INSTRUCTION_PATH = Path(__file__).resolve().parent / "last_instruction.json"
+LAST_INSTRUCTION_PATH = Path(__file__).resolve().parent / "last.json"
 
 def is_cached(model):
     repo_slug = "models--" + model["repo_id"].replace("/", "--")
@@ -23,6 +23,7 @@ def log_model_use(model):
     timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
     with open(MODEL_LOG_PATH, "a") as f:
         f.write(f"{timestamp} {model['repo_id']} {model['filename']}\n")
+    save_last_model(model)
 
 def log_instruction_use(instruction):
     INSTRUCTION_LOG_PATH.parent.mkdir(parents=True, exist_ok=True)
@@ -193,16 +194,24 @@ def pick_model():
     if not all_models:
         print("No usable models defined.")
         raise SystemExit
+    last_model = find_last_model(all_models)
     current = all_models
     print(f"Available models ([{cached_symb}] = cached, [{nonthinking_symb}] = non-thinking):")
+    if last_model is not None:
+        print(f"l: Last used model: {last_model['repo_id']} ({last_model['filename']})")
     print_model_list(current)
-    print("Keywords to filter, number to select, * to reset, t thinking models, n non-thinking, x downloaded.")
+    print("Keywords to filter, number to select, l last used, * to reset, t thinking models, n non-thinking, x downloaded.")
     while True:
         try:
             raw = input("Filter / select: ").strip()
         except (KeyboardInterrupt, EOFError):
             print("\nExiting.")
             raise SystemExit
+        if raw.lower() == "l":
+            if last_model is None:
+                print("No last used model saved.")
+                continue
+            return last_model
         if raw == "*":
             current = all_models
             print_model_list(current)
@@ -233,6 +242,39 @@ def pick_model():
             if confirm != "n":
                 return current[0]
 
+def read_state():
+    if not LAST_INSTRUCTION_PATH.is_file():
+        return {}
+    try:
+        data = json.loads(LAST_INSTRUCTION_PATH.read_text(encoding="utf-8"))
+    except (OSError, ValueError):
+        return {}
+    return data if isinstance(data, dict) else {}
+
+def write_state(state):
+    temp_path = LAST_INSTRUCTION_PATH.with_suffix(".tmp")
+    temp_path.write_text(json.dumps(state, ensure_ascii=False, indent=2), encoding="utf-8")
+    temp_path.replace(LAST_INSTRUCTION_PATH)
+
+def load_state_value(key, value_type):
+    value = read_state().get(key)
+    if value_type is bool:
+        return value if isinstance(value, bool) else None
+    if value_type is str:
+        return value if isinstance(value, str) else None
+    if value_type is int:
+        return value if isinstance(value, int) and not isinstance(value, bool) else None
+    if value_type is float:
+        return value if isinstance(value, (int, float)) and not isinstance(value, bool) else None
+    return value if isinstance(value, value_type) else None
+
+
+def save_state_value(key, value):
+    state = read_state()
+    state[key] = value
+    write_state(state)
+
+
 def strip_think(text):
     marker = "</think>"
     idx = text.find(marker)
@@ -249,20 +291,30 @@ def wait_while_stopped():
     print("Stop file removal detected, resuming.")
 
 def load_last_instruction():
-    if not LAST_INSTRUCTION_PATH.is_file():
-        return None
-    try:
-        data = json.loads(LAST_INSTRUCTION_PATH.read_text(encoding="utf-8"))
-    except (OSError, ValueError):
-        return None
-    if not isinstance(data, dict):
-        return None
-    instruction = data.get("instruction")
+    instruction = read_state().get("instruction")
     if not isinstance(instruction, str):
         return None
     return instruction.strip() or None
 
 def save_last_instruction(instruction):
-    temp_path = LAST_INSTRUCTION_PATH.with_suffix(".tmp")
-    temp_path.write_text(json.dumps({"instruction": instruction}, ensure_ascii=False, indent=2), encoding="utf-8")
-    temp_path.replace(LAST_INSTRUCTION_PATH)
+    state = read_state()
+    state["instruction"] = instruction
+    write_state(state)
+
+def load_last_model():
+    model = read_state().get("model")
+    return model if isinstance(model, dict) else None
+
+def save_last_model(model):
+    state = read_state()
+    state["model"] = {"repo_id": model["repo_id"], "filename": model["filename"]}
+    write_state(state)
+
+def find_last_model(models_list):
+    last = load_last_model()
+    if last is None:
+        return None
+    for m in models_list:
+        if m["repo_id"] == last.get("repo_id") and m["filename"] == last.get("filename"):
+            return m
+    return None

@@ -25,7 +25,7 @@ def run_chat_loop(llm):
         if settings.RUN_REPORT_RECEIVED:
             tokens = len(llm.tokenize(prompt.encode("utf-8"), add_bos=False))
             print(f"Received {len(prompt)} characters, {tokens} tokens, ending with: \"{prompt[-40:]}\"")
-        stream_response(llm, settings.SYSTEM_INSTRUCTION + prompt)
+        stream_response(llm, settings.SYSTEM_INSTRUCTION + " <prompt> " + prompt + " </prompt> ")
 
 if __name__ == "__main__":
     model = pick_model()

@@ -1,6 +1,5 @@
 import time
-from pathlib import Path
-from utils import load_model, log_instruction_use, memory_derived_ctx, pick_model, strip_think, wait_while_stopped, load_last_instruction, save_last_instruction
+from utils import load_model, load_state_value, log_instruction_use, memory_derived_ctx, pick_model, save_state_value, strip_think, wait_while_stopped
 import settings
 
 def run_completion(llm, prompt):
@@ -22,10 +21,7 @@ def run_completion(llm, prompt):
     choice = result["choices"][0]
     if choice["finish_reason"] == "length":
         print("Warning: generation filled the context, output was cut off.")
-    content = choice["message"]["content"].strip()
-    if not Path(settings.KEEP_THINKING_FLAG).is_file():
-        content = strip_think(content)
-    return content
+    return choice["message"]["content"].strip()
 
 def build_process_prompt(line, context=None):
     parts = []
@@ -40,11 +36,15 @@ def process_line(llm, line, context=None):
     return run_completion(llm, build_process_prompt(line, context))
 
 def write_output(outfile, output):
+    # Read the hand-edited JSON setting when this output is written.
+    if not load_state_value("keep_thinking", bool):
+        output = strip_think(output)
     output = "\n".join(line for line in output.split("\n") if line.strip() != "")
     print(output)
     if output:
         outfile.write(output + "\n")
         outfile.flush()
+    return output
 
 def read_segments(infile):
     segments = []
@@ -109,11 +109,10 @@ def process_segments(llm, segments, outfile, use_prev_output):
         if output is None:
             print(f"Warning: segment starting with \"{segment[0][:60]}\" could not be processed.")
             continue
-        write_output(outfile, output)
-        last_output = output
+        last_output = write_output(outfile, output)
 
 def pick_request():
-    last_instruction = load_last_instruction()
+    last_instruction = (load_state_value("instruction", str) or "").strip() or None
     last_sample = " ".join(last_instruction.split())[:65] if last_instruction else "none saved"
     print("m/c: Enter instruction manually.")
     print(f"l: Last used instruction: {last_sample}")
@@ -138,7 +137,7 @@ def pick_request():
         except ValueError:
             index = 0
         settings.REQUEST = settings.REQUESTS[index]
-    save_last_instruction(settings.REQUEST)
+    save_state_value("instruction", settings.REQUEST)
     log_instruction_use(settings.REQUEST)
 
 def main():

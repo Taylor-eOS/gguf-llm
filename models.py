@@ -37,7 +37,7 @@ MODELS = [
         "repo_id": "LiquidAI/LFM2.5-2.6B-GGUF",
         "thinking": True,
         "filename": "LFM2.5-2.6B-Q5_K_M.gguf",
-        "comment": "Q5, 1.9GB, popular, sub-4GB agentic tool-use, small, finishes thinking, nonsense summary",
+        "comment": "Q5, 1.9GB, small, popular, sub-4GB agentic tool-use, finishes thinking, nonsense summary",
     },
     #{
     #    "repo_id": "LiquidAI/LFM2.5-230M-GGUF",
@@ -149,7 +149,7 @@ MODELS = [
         #"filename": "phi-4.Q5_K_M.gguf",
         #"comment": "Q5, 10.6GB, 14B, big, a tad boring, swaps, slow but useful, didn't refuse all",
         "filename": "phi-4.Q4_K_M.gguf", #several others
-        "comment": "Q4, 9GB, 14B, a tad boring, didn't refuse all",
+        "comment": "Q4, 9GB, 14B, big, a tad boring, didn't refuse all",
     },
     {
         "repo_id": "yuxinlu1/gemma-4-12B-it-Claude-4.6-4.8-Opus-GGUF",
@@ -407,7 +407,7 @@ MODELS = [
         "filename": "JiRackUltra_14b_Q3_K_M.gguf",
         "comment": "Q3, 7.3GB, for CPU, limited thinking, boring",
         #"filename": "JiRackUltra_14b_Q4_K_M.gguf", #try this
-        #"comment": "Q4, 9GB, for CPU, limited thinking",
+        #"comment": "Q4, 9GB, big, for CPU, limited thinking",
     },
     {
         "repo_id": "HauhauCS/Qwen3.8-27B-Uncensored-HauhauCS-Aggressive-MTP-GGUF",
@@ -445,7 +445,7 @@ MODELS = [
         "repo_id": "unsloth/Qwen3-30B-A3B-Instruct-2507-GGUF",
         "thinking": False,
         "filename": "Qwen3-30B-A3B-Instruct-2507-UD-TQ1_0.gguf",
-        "comment": "UD-TQ1, 8GB, fast, can da, good, loops, bland, old, fine advice, goes along",
+        "comment": "UD-TQ1, 8GB, big, fast, can da, good, loops, bland, old, fine advice, goes along",
         #"filename": "Qwen3-30B-A3B-Instruct-2507-UD-Q2_K_XL.gguf",
         #"comment": "UD-TQ2, 11.8GB, big, fast, can da, good, bland, old, fine advice",
         #"filename": "Qwen3-30B-A3B-Instruct-2507-UD-Q3_K_XL.gguf", #try if this runs
@@ -495,7 +495,7 @@ MODELS = [
         "repo_id": "tvall43/Qwen3.6-14B-A3B-FableVibes-GGUF",
         "thinking": True,
         "filename": "Qwen3.6-14B-A3B-FableVibes-Q4_K_M.gguf",
-        "comment": "Q4, 8.5GB",
+        "comment": "Q4, 8.5GB, big-ish",
     },
     {
         "repo_id": "DevQuasar/amd.Instella-MoE-16B-A3B-Think-GGUF",
@@ -517,7 +517,7 @@ MODELS = [
         "repo_id": "XeyonAI/Helcyon-Solara-2-14b-v2.0-GGUF",
         "thinking": False,
         "filename": "Helcyon-Solara-2-14B-v2.0-Q4_K_M.gguf",
-        "comment": "Q4, 8.2GB, supposedly personality",
+        "comment": "Q4, 8.2GB, big-ish, supposedly personality",
     },
     {
         "repo_id": "MaziyarPanahi/solar-pro-preview-instruct-GGUF",
@@ -535,13 +535,13 @@ MODELS = [
         "repo_id": "JetBrains/Mellum2-12B-A2.5B-Instruct-GGUF-Q4_K_M",
         #"thinking": False,
         "filename": "Mellum2-12B-A2.5B-Instruct-Q4_K_M.gguf", #only one
-        "comment": "Q4, 8.1GB",
+        "comment": "Q4, 8.1GB, big-ish",
     },
     {
         "repo_id": "bartowski/Qwen2.5-Coder-14B-Instruct-abliterated-GGUF",
         #"thinking": False, #probably
         "filename": "Qwen2.5-Coder-14B-Instruct-abliterated-Q4_K_M.gguf", #many others
-        "comment": "Q4, 9GB, old",
+        "comment": "Q4, 9GB, big, old",
     },
     {
         "repo_id": "MN-Violet-Lotus-12B.Q4_K_M.gguf",
@@ -556,10 +556,10 @@ MODELS = [
         "comment": "Q3, 11.3GB, big",
     },
     {
-        "repo_id": "",
-        #"thinking": False,
-        "filename": "",
-        "comment": "",
+        "repo_id": "pfeifferj/Ornith-1.5-35B-A3B-GSQ-RCO-GGUF",
+        "thinking": True,
+        "filename": "Ornith-1.5-35B-A3B-GSQ-RCO-3bit.gguf", #only one
+        "comment": "3bit, 13GB, big, works, fast, not too much thinking, censored",
     },
     {
         "repo_id": "",
