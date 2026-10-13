@@ -13,11 +13,6 @@ import settings
 MODEL_LOG_PATH = Path(__file__).resolve().parent / "llm_use.log"
 INSTRUCTION_LOG_PATH = Path(__file__).resolve().parent / "instruction_use.log"
 LAST_INSTRUCTION_PATH = Path(__file__).resolve().parent / "last.json"
-STATE_SCHEMA = {
-    "instruction": str,
-    "model": dict,
-    "keep_thinking": bool,
-}
 
 def is_cached(model):
     repo_slug = "models--" + model["repo_id"].replace("/", "--")
@@ -28,6 +23,8 @@ def log_model_use(model):
     timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
     with open(MODEL_LOG_PATH, "a") as f:
         f.write(f"{timestamp} {model['repo_id']} {model['filename']}\n")
+
+def remember_model(model):
     save_state_value("model", {"repo_id": model["repo_id"], "filename": model["filename"]})
 
 def log_instruction_use(instruction):
@@ -66,6 +63,7 @@ def load_model(model, c_ntx=None, redirect_logs=settings.WRITE_LOG):
     if c_ntx is None:
         c_ntx = settings.N_CTX
     log_model_use(model)
+    remember_model(model)
     path = resolve_model_path(model)
     batch_size = min(c_ntx, settings.MODEL_N_BATCH)
     llama_kwargs = {
@@ -250,47 +248,15 @@ def pick_model():
 def read_state():
     if not LAST_INSTRUCTION_PATH.is_file():
         return {}
-    try:
-        data = json.loads(LAST_INSTRUCTION_PATH.read_text(encoding="utf-8"))
-    except (OSError, ValueError):
-        return {}
-    return data if isinstance(data, dict) else {}
+    return json.loads(LAST_INSTRUCTION_PATH.read_text(encoding="utf-8"))
 
 def write_state(state):
-    temp_path = LAST_INSTRUCTION_PATH.with_suffix(".tmp")
-    temp_path.write_text(json.dumps(state, ensure_ascii=False, indent=2), encoding="utf-8")
-    temp_path.replace(LAST_INSTRUCTION_PATH)
+    LAST_INSTRUCTION_PATH.write_text(json.dumps(state, ensure_ascii=False, indent=2), encoding="utf-8")
 
-def load_state_value(key, value_type):
-    expected = STATE_SCHEMA.get(key)
-    if expected is None:
-        raise KeyError(f"Unknown state key: {key}")
-    if expected is not value_type:
-        raise TypeError(f"State key {key!r} holds {expected.__name__}, not {value_type.__name__}")
-    value = read_state().get(key)
-    if value_type is bool:
-        if not isinstance(value, bool):
-            return None
-        return value
-    if not isinstance(value, value_type):
-        return None
-    if key == "instruction":
-        stripped = value.strip()
-        return stripped or None
-    if key == "model":
-        if not isinstance(value.get("repo_id"), str) or not isinstance(value.get("filename"), str):
-            return None
-    return value
+def load_state_value(key):
+    return read_state().get(key)
 
 def save_state_value(key, value):
-    expected = STATE_SCHEMA.get(key)
-    if expected is None:
-        raise KeyError(f"Unknown state key: {key}")
-    if expected is bool:
-        if not isinstance(value, bool):
-            raise TypeError(f"State key {key!r} expects bool, got {type(value).__name__}")
-    elif not isinstance(value, expected):
-        raise TypeError(f"State key {key!r} expects {expected.__name__}, got {type(value).__name__}")
     state = read_state()
     state[key] = value
     write_state(state)
@@ -311,7 +277,7 @@ def wait_while_stopped():
     print("Stop file removal detected, resuming.")
 
 def find_last_model(models_list):
-    last = load_state_value("model", dict)
+    last = load_state_value("model")
     if last is None:
         return None
     for m in models_list:

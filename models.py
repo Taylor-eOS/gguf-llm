@@ -559,7 +559,7 @@ MODELS = [
         "repo_id": "pfeifferj/Ornith-1.5-35B-A3B-GSQ-RCO-GGUF",
         "thinking": True,
         "filename": "Ornith-1.5-35B-A3B-GSQ-RCO-3bit.gguf", #only one
-        "comment": "3bit, 13GB, big, works, fast, not too much thinking, censored",
+        "comment": "3bit, 13GB, big, works, fast, not too much thinking, censored, good",
     },
     {
         "repo_id": "",
