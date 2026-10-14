@@ -303,15 +303,15 @@ MODELS = [
         "repo_id": "ornith-ai/Ornith-1.5-9B-GGUF",
         "thinking": True,
         #"filename": "Ornith-1.5-9B-Q5_K_M.gguf",
-        #"comment": "Q5, 6.7GB, popular, good long text, quite restricted, annoyingly opinionated",
+        #"comment": "Q5, 6.7GB, popular, good long text, quite restricted, opinionated, discerning",
         "filename": "Ornith-1.5-9B-Q4_K_M.gguf",
-        "comment": "Q4, 5.8GB, popular, good long text, quite restricted, annoyingly opinionated",
+        "comment": "Q4, 5.8GB, popular, good long text, quite restricted, opinionated, discerning",
     },
     {
         "repo_id": "MaziyarPanahi/Nemotron-Orchestrator-8B-GGUF",
         "thinking": True,
         "filename": "Nemotron-Orchestrator-8B.Q5_K_M.gguf",
-        "comment": "Q5, 5.9GB, can skip thinking, looped nonsense",
+        "comment": "Q5, 5.9GB, can skip thinking, looped nonsense, keeps thinking",
     },
     {
         "repo_id": "bartowski/allura-forge_Llama-3.3-8B-Instruct-GGUF",
@@ -560,7 +560,7 @@ MODELS = [
         "repo_id": "pfeifferj/Ornith-1.5-35B-A3B-GSQ-RCO-GGUF",
         "thinking": True,
         "filename": "Ornith-1.5-35B-A3B-GSQ-RCO-3bit.gguf",
-        "comment": "3bit, 13GB, big, works, fast, ok thinking, restricted, less discernment than 9B",
+        "comment": "3bit, 13GB, big, works, fast, ok thinking, restricted, less discerning than 9B",
         #"filename": "Ornith-1.5-35B-A3B-GSQ-RCO-3.5bit.gguf", #much bigger than RAM but worth trying
         #"comment": "3.5bit, 15.2GB, big",
     },

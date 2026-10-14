@@ -136,7 +136,7 @@ def memory_derived_ctx(model, longest_prompt=None):
     if trained:
         n_ctx = min(n_ctx, trained)
     if longest_prompt is not None:
-        n_ctx = min(n_ctx, max(settings.N_CTX_MIN, longest_prompt * settings.CTX_PER_PROMPT_TOKEN))
+        n_ctx = min(n_ctx, max(settings.N_CTX_MIN, longest_prompt + settings.RESERVE_TOKENS))
     if n_ctx < 1024:
         fallback = min(settings.N_CTX, trained) if trained else settings.N_CTX
         print(f"The memory estimate allows only {n_ctx} tokens of context, using {fallback} instead.")

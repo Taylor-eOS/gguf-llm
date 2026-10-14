@@ -8,7 +8,7 @@ def run_completion(llm, messages):
             print(message["content"])
     start_time = time.perf_counter()
     try:
-        result = llm.create_chat_completion(messages=messages, max_tokens=None, temperature=0.7, top_p=0.9)
+        result = llm.create_chat_completion(messages=messages, max_tokens=settings.MAX_TOKENS, temperature=0.6, top_p=0.95, top_k=20, presence_penalty=1.0)
     except ValueError as error:
         print(f"Warning: {error}")
         return None
