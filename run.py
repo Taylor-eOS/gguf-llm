@@ -1,10 +1,11 @@
 import readline
-from utils import is_cached, load_model, pick_model
+from utils import build_messages, is_cached, load_model, pick_model
 import settings
 
 def stream_response(llm, prompt):
     print()
-    stream = llm.create_chat_completion(messages=[{"role": "user", "content": prompt}], stream=True)
+    messages = build_messages(settings.SYSTEM_INSTRUCTION, prompt, settings.SYSTEM_INSTRUCTION + " <prompt> " + prompt + " </prompt> ")
+    stream = llm.create_chat_completion(messages=messages, stream=True)
     for chunk in stream:
         delta = chunk["choices"][0]["delta"]
         token = (delta.get("content") or "").replace("*", "")
@@ -25,7 +26,7 @@ def run_chat_loop(llm):
         if settings.RUN_REPORT_RECEIVED:
             tokens = len(llm.tokenize(prompt.encode("utf-8"), add_bos=False))
             print(f"Received {len(prompt)} characters, {tokens} tokens, ending with: \"{prompt[-40:]}\"")
-        stream_response(llm, settings.SYSTEM_INSTRUCTION + " <prompt> " + prompt + " </prompt> ")
+        stream_response(llm, prompt)
 
 if __name__ == "__main__":
     model = pick_model()

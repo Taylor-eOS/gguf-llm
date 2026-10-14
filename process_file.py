@@ -1,17 +1,11 @@
 import time
-from utils import load_model, load_state_value, load_tokenizer, log_instruction_use, memory_derived_ctx, pick_model, save_state_value, strip_think, wait_while_stopped, next_free_path
+from utils import build_messages, load_model, load_state_value, load_tokenizer, log_instruction_use, memory_derived_ctx, pick_model, save_state_value, strip_think, wait_while_stopped, next_free_path
 import settings
 
-USE_SYSTEM_ROLE = True
-
-def run_completion(llm, prompt, system=None):
-    messages = [{"role": "user", "content": prompt}]
-    if system:
-        messages.insert(0, {"role": "system", "content": system})
+def run_completion(llm, messages):
     if settings.PRINT_PROCESSING_PROMPT:
-        if system:
-            print(system)
-        print(prompt)
+        for message in messages:
+            print(message["content"])
     start_time = time.perf_counter()
     try:
         result = llm.create_chat_completion(messages=messages, max_tokens=None, temperature=0.7, top_p=0.9)
@@ -30,29 +24,20 @@ def run_completion(llm, prompt, system=None):
         print("Warning: generation filled the context, output was cut off.")
     return choice["message"]["content"].strip()
 
-def build_system_prompt():
-    return f"{settings.BASE}\n{settings.TASK_LINE}: {settings.REQUEST}"
-
 def build_user_prompt(line, context=None):
     parts = []
     if context:
         parts.append(context)
     parts.append(f"Input content: <context>\"{line}\"</context>")
+    parts.append(f"Instruction: <instruction>{settings.REQUEST}</instruction>")
     return "\n".join(parts)
 
 def build_process_prompt(line, context=None):
-    return build_user_prompt(line, context) + "\n" + build_system_prompt() + "\nProcessed:"
-
-def configure_system_role(model):
-    global USE_SYSTEM_ROLE
-    USE_SYSTEM_ROLE = not model.get("no_system_role", False)
-    if not USE_SYSTEM_ROLE:
-        print("Model is marked no_system_role, putting the instruction into the user message.")
+    return settings.BASE + "\n" + build_user_prompt(line, context)
 
 def process_line(llm, line, context=None):
-    if USE_SYSTEM_ROLE:
-        return run_completion(llm, build_user_prompt(line, context), build_system_prompt())
-    return run_completion(llm, build_process_prompt(line, context))
+    messages = build_messages(settings.BASE, build_user_prompt(line, context), build_process_prompt(line, context))
+    return run_completion(llm, messages)
 
 def write_output(outfile, output):
     if not load_state_value("keep_thinking", bool):
@@ -172,7 +157,6 @@ def pick_request():
 
 def main():
     model = pick_model()
-    configure_system_role(model)
     pick_request()
     segment_mode = input("Use segment mode or line mode? [Y/n]: ").strip().lower() in ("y", "yes", "")
     use_prev_output = input("Include previous output as context? [y/N]: ").strip().lower() in ("y", "yes")

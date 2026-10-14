@@ -13,6 +13,7 @@ import settings
 MODEL_LOG_PATH = Path(__file__).resolve().parent / "llm_use.log"
 INSTRUCTION_LOG_PATH = Path(__file__).resolve().parent / "instruction_use.log"
 LAST_INSTRUCTION_PATH = Path(__file__).resolve().parent / "last.json"
+USE_SYSTEM_ROLE = True
 
 def is_cached(model):
     repo_slug = "models--" + model["repo_id"].replace("/", "--")
@@ -26,6 +27,17 @@ def log_model_use(model):
 
 def remember_model(model):
     save_state_value("model", {"repo_id": model["repo_id"], "filename": model["filename"]})
+
+def configure_system_role(model):
+    global USE_SYSTEM_ROLE
+    USE_SYSTEM_ROLE = not model.get("no_system_role", False)
+    if not USE_SYSTEM_ROLE:
+        print("Model is marked no_system_role, putting the instruction into the user message.")
+
+def build_messages(system, user, flat_prompt):
+    if USE_SYSTEM_ROLE:
+        return [{"role": "system", "content": system}, {"role": "user", "content": user}]
+    return [{"role": "user", "content": flat_prompt}]
 
 def log_instruction_use(instruction):
     INSTRUCTION_LOG_PATH.parent.mkdir(parents=True, exist_ok=True)
@@ -64,6 +76,7 @@ def load_model(model, c_ntx=None, redirect_logs=settings.WRITE_LOG):
         c_ntx = settings.N_CTX
     log_model_use(model)
     remember_model(model)
+    configure_system_role(model)
     path = resolve_model_path(model)
     batch_size = min(c_ntx, settings.MODEL_N_BATCH)
     llama_kwargs = {
