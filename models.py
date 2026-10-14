@@ -80,8 +80,8 @@ MODELS = [
     {
         "repo_id": "mlabonne/Meta-Llama-3.1-8B-Instruct-abliterated-GGUF",
         "thinking": False,
-        "filename": "meta-llama-3.1-8b-instruct-abliterated.Q4_K_M.gguf", #seems to make similar responses as Q6 but that was more censored
-        "comment": "Q4, 4.9GB, clever, not overly censored",
+        "filename": "meta-llama-3.1-8b-instruct-abliterated.Q4_K_M.gguf", #seems to make similar responses as Q6 but that was more restricted
+        "comment": "Q4, 4.9GB, clever, not too restricted",
     },
     {
         "repo_id": "bartowski/Mistral-7B-Instruct-v0.3-GGUF",
@@ -182,7 +182,7 @@ MODELS = [
     {
         "repo_id": "VLTX/VertaLily-1.2-1B-GGUF",
         "thinking": False,
-        "filename": "VertaLily-1.2-1B-Q8_0-stable.gguf", #Q4 is overly censored and kind of wrong, no others
+        "filename": "VertaLily-1.2-1B-Q8_0-stable.gguf", #Q4 is overly restricted and kind of wrong; no others
         "comment": "Q8, 1.3GB, small, can stop, follows style, good translation",
     },
     {
@@ -324,6 +324,7 @@ MODELS = [
     {
         "repo_id": "bartowski/gemma-2-9b-it-GGUF",
         "thinking": False,
+        "no_system_role": True,
         #"filename": "gemma-2-9b-it-IQ4_XS.gguf",
         #"comment": "IQ4, 5.2GB, restricted",
         "filename": "gemma-2-9b-it-Q4_K_M.gguf",
@@ -363,7 +364,7 @@ MODELS = [
         "repo_id": "OBLITERATUS/Ornith-1.5-9B-OBLITERATED",
         "thinking": True,
         "filename": "Ornith-1.5-9B-OBLITERATED-Q4_K_M.gguf", #IQ4 went insane
-        "comment": "Q4, 5.8GB, much thinking, not censored, good",
+        "comment": "Q4, 5.8GB, much thinking, unrestricted, good",
     },
     {
         "repo_id": "Jackrong/Qwopus3.5-9B-Coder-MTP-GGUF",
@@ -559,7 +560,7 @@ MODELS = [
         "repo_id": "pfeifferj/Ornith-1.5-35B-A3B-GSQ-RCO-GGUF",
         "thinking": True,
         "filename": "Ornith-1.5-35B-A3B-GSQ-RCO-3bit.gguf",
-        "comment": "3bit, 13GB, big, works, fast, not too much thinking, censored, good, a bit boring",
+        "comment": "3bit, 13GB, big, works, fast, ok thinking, restricted, less discernment than 9B",
         #"filename": "Ornith-1.5-35B-A3B-GSQ-RCO-3.5bit.gguf", #much bigger than RAM but worth trying
         #"comment": "3.5bit, 15.2GB, big",
     },
