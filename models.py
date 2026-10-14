@@ -57,7 +57,7 @@ MODELS = [
         "repo_id": "DavidAU/Llama-3.2-8X3B-MOE-Dark-Champion-Instruct-uncensored-abliterated-18.4B-GGUF",
         "thinking": False,
         "filename": "L3.2-8X3B-MOE-Dark-Champion-Inst-18.4B-uncen-ablit_D_AU-Q4_k_s.gguf",
-        "comment": "Q4, 10.7GB, big, ?",
+        "comment": "Q4, 10.7GB, big",
     },
     {
         "repo_id": "squ11z1/Mythos-nano",
@@ -261,7 +261,7 @@ MODELS = [
         "repo_id": "HauhauCS/Gemma-4-E4B-Uncensored-HauhauCS-Aggressive",
         "thinking": False,
         "filename": "Gemma-4-E4B-Uncensored-HauhauCS-Aggressive-Q4_K_M.gguf", #Q3_K_P 4.9GB, Q4_K_P 5.4GB, Q5_K_P 5.8GB (P = perfect)
-        "comment": "Q4, 5.3GB, popular, fast, hilarious, sarcastic, wrong details, agrees nonsense",
+        "comment": "Q4, 5.3GB, popular, fast, hilarious, sarcastic, wrong details, agrees to nonsense",
     },
     {
         "repo_id": "RusteddDDD/Gemma-4-E4B-Uncensored-HauhauCS-Aggressive",
@@ -311,7 +311,7 @@ MODELS = [
         "repo_id": "MaziyarPanahi/Nemotron-Orchestrator-8B-GGUF",
         "thinking": True,
         "filename": "Nemotron-Orchestrator-8B.Q5_K_M.gguf",
-        "comment": "Q5, 5.9GB, can skip thinking, loops nonsense to limit",
+        "comment": "Q5, 5.9GB, can skip thinking, looped nonsense",
     },
     {
         "repo_id": "bartowski/allura-forge_Llama-3.3-8B-Instruct-GGUF",
@@ -405,7 +405,7 @@ MODELS = [
         "repo_id": "CMSManhattan/JiRackUltra_14b",
         "thinking": True,
         "filename": "JiRackUltra_14b_Q3_K_M.gguf",
-        "comment": "Q3, 7.3GB, for CPU, limited thinking, boring",
+        "comment": "Q3, 7.3GB, for CPU, limited thinking, boring, good analysis",
         #"filename": "JiRackUltra_14b_Q4_K_M.gguf", #try this
         #"comment": "Q4, 9GB, big, for CPU, limited thinking",
     },
@@ -558,8 +558,28 @@ MODELS = [
     {
         "repo_id": "pfeifferj/Ornith-1.5-35B-A3B-GSQ-RCO-GGUF",
         "thinking": True,
-        "filename": "Ornith-1.5-35B-A3B-GSQ-RCO-3bit.gguf", #only one
-        "comment": "3bit, 13GB, big, works, fast, not too much thinking, censored, good",
+        "filename": "Ornith-1.5-35B-A3B-GSQ-RCO-3bit.gguf",
+        "comment": "3bit, 13GB, big, works, fast, not too much thinking, censored, good, a bit boring",
+        #"filename": "Ornith-1.5-35B-A3B-GSQ-RCO-3.5bit.gguf", #much bigger than RAM but worth trying
+        #"comment": "3.5bit, 15.2GB, big",
+    },
+    {
+        "repo_id": "pfeifferj/Spark-X2.5-4B-GSQ-RCO-GGUF",
+        #"thinking": True,
+        "filename": "Spark-X2.5-4B-GSQ-RCO-3.5bit.gguf",
+        "comment": "3.5bit, 1.8GB, small, has a way to disable thinking",
+    },
+    {
+        "repo_id": "ConwayResearch/Underdog-Saluki-27B-1.0",
+        "thinking": True,
+        "filename": "Underdog-Saluki-27B-1.0-IQ2-mix.gguf",
+        "comment": "IQ2, 7.9GB, tool-calling",
+    },
+    {
+        "repo_id": "",
+        #"thinking": False,
+        "filename": "",
+        "comment": "",
     },
     {
         "repo_id": "",

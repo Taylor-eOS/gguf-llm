@@ -107,7 +107,7 @@ def kv_bytes_per_token(metadata):
     value_len = metadata_int(metadata, f"{arch}.attention.value_length") or key_len
     return layers * heads_kv * (key_len + value_len) * 2
 
-def memory_derived_ctx(model, longest_prompt=0):
+def memory_derived_ctx(model, longest_prompt=None):
     tokenizer_llm = load_tokenizer(model)
     metadata = dict(tokenizer_llm.metadata)
     del tokenizer_llm
@@ -122,12 +122,13 @@ def memory_derived_ctx(model, longest_prompt=0):
     n_ctx = min(memory_ctx, settings.N_CTX_MAX)
     if trained:
         n_ctx = min(n_ctx, trained)
-    n_ctx = min(n_ctx, max(settings.N_CTX_MIN, longest_prompt * settings.CTX_PER_PROMPT_TOKEN))
+    if longest_prompt is not None:
+        n_ctx = min(n_ctx, max(settings.N_CTX_MIN, longest_prompt * settings.CTX_PER_PROMPT_TOKEN))
     if n_ctx < 1024:
         fallback = min(settings.N_CTX, trained) if trained else settings.N_CTX
         print(f"The memory estimate allows only {n_ctx} tokens of context, using {fallback} instead.")
         return fallback
-    print(f"KV cache estimate: {per_token * n_ctx / 1024 ** 3:.2f} GiB for {n_ctx} tokens (longest prompt {longest_prompt} tokens, memory would allow {memory_ctx}).")
+    print(f"KV cache estimate: {per_token * n_ctx / 1024 ** 3:.2f} GiB for {n_ctx} tokens (memory would allow {memory_ctx}).")
     return n_ctx
 
 def load_tokenizer(model, redirect_logs=settings.WRITE_LOG):
@@ -287,3 +288,9 @@ def find_last_model(models_list):
         if m["repo_id"] == last["repo_id"] and m["filename"] == last["filename"]:
             return m
     return None
+
+def next_free_path(template):
+    number = 1
+    while Path(template.format(n=number)).exists():
+        number += 1
+    return Path(template.format(n=number))

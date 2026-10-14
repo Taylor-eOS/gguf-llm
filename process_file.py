@@ -1,5 +1,5 @@
 import time
-from utils import load_model, load_state_value, load_tokenizer, log_instruction_use, memory_derived_ctx, pick_model, save_state_value, strip_think, wait_while_stopped
+from utils import load_model, load_state_value, load_tokenizer, log_instruction_use, memory_derived_ctx, pick_model, save_state_value, strip_think, wait_while_stopped, next_free_path
 import settings
 
 def run_completion(llm, prompt):
@@ -162,7 +162,9 @@ def main():
     print(f"Using context window of {n_ctx} tokens.")
     llm = load_model(model, c_ntx=n_ctx)
     check_segments_fit(llm, segments, use_prev_output)
-    with open(settings.OUTPUT_FILE, "w", encoding="utf-8") as outfile:
+    output_path = next_free_path(settings.OUTPUT_FILE_TEMPLATE)
+    print(f"Writing output to {output_path}.")
+    with open(output_path, "x", encoding="utf-8") as outfile:
         process_segments(llm, segments, outfile, use_prev_output)
 
 if __name__ == "__main__":
