@@ -311,7 +311,7 @@ MODELS = [
         "repo_id": "MaziyarPanahi/Nemotron-Orchestrator-8B-GGUF",
         "thinking": True,
         "filename": "Nemotron-Orchestrator-8B.Q5_K_M.gguf",
-        "comment": "Q5, 5.9GB, can skip thinking, looped nonsense, keeps thinking",
+        "comment": "Q5, 5.9GB, can skip thinking, nonsense loop, keeps thinking",
     },
     {
         "repo_id": "bartowski/allura-forge_Llama-3.3-8B-Instruct-GGUF",
@@ -548,7 +548,7 @@ MODELS = [
         "repo_id": "unsloth/GLM-4.7-Flash-REAP-23B-A3B-GGUF",
         "thinking": True,
         "filename": "GLM-4.7-Flash-REAP-23B-A3B-Q3_K_M.gguf", #Q4 is too big, Q3_K_S 10.3GB
-        "comment": "Q3, 11.3GB, big, fast, overthinks, loops",
+        "comment": "Q3, 11.3GB, big, fast, overthinks, loop",
     },
     {
         "repo_id": "pfeifferj/Ornith-1.5-35B-A3B-GSQ-RCO-GGUF",

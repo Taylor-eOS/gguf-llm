@@ -153,7 +153,7 @@ def pick_request():
         index = 1
     if index == 0:
         custom = input("Enter instruction: ").strip()
-        settings.REQUEST = custom if custom else settings.REQUESTS[0]
+        settings.REQUEST = custom if custom else "Tell a joke."
     else:
         settings.REQUEST = settings.REQUESTS[index - 1]
     log_instruction_use(settings.REQUEST)

@@ -1,7 +1,6 @@
 import time
 from jinja2.sandbox import ImmutableSandboxedEnvironment
-from utils import build_messages, load_model, load_state_value, load_tokenizer, log_instruction_use, memory_derived_ctx, pick_model, save_state_value, strip_think, wait_while_stopped, next_free_path
-from process_file import build_user_prompt, build_process_prompt, process_line, write_output, read_segments, read_line_segments, build_prev_output_context, abort_oversized_segment, segment_token_counts, longest_prompt_tokens, check_segments_fit, process_segments, pick_request, main
+import process_file
 import settings
 
 DISABLE_THINKING = True
@@ -56,5 +55,7 @@ def run_completion(llm, messages):
         print("Warning: generation filled the context, output was cut off.")
     return choice_text(choice).strip()
 
+process_file.run_completion = run_completion
+
 if __name__ == "__main__":
-    main()
+    process_file.main()

@@ -1,4 +1,5 @@
 import time
+import readline
 from utils import build_messages, load_model, load_state_value, load_tokenizer, log_instruction_use, memory_derived_ctx, pick_model, save_state_value, strip_think, wait_while_stopped, next_free_path
 import settings
 
