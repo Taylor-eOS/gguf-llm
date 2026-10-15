@@ -137,13 +137,9 @@ def pick_request():
     choice = input(f"Pick an instruction [1-{len(settings.REQUESTS)}, m/c, l]: ").strip().lower()
     if choice == "m" or choice == "c":
         custom = input("Enter instruction: ").strip()
-        settings.REQUEST = custom if custom else settings.REQUESTS[0]
+        settings.REQUEST = custom if custom else "Tell a joke."
     elif choice == "l":
-        if last_instruction is None:
-            print("No last used instruction saved, using the first predefined one.")
-            settings.REQUEST = settings.REQUESTS[0]
-        else:
-            settings.REQUEST = last_instruction
+        settings.REQUEST = last_instruction
     else:
         try:
             index = int(choice) - 1
