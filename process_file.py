@@ -127,6 +127,13 @@ def process_segments(llm, segments, outfile, use_prev_output):
             continue
         last_output = write_output(outfile, output)
 
+def read_input(prompt):
+    try:
+        return input(prompt).strip()
+    except (KeyboardInterrupt, EOFError):
+        print()
+        return ""
+
 def pick_request():
     last_instruction = load_state_value("instruction", str)
     last_sample = " ".join(last_instruction.split())[:65] if last_instruction else "none saved"
@@ -135,20 +142,15 @@ def pick_request():
     for i, request in enumerate(settings.REQUESTS, 1):
         sample = " ".join(request.split())[:92]
         print(f"{i}: {sample}")
-    choice = input(f"Pick an instruction [1-{len(settings.REQUESTS)}, m/c, l]: ").strip().lower()
-    if choice == "m" or choice == "c":
-        custom = input("Enter instruction: ").strip()
-        settings.REQUEST = custom if custom else "Tell a joke."
+    choice = read_input(f"Pick an instruction [1-{len(settings.REQUESTS)}, m/c, l]: ").lower()
+    if choice in ("m", "c"):
+        settings.REQUEST = read_input("Enter instruction: ") or settings.DEFAULT_REQUEST
     elif choice == "l":
-        settings.REQUEST = last_instruction
+        settings.REQUEST = last_instruction or settings.DEFAULT_REQUEST
+    elif choice.isdigit() and 1 <= int(choice) <= len(settings.REQUESTS):
+        settings.REQUEST = settings.REQUESTS[int(choice) - 1]
     else:
-        try:
-            index = int(choice) - 1
-            if index < 0 or index >= len(settings.REQUESTS):
-                raise ValueError
-        except ValueError:
-            index = 0
-        settings.REQUEST = settings.REQUESTS[index]
+        settings.REQUEST = settings.DEFAULT_REQUEST
     save_state_value("instruction", settings.REQUEST)
     log_instruction_use(settings.REQUEST)
 

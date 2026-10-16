@@ -1,6 +1,6 @@
 import readline
-from utils import load_model, load_tokenizer, log_instruction_use, pick_model, split_lines_by_tokens, strip_think
-from process_file import compute_required_ctx, prompt_overhead_tokens, read_segments, segment_token_count, write_output
+from utils import load_model, load_tokenizer, pick_model, split_lines_by_tokens, strip_think
+from process_file import compute_required_ctx, pick_request, prompt_overhead_tokens, read_segments, segment_token_count, write_output
 import settings
 
 input_file = "input.txt"
@@ -138,26 +138,6 @@ def process_segments(llm, n_ctx, segments, aligned_summaries, outfile, allow_spl
                 write_output(outfile, process_line(llm, "\n".join(chunk), prev_summary, next_summary))
         else:
             write_output(outfile, process_line(llm, "\n".join(segment), prev_summary, next_summary))
-
-def pick_request():
-    manual_option = 1
-    print(f"{manual_option}: Enter instruction manually.")
-    for i, request in enumerate(settings.REQUESTS, 2):
-        sample = " ".join(request.split()[:10])
-        print(f"{i}: {sample}...")
-    choice = input(f"Pick an instruction [1-{len(settings.REQUESTS) + 1}]: ").strip()
-    try:
-        index = int(choice) - 1
-        if index < 0 or index > len(settings.REQUESTS):
-            raise ValueError
-    except ValueError:
-        index = 1
-    if index == 0:
-        custom = input("Enter instruction: ").strip()
-        settings.REQUEST = custom if custom else "Tell a joke."
-    else:
-        settings.REQUEST = settings.REQUESTS[index - 1]
-    log_instruction_use(settings.REQUEST)
 
 def main():
     model = pick_model()

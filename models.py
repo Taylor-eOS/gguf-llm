@@ -4,14 +4,14 @@ MODELS = [
         "thinking": False,
         "filename": "gemma4-coding-Q4_K_M.gguf", #seems right
         "comment": "Q4, 7.4GB, in library, works well, does most requests, short answers, swaps but ok",
-        #"filename": "gemma4-coding-Q3_K_M.gguf", #for speed, not in library
+        #"filename": "gemma4-coding-Q3_K_M.gguf", #for speed
         #"comment": "Q4, 6.1GB, works well, does most requests",
     },
     {
         "repo_id": "deadbydawn101/RavenX-OpenFable-Coder-Gemma-4-12B-GGUF",
         "thinking": False,
         "filename": "RavenX-OpenFable-Coder-Gemma-4-12B-Q4_K_M.gguf", #only one
-        "comment": "Q4, 7.4GB, seems to work, good code description, good advice, few DL, not fast, history",
+        "comment": "Q4, 7.4GB, seems to work, good code description, good advice, few DL, slow, history",
     },
     {
         "repo_id": "Qwen/Qwen2.5-Coder-7B-Instruct-GGUF",
@@ -129,7 +129,7 @@ MODELS = [
         "repo_id": "MaziyarPanahi/mistral-small-3.1-24b-instruct-2503-hf-GGUF",
         "thinking": False,
         "filename": "mistral-small-3.1-24b-instruct-2503-hf.Q3_K_M.gguf",
-        "comment": "Q3, 11.5GB, big, works, not fast, gets authors right, sanitized, boring repeats request",
+        "comment": "Q3, 11.5GB, big, works, slow, gets authors right, sanitized, boring repeats request",
     },
     {
         "repo_id": "unsloth/gpt-oss-20b-GGUF",
@@ -197,9 +197,9 @@ MODELS = [
         "repo_id": "dphn/Dolphin3.0-Llama3.1-8B-GGUF",
         "thinking": False,
         #"filename": "Dolphin3.0-Llama3.1-8B-Q6_K.gguf", #small ones might fit Pi
-        #"comment": "Q6, 6.6GB, in separate script, uncensored, not boring",
+        #"comment": "Q6, 6.6GB, in separate script, uncensored, interesting",
         "filename": "Dolphin3.0-Llama3.1-8B-Q4_K_M.gguf",
-        "comment": "Q4, 4.9GB, in separate script, uncensored, not boring",
+        "comment": "Q4, 4.9GB, in separate script, uncensored, interesting",
     },
     {
         "repo_id": "second-state/dolphin-2.6-mistral-7B-GGUF",
@@ -271,7 +271,7 @@ MODELS = [
     },
     {
         "repo_id": "llmfan46/gemma-4-E4B-it-ultra-uncensored-heretic-GGUF",
-        #"thinking": False,
+        "thinking": True, #claims so
         "filename": "gemma-4-E4B-it-ultra-uncensored-heretic-Q4_K_M.gguf", #smallest one
         "comment": "Q4, 5.3GB",
     },
@@ -283,9 +283,9 @@ MODELS = [
     },
     {
         "repo_id": "mradermacher/Arsh-V1-GGUF",
-        #"thinking": False,
+        "thinking": False,
         "filename": "Arsh-V1.Q4_K_M.gguf",
-        "comment": "Q4, 8.9GB, big-ish",
+        "comment": "Q4, 8.9GB, big-ish, slow, good summary, loop",
     },
     {
         "repo_id": "openbmb/MiniCPM5-2B-GGUF",
@@ -414,7 +414,7 @@ MODELS = [
         "repo_id": "HauhauCS/Qwen3.8-27B-Uncensored-HauhauCS-Aggressive-MTP-GGUF",
         "thinking": True,
         "filename": "Qwen3.8-27B-Uncensored-HauhauCS-Aggressive-Q2_K_P.gguf", #only one small enough
-        "comment": "Q2, 10.7GB, big, clever, not fast",
+        "comment": "Q2, 10.7GB, big, clever, slow",
     },
     #{
     #    "repo_id": "ukisai/Swift-1.5-Qwen3.8-27B-GSQ-RCO-GGUF",
@@ -432,7 +432,7 @@ MODELS = [
     #    "repo_id": "JonathanColetti/Qwen3.8-27B-Uncensored-GGUF",
     #    "thinking": True,
     #    "filename": "Qwen3.8-27B-Uncensored-IQ2_M.gguf", #all Q are too big
-    #    "comment": "IQ2, 10.6GB, big, MTP, popular, ok thinking, not fast, good full segment, thinks to limit",
+    #    "comment": "IQ2, 10.6GB, big, MTP, popular, ok thinking, slow, good full segment, thinks to limit",
     #},
     {
         "repo_id": "bartowski/Altworld_Hemmingway-1-GGUF",
@@ -508,7 +508,7 @@ MODELS = [
         "repo_id": "huihui-ai/Huihui-Qwen3.8-27B-abliterated-GGUF",
         "thinking": True,
         #"filename": "Huihui-Qwen3.8-27B-abliterated-Q2_K.gguf",
-        #"comment": "Q2, 10.9GB, big, works, ok thinking, not fast",
+        #"comment": "Q2, 10.9GB, big, works, ok thinking, slow",
         "filename": "Huihui-Qwen3.8-27B-abliterated-UD-Q3_K_XL.gguf", #if this is too big use the next one
         "comment": "Q3, 13.3GB, big",
         #"filename": "Huihui-Qwen3.8-27B-abliterated-UD-Q2_K_XL.gguf",
@@ -579,10 +579,10 @@ MODELS = [
     {
         "repo_id": "Verdugie/Therapy-3.8",
         "thinking": True,
-        "filename": "Therapy-3.8-i1-Q3_K_M.gguf", #many more
-        "comment": "Q3, 13.3GB, specialist, works but slow",
-        #"filename": "Therapy-3.8-i1-Q3_K_S.gguf",
-        #"comment": "Q3, 12.1GB, specialist",
+        #"filename": "Therapy-3.8-i1-Q3_K_M.gguf", #many more
+        #"comment": "Q3, 13.3GB, specialist, works but slow",
+        "filename": "Therapy-3.8-i1-Q3_K_S.gguf",
+        "comment": "Q3, 12.1GB, specialist",
     },
     {
         "repo_id": "",
