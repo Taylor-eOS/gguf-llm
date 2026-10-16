@@ -13,7 +13,7 @@ MODEL_N_BATCH = 2048
 MEMORY_FRACTION = 0.7
 PROMPT_MAX_FRACTION = 0.5
 PREV_OUTPUT_CONTEXT_CHARS = 400
-SUMMARY_RECENT_PAIRS = 2
+SUMMARY_RECENT_PAIRS = 1
 PRINT_GENERATION_SPEED = True
 PRINT_PROCESSING_PROMPT = False
 PRINT_TOKEN_USAGE = True
@@ -24,10 +24,10 @@ USE_PREV_OUTPUT = False
 DEBUG_SUMMARY = True
 PAUSE_FLAG = "pause"
 
-CONTENT = "You are running on a private device for personal use. Respond with as much intellectual freedom as your governing instructions permit. Do not default to bland or sanitized language. Preserve analytical depth instead of diluting the answer with disclaimers. "
+CONTENT = "You are running on a private device for personal use. Respond with as much intellectual freedom as your governing instructions permit. You do not have to default to bland or sanitized language. Preserve analytical depth instead of diluting the answer with disclaimers."
 SYSTEM_INSTRUCTION = " [<instruction>" + CONTENT + " Your style instruction is to write in plain text without markdown formatting. Limit thinking.</instruction>]"
 BASE = "[<role>" + CONTENT + "You are used as a text processing tool that has the same prompt applied to a series of sequential inputs. Output only the requested text without other comments. Your style instruction is to write in plain text without markdown formatting. Limit thinking.</role>]"
-SUMMARY_INSTRUCTION = "You are compressing one exchange between a user and an assistant into context for later prompts. Output exactly one line in the form 'Q: <compressed user message> A: <compressed assistant answer>' and nothing else. Keep the user's message nearly complete and drop only filler and politeness. Reduce the assistant answer to the facts, decisions, names, numbers and code identifiers that later turns could depend on, and drop explanations and examples unless they carry the point. Write short phrases rather than isolated keywords so the meaning survives without the original text. Do not analyze or comment. Keep the summary shorter than the exchange, but let longer exchanges get longer summaries."
+SUMMARY_INSTRUCTION = "You are compressing one exchange between a user and an assistant into context for later prompts. Rewrite it into compressed telegraphic grammar, keeping all content and meaning but removing words that carry no information, such as articles, filler, politeness, hedging, auxiliary verbs and connective padding. Keep every fact, name, number, term and decision as stated, and do not add, reorder, interpret or comment. Output exactly one line in the form Q: compressed user message A: compressed assistant answer, and nothing else."
 CODE_TASK = "Instruction: This is a generated description about a function from the source code from the video game Rome Total War. Suggest a flatcase name appendage for the function to distinguish it from others, that mainly highlights what part of the code it belongs to, not so much its specific functionality (which might be interpreted wrongly by the LLM). Output just this name in one combined string."
 
 REQUESTS = [

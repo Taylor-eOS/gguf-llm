@@ -4,13 +4,16 @@ import settings
 summaries = []
 recent = []
 
+def compact(text):
+    return "\n".join(line for line in text.splitlines() if line.strip())
+
 def build_summary_prompt(question, answer):
-    return (settings.SUMMARY_INSTRUCTION + "\n\n" + f"Q: {question}\nA: {answer}" + "\n\nCompressed exchange:")
+    return compact(settings.SUMMARY_INSTRUCTION + "\n" + f"Q: {question}\nA: {answer}" + "\nCompressed exchange:")
 
 def summarize(llm, question, answer):
     prompt = build_summary_prompt(question, answer)
     response = llm.create_chat_completion(messages=[{"role": "user", "content": prompt}], stream=False,)
-    return strip_think(response["choices"][0]["message"]["content"]).strip()
+    return compact(strip_think(response["choices"][0]["message"]["content"]))
 
 def stream_response(llm, prompt):
     print()
@@ -30,11 +33,11 @@ def build_full_prompt(prompt):
     if summaries:
         parts.append("Summary of earlier queries in this conversation:\n" + "\n".join(summaries))
     if recent:
-        parts.append("Most recent exchanges:\n" + "\n\n".join(f"Q: {q}\nA: {a}" for q, a in recent))
+        parts.append("Most recent exchanges:\n" + "\n".join(f"Q: {q}\nA: {a}" for q, a in recent))
     context_prefix = ""
     if parts:
-        context_prefix = "\n\n".join(parts) + "\n\nCurrent query:\n"
-    return context_prefix + prompt + settings.SYSTEM_INSTRUCTION
+        context_prefix = "\n".join(parts) + "\nCurrent query:\n"
+    return compact(settings.SYSTEM_INSTRUCTION + "\n" + context_prefix + prompt)
 
 def summarize_overflow(llm):
     while len(recent) > settings.SUMMARY_RECENT_PAIRS:
@@ -42,7 +45,7 @@ def summarize_overflow(llm):
         summary = summarize(llm, question, answer)
         summaries.append(summary)
         if settings.DEBUG_SUMMARY:
-            print(f"\n[Summary]: {summary}\n")
+            print(f"[Summary]: {summary}")
 
 def run_chat_loop(llm):
     print("Prompt:\n")
@@ -54,7 +57,10 @@ def run_chat_loop(llm):
             break
         if not prompt:
             continue
-        answer = strip_think(stream_response(llm, build_full_prompt(prompt)))
+        full_prompt = build_full_prompt(prompt)
+        if settings.DEBUG_SUMMARY:
+            print(full_prompt)
+        answer = strip_think(stream_response(llm, full_prompt))
         recent.append((prompt, answer))
         summarize_overflow(llm)
 
