@@ -38,7 +38,13 @@ def render(messages, **variables):
 def disable_with_enable_thinking(messages):
     return render(messages, enable_thinking=False)
 
-MECHANISMS = {"enable_thinking": disable_with_enable_thinking}
+def disable_with_empty_think(messages):
+    prompt = render(messages)
+    if not prompt.endswith("<think>\n"):
+        prompt += "<think>\n"
+    return prompt + "\n</think>\n\n"
+
+MECHANISMS = {"enable_thinking": disable_with_enable_thinking, "empty_think": disable_with_empty_think}
 
 def tokenize_prompt(llm, text):
     return llm.tokenize(text.encode("utf-8"), add_bos=BOS_MODE == "bos_by_tokenizer", special=True)
@@ -58,6 +64,8 @@ def check_bos(llm):
     expected = EXPECTED_BOS_COUNT[BOS_MODE]
     if found != expected:
         print(f"Warning: the prompt starts with {found} BOS tokens but \"{BOS_MODE}\" expects {expected}. Check the disable_thinking entry of this model.")
+    elif BOS_MODE == "no_bos" and llm.metadata.get("tokenizer.ggml.add_bos_token") == "true":
+        print("Warning: the model metadata asks for a BOS token but \"no_bos\" adds none. Consider bos_by_tokenizer.")
 
 def deactivate(reason):
     global MECHANISM
