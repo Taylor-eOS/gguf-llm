@@ -1,4 +1,5 @@
 import time
+import readline
 from jinja2.sandbox import ImmutableSandboxedEnvironment
 import process_file
 import settings

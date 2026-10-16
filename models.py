@@ -148,7 +148,7 @@ MODELS = [
         "thinking": False,
         #"filename": "phi-4.Q5_K_M.gguf",
         #"comment": "Q5, 10.6GB, 14B, big, a tad boring, swaps, slow but useful, didn't refuse all",
-        "filename": "phi-4.Q4_K_M.gguf", #several others
+        "filename": "phi-4.Q4_K_M.gguf", #several more
         "comment": "Q4, 9GB, 14B, big, a tad boring, didn't refuse all",
     },
     {
@@ -182,7 +182,7 @@ MODELS = [
     {
         "repo_id": "VLTX/VertaLily-1.2-1B-GGUF",
         "thinking": False,
-        "filename": "VertaLily-1.2-1B-Q8_0-stable.gguf", #Q4 is overly restricted and kind of wrong; no others
+        "filename": "VertaLily-1.2-1B-Q8_0-stable.gguf", #Q4 is overly restricted and kind of wrong; no more
         "comment": "Q8, 1.3GB, small, can stop, follows style, good translation",
     },
     {
@@ -523,7 +523,7 @@ MODELS = [
     {
         "repo_id": "MaziyarPanahi/solar-pro-preview-instruct-GGUF",
         #"thinking": False,
-        "filename": "solar-pro-preview-instruct.Q3_K_M.gguf", #many others
+        "filename": "solar-pro-preview-instruct.Q3_K_M.gguf", #many more
         "comment": "Q3, 10.7GB, big",
     },
     {
@@ -534,14 +534,14 @@ MODELS = [
     },
     {
         "repo_id": "JetBrains/Mellum2-12B-A2.5B-Instruct-GGUF-Q4_K_M",
-        #"thinking": False,
+        "thinking": False,
         "filename": "Mellum2-12B-A2.5B-Instruct-Q4_K_M.gguf", #only one
-        "comment": "Q4, 8.1GB, big-ish",
+        "comment": "Q4, 8.1GB, big-ish, fast, restricted",
     },
     {
         "repo_id": "bartowski/Qwen2.5-Coder-14B-Instruct-abliterated-GGUF",
-        #"thinking": False, #probably
-        "filename": "Qwen2.5-Coder-14B-Instruct-abliterated-Q4_K_M.gguf", #many others
+        "thinking": True, #says K quants think less
+        "filename": "Qwen2.5-Coder-14B-Instruct-abliterated-Q4_K_M.gguf", #many more
         "comment": "Q4, 9GB, big, old",
     },
     {
@@ -560,9 +560,9 @@ MODELS = [
     },
     {
         "repo_id": "pfeifferj/Spark-X2.5-4B-GSQ-RCO-GGUF",
-        #"thinking": True,
+        "thinking": True,
         "filename": "Spark-X2.5-4B-GSQ-RCO-3.5bit.gguf",
-        "comment": "3.5bit, 1.8GB, small, has a way to disable thinking",
+        "comment": "3.5bit, 1.8GB, small, claims way to disable thinking",
     },
     {
         "repo_id": "ConwayResearch/Underdog-Saluki-27B-1.0",
@@ -571,10 +571,18 @@ MODELS = [
         "comment": "IQ2, 7.9GB, tool-calling",
     },
     {
-        "repo_id": "",
-        #"thinking": False,
-        "filename": "",
-        "comment": "",
+        "repo_id": "LiquidAI/LFM2.5-24B-A2B-GGUF",
+        "thinking": True,
+        "filename": "LFM2.5-24B-A2B-Q4_K_M.gguf",
+        "comment": "Q4, 14.5GB, fast, limited thinking, refuses dark joke",
+    },
+    {
+        "repo_id": "Verdugie/Therapy-3.8",
+        "thinking": True,
+        "filename": "Therapy-3.8-i1-Q3_K_M.gguf", #many more
+        "comment": "Q3, 13.3GB, specialist, works but slow",
+        #"filename": "Therapy-3.8-i1-Q3_K_S.gguf",
+        #"comment": "Q3, 12.1GB, specialist",
     },
     {
         "repo_id": "",

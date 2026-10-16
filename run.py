@@ -1,5 +1,5 @@
 import readline
-from utils import build_messages, is_cached, load_model, pick_model
+from utils import build_messages, load_model, pick_model
 import settings
 
 def stream_response(llm, prompt):

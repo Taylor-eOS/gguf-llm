@@ -1,3 +1,4 @@
+import readline
 from utils import load_model, load_tokenizer, log_instruction_use, pick_model, split_lines_by_tokens, strip_think
 from process_file import compute_required_ctx, prompt_overhead_tokens, read_segments, segment_token_count, write_output
 import settings

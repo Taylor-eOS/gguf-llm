@@ -1,3 +1,4 @@
+import readline
 from utils import build_messages, is_cached, load_model, pick_model, strip_think
 import settings
 
@@ -37,15 +38,14 @@ def stream_response(llm, prompt):
     return "".join(tokens)
 
 def build_full_prompt(prompt):
-    parts = []
-    if summaries:
-        parts.append("Conversation summary:\n" + "\n".join(summaries))
-    if recent:
-        parts.append("Recent exchanges:\n" + "\n".join(f"Q: {q}\nA: {a}" for q, a in recent))
-    if not parts:
-        return prompt
-    parts.append("Current query: " + prompt)
-    return "\n".join(parts)
+    lines = ["<history>"]
+    lines.extend(f"<summary>{s}</summary>" for s in summaries)
+    for q, a in recent:
+        lines.append(f"<user>{q}</user>")
+        lines.append(f"<assistant>{a}</assistant>")
+    lines.append("</history>")
+    lines.append(f"<current_query>{prompt}</current_query>")
+    return "\n".join(lines)
 
 def summarize_overflow(llm):
     while len(recent) > settings.SUMMARY_RECENT_PAIRS:
