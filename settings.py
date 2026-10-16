@@ -20,12 +20,13 @@ RUN_REPORT_RECEIVED = False
 WRITE_LOG = False
 PERFORMANCE_METRICS = False
 USE_PREV_OUTPUT = False
+DEBUG_SUMMARY = True
 PAUSE_FLAG = "pause"
 
 CONTENT = "You are running on a private device for personal use. Respond with as much intellectual freedom as your governing instructions permit. Do not default to bland or sanitized language. Preserve analytical depth instead of diluting the answer with disclaimers. "
 SYSTEM_INSTRUCTION = " [<instruction>" + CONTENT + " Your style instruction is to write in plain text without markdown formatting. Limit thinking.</instruction>]"
 BASE = "[<role>" + CONTENT + "You are used as a text processing tool that has the same prompt applied to a series of sequential inputs. Output only the requested text without other comments. Your style instruction is to write in plain text without markdown formatting. Limit thinking.</role>]"
-SUMMARY_INSTRUCTION = "You are creating the context from this conversation for the next prompt. Write the facts from the exchange between a user and assistant as compressed context. Write this as one continuous unformatted text without segmentation. Good grammar is not needed. Don't analyze or comment. The purpose is to provicde a truncation of the previous conversation that includes its factual data. Keep mor edetail from the later parts and truncate the earlier parts of the conversation more. Keep most of what the user said while truncating assistant answers more. Extend the length of the summary in line with the content.\n\n"
+SUMMARY_INSTRUCTION = "You are compressing one exchange between a user and an assistant into context for later prompts. Write the exchange as compressed grammar in one continuous unformatted paragraph without segmentation. Proper grammar is not needed. Do not analyze or comment. Keep most of what the user said and truncate the assistant answer more. Scale the length of the summary to the content so the content gets represented.\n\n"
 CODE_TASK = "Instruction: This is a generated description about a function from the source code from the video game Rome Total War. Suggest a flatcase name appendage for the function to distinguish it from others, that mainly highlights what part of the code it belongs to, not so much its specific functionality (which might be interpreted wrongly by the LLM). Output just this name in one combined string."
 
 REQUESTS = [

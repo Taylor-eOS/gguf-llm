@@ -1,25 +1,15 @@
 from utils import is_cached, load_model, pick_model, strip_think
 import settings
 
-DEBUG_SUMMARY = True
+summaries = []
 
-def build_summary_prompt(pairs):
-    lines = []
-    for i, (q, a) in enumerate(pairs, 1):
-        lines.append(f"Q{i}: {q}")
-        lines.append(f"A{i}: {a}")
-    body = "\n".join(lines)
-    return (settings.SUMMARY_INSTRUCTION + body
-        + "\n\nCompressed facts:"
-    )
+def build_summary_prompt(question, answer):
+    return (settings.SUMMARY_INSTRUCTION + f"Q: {question}\nA: {answer}" + "\n\nCompressed facts:")
 
-def summarize(llm, pairs):
-    prompt = build_summary_prompt(pairs)
-    response = llm.create_chat_completion(
-        messages=[{"role": "user", "content": prompt}],
-        stream=False,
-    )
-    return response["choices"][0]["message"]["content"].strip()
+def summarize(llm, question, answer):
+    prompt = build_summary_prompt(question, answer)
+    response = llm.create_chat_completion(messages=[{"role": "user", "content": prompt}], stream=False,)
+    return strip_think(response["choices"][0]["message"]["content"]).strip()
 
 def stream_response(llm, prompt):
     print()
@@ -34,10 +24,14 @@ def stream_response(llm, prompt):
     print()
     return "".join(tokens)
 
+def build_full_prompt(prompt):
+    context_prefix = ""
+    if summaries:
+        context_prefix = "Summary of earlier queries in this conversation:\n" + "\n".join(summaries) + "\n\nCurrent query:\n"
+    return context_prefix + prompt + settings.SYSTEM_INSTRUCTION
+
 def run_chat_loop(llm):
     print("Prompt:\n")
-    pairs = []
-    summary = ""
     while True:
         try:
             prompt = input(">>> ").strip()
@@ -46,18 +40,13 @@ def run_chat_loop(llm):
             break
         if not prompt:
             continue
-        context_prefix = ""
-        if summary:
-            context_prefix = f"This is a summary of the earlier queries in this conversation:\n{summary}\n\nCurrent query:\n"
-        full_prompt = context_prefix + prompt + settings.SYSTEM_INSTRUCTION
-        answer = stream_response(llm, full_prompt)
-        pairs.append((prompt, strip_think(answer)))
-        summary = strip_think(summarize(llm, list(pairs)))
-        if DEBUG_SUMMARY:
+        answer = strip_think(stream_response(llm, build_full_prompt(prompt)))
+        summary = summarize(llm, prompt, answer)
+        summaries.append(summary)
+        if settings.DEBUG_SUMMARY:
             print(f"\n[Summary]: {summary}\n")
 
 if __name__ == "__main__":
     model = pick_model()
     llm = load_model(model)
     run_chat_loop(llm)
-
