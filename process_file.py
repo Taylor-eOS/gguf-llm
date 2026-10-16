@@ -135,22 +135,25 @@ def read_input(prompt):
         return ""
 
 def pick_request():
-    last_instruction = load_state_value("instruction", str)
-    last_sample = " ".join(last_instruction.split())[:65] if last_instruction else "none saved"
+    last_instruction = load_state_value("instruction", str) or settings.DEFAULT_REQUEST
+    last_sample = " ".join(last_instruction.split())[:65]
     print("m/c: Enter instruction manually.")
-    print(f"l: Last used instruction: {last_sample}")
+    print(f"Enter: Last used instruction: {last_sample}")
     for i, request in enumerate(settings.REQUESTS, 1):
         sample = " ".join(request.split())[:92]
         print(f"{i}: {sample}")
-    choice = read_input(f"Pick an instruction [1-{len(settings.REQUESTS)}, m/c, l]: ").lower()
-    if choice in ("m", "c"):
-        settings.REQUEST = read_input("Enter instruction: ") or settings.DEFAULT_REQUEST
-    elif choice == "l":
-        settings.REQUEST = last_instruction or settings.DEFAULT_REQUEST
-    elif choice.isdigit() and 1 <= int(choice) <= len(settings.REQUESTS):
-        settings.REQUEST = settings.REQUESTS[int(choice) - 1]
-    else:
-        settings.REQUEST = settings.DEFAULT_REQUEST
+    while True:
+        choice = read_input(f"Pick an instruction [1-{len(settings.REQUESTS)}, m/c, Enter for last]: ").lower()
+        if choice == "":
+            settings.REQUEST = last_instruction
+        elif choice in ("m", "c"):
+            settings.REQUEST = read_input("Enter instruction: ") or last_instruction
+        elif choice.isdigit() and 1 <= int(choice) <= len(settings.REQUESTS):
+            settings.REQUEST = settings.REQUESTS[int(choice) - 1]
+        else:
+            print("Invalid choice, try again.")
+            continue
+        break
     save_state_value("instruction", settings.REQUEST)
     log_instruction_use(settings.REQUEST)
 
