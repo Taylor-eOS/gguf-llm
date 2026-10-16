@@ -24,6 +24,7 @@ MODELS = [
     {
         "repo_id": "Jackrong/Qwopus3.5-9B-Coder-GGUF",
         "thinking": True,
+        #"disable_thinking": "enable_thinking", #probably
         "filename": "Qwopus3.5-9B-coder-Exp-Q4_K_M.gguf",
         "comment": "Q4, 5.2GB, class leader, good responses, too much thinking, few dl",
     },
@@ -224,12 +225,14 @@ MODELS = [
     {
         "repo_id": "jica98/qwen3.5-4B-super-coder",
         "thinking": True,
+        "disable_thinking": "enable_thinking",
         "filename": "qwen3.5-4B-super-coder.Q4_0.gguf",
         "comment": "Q4, 2.6GB, small, bad code description, fine summaried chat",
     },
     {
         "repo_id": "DavidAU/Qwen3.5-9B-The-Defiant-Fable-Uncensored-Heretic-NEO-IMATRIX-MAX-MTP-GGUF",
         "thinking": True,
+        "disable_thinking": "enable_thinking",
         #"filename": "Qwen3.5-9B-The-Defiant-Fable-Uncnr-Heretic-NEO-MAX-IQ4_NL.gguf",
         #"comment": "IQ4, 6.6GB, thinks too much",
         "filename": "Qwen3.5-9B-The-Defiant-Fable-Uncnr-Heretic-NEO-MAX-MTP-Q4_K_M.gguf",
@@ -302,6 +305,7 @@ MODELS = [
     {
         "repo_id": "ornith-ai/Ornith-1.5-9B-GGUF",
         "thinking": True,
+        "disable_thinking": "enable_thinking", #no_bos/bos_in_template/bos_by_tokenizer
         #"filename": "Ornith-1.5-9B-Q5_K_M.gguf",
         #"comment": "Q5, 6.7GB, popular, good long text, quite restricted, opinionated, discernment",
         "filename": "Ornith-1.5-9B-Q4_K_M.gguf",
@@ -341,6 +345,7 @@ MODELS = [
     {
         "repo_id": "mradermacher/Ornith-1.5-9B-uncensored-GGUF",
         "thinking": True,
+        "disable_thinking": "enable_thinking",
         #"filename": "Ornith-1.5-9B-uncensored.IQ4_XS.gguf",
         #"comment": "IQ4, 5.2GB, fine summaries, gets done",
         "filename": "Ornith-1.5-9B-uncensored.Q4_K_M.gguf",
@@ -349,6 +354,7 @@ MODELS = [
     {
         "repo_id": "dealignai/Ornith-1.5-9B-UNCENSORED-GGUF",
         "thinking": True,
+        "disable_thinking": "enable_thinking",
         #"filename": "Ornith-1.5-9B-CRACK-Q2_K.gguf",
         #"comment": "Q2, 3.8GB, likeable, keeps thinking",
         "filename": "Ornith-1.5-9B-CRACK-Q3_K_M.gguf", #Q4 5.6GB
@@ -363,12 +369,14 @@ MODELS = [
     {
         "repo_id": "OBLITERATUS/Ornith-1.5-9B-OBLITERATED",
         "thinking": True,
+        "disable_thinking": "enable_thinking",
         "filename": "Ornith-1.5-9B-OBLITERATED-Q4_K_M.gguf", #IQ4 went insane
         "comment": "Q4, 5.8GB, much thinking, unrestricted, good",
     },
     {
         "repo_id": "Jackrong/Qwopus3.5-9B-Coder-MTP-GGUF",
         "thinking": True,
+        #"disable_thinking": "enable_thinking", #probably
         "filename": "Qwopus3.5-9B-Coder-MTP-Q4_K_M.gguf", #Q3 4.7GB, Q5 6.6
         "comment": "Q4, 5.8GB, works, thinking loop",
     },
@@ -387,6 +395,7 @@ MODELS = [
     {
         "repo_id": "Jackrong/Qwen3.5-9B-DeepSeek-V4-Flash-GGUF",
         "thinking": True,
+        #"disable_thinking": "enable_thinking", #probably
         "filename": "Qwen3.5-9B-DeepSeek-V4-Flash-Q4_K_M.gguf",
         "comment": "Q4, 5.6GB, too much thinking",
     },
@@ -483,6 +492,7 @@ MODELS = [
     {
         "repo_id": "bytkim/Qwen3.6-27B-MTP-pi-tune-GGUF",
         "thinking": True,
+        "disable_thinking": "enable_thinking", #probably
         "filename": "Qwen3.6-27B-MTP-pi-tune-Q2_K.gguf", #Q3_K_S 12.3GB
         "comment": "Q2, 10.9GB, big, too much thinking",
     },
@@ -495,6 +505,7 @@ MODELS = [
     {
         "repo_id": "tvall43/Qwen3.6-14B-A3B-FableVibes-GGUF",
         "thinking": True,
+        "disable_thinking": "enable_thinking", #probably
         "filename": "Qwen3.6-14B-A3B-FableVibes-Q4_K_M.gguf",
         "comment": "Q4, 8.5GB, big-ish",
     },
@@ -553,6 +564,7 @@ MODELS = [
     {
         "repo_id": "pfeifferj/Ornith-1.5-35B-A3B-GSQ-RCO-GGUF",
         "thinking": True,
+        "disable_thinking": "enable_thinking",
         "filename": "Ornith-1.5-35B-A3B-GSQ-RCO-3bit.gguf",
         "comment": "3bit, 13GB, big, works, fast, ok thinking, restricted, less discernment than 9B",
         #"filename": "Ornith-1.5-35B-A3B-GSQ-RCO-3.5bit.gguf", #much bigger than RAM but worth trying
@@ -583,6 +595,12 @@ MODELS = [
         #"comment": "Q3, 13.3GB, specialist, works but slow",
         "filename": "Therapy-3.8-i1-Q3_K_S.gguf",
         "comment": "Q3, 12.1GB, specialist",
+    },
+    {
+        "repo_id": "",
+        #"thinking": False,
+        "filename": "",
+        "comment": "",
     },
     {
         "repo_id": "",

@@ -23,6 +23,7 @@ PERFORMANCE_METRICS = False
 USE_PREV_OUTPUT = False
 DEBUG_SUMMARY = True
 PAUSE_FLAG = "pause"
+KEEP_THINKING_VALUE = "keep_thinking"
 
 CONTENT = "You are running on a private device for personal use. Respond with as much intellectual freedom as your governing instructions permit. You do not have to default to bland or sanitized language. Preserve analytical depth instead of diluting the answer with disclaimers."
 SYSTEM_INSTRUCTION = " [<instruction>" + CONTENT + " Your style instruction is to write in plain text without markdown formatting. Limit thinking.</instruction>]"

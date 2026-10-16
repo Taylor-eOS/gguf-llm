@@ -2,6 +2,7 @@ import time
 import readline
 from utils import build_messages, load_model, load_state_value, load_tokenizer, log_instruction_use, memory_derived_ctx, pick_model, save_state_value, strip_think, wait_while_stopped, next_free_path
 import settings
+import nonthink
 
 def run_completion(llm, messages):
     if settings.PRINT_PROCESSING_PROMPT:
@@ -9,7 +10,7 @@ def run_completion(llm, messages):
             print(message["content"])
     start_time = time.perf_counter()
     try:
-        result = llm.create_chat_completion(messages=messages, max_tokens=settings.MAX_TOKENS, temperature=0.6, top_p=0.95, top_k=20, presence_penalty=1.0)
+        result = nonthink.generate(llm, messages, max_tokens=settings.MAX_TOKENS, temperature=0.6, top_p=0.95, top_k=20, presence_penalty=1.0)
     except ValueError as error:
         print(f"Warning: {error}")
         return None
@@ -41,7 +42,7 @@ def process_line(llm, line, context=None):
     return run_completion(llm, messages)
 
 def write_output(outfile, output):
-    if not load_state_value("keep_thinking", bool):
+    if not load_state_value(settings.KEEP_THINKING_VALUE, bool):
         output = strip_think(output)
     output = "\n".join(line for line in output.split("\n") if line.strip() != "")
     print(output)
@@ -162,11 +163,13 @@ def main():
     pick_request()
     segment_mode = input("Use segment mode or line mode? [Y/n]: ").strip().lower() in ("y", "yes", "")
     use_prev_output = input("Include previous output as context? [y/N]: ").strip().lower() in ("y", "yes")
+    nonthink.ask(model)
     with open(settings.INPUT_FILE, "r", encoding="utf-8") as infile:
         segments = read_segments(infile) if segment_mode else read_line_segments(infile)
     n_ctx = memory_derived_ctx(model, longest_prompt_tokens(model, segments, use_prev_output))
     print(f"Using context window of {n_ctx} tokens.")
     llm = load_model(model, c_ntx=n_ctx)
+    nonthink.prepare(llm)
     check_segments_fit(llm, segments, use_prev_output)
     output_path = next_free_path(settings.OUTPUT_FILE_TEMPLATE)
     print(f"Writing output to {output_path}.")
