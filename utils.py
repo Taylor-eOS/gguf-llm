@@ -2,6 +2,7 @@ import os
 import sys
 import time
 import json
+import glob
 from datetime import datetime
 from huggingface_hub import hf_hub_download
 from huggingface_hub.utils import LocalEntryNotFoundError
@@ -303,7 +304,10 @@ def find_last_model(models_list):
     return None
 
 def next_free_path(template):
-    number = 1
-    while Path(template.format(n=number)).exists():
-        number += 1
-    return Path(template.format(n=number))
+    prefix, suffix = template.split("{n}")
+    highest = 0
+    for match in glob.glob(template.replace("{n}", "*")):
+        number = match[len(prefix):len(match) - len(suffix)]
+        if number.isdigit():
+            highest = max(highest, int(number))
+    return Path(template.format(n=highest + 1))
