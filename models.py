@@ -86,7 +86,7 @@ MODELS = [
         "repo_id": "mlabonne/Meta-Llama-3.1-8B-Instruct-abliterated-GGUF",
         "thinking": False,
         "filename": "meta-llama-3.1-8b-instruct-abliterated.Q4_K_M.gguf", #seems to make similar responses as Q6 but that was more restricted
-        "comment": "Q4, 4.9GB, clever, not too restricted",
+        "comment": "Q4, 4.9GB, clever, uncensored",
     },
     {
         "repo_id": "bartowski/Mistral-7B-Instruct-v0.3-GGUF",
@@ -128,7 +128,7 @@ MODELS = [
         #"filename": "aya-expanse-8b-abliterated.i1-IQ4_XS.gguf",
         #"comment": "IQ4, 4.6GB",
         "filename": "aya-expanse-8b-abliterated.i1-Q4_K_M.gguf",
-        "comment": "Q4, 5.1GB, some French, not slow, useful, long context, unoriginal",
+        "comment": "Q4, 5.1GB, uncensored, some French, not slow, useful, long context, unoriginal",
     },
     {
         "repo_id": "MaziyarPanahi/mistral-small-3.1-24b-instruct-2503-hf-GGUF",
@@ -507,7 +507,7 @@ MODELS = [
         "repo_id": "mradermacher/Huihui-Qwen3-Coder-30B-A3B-Instruct-abliterated-i1-GGUF",
         "thinking": False,
         "filename": "Huihui-Qwen3-Coder-30B-A3B-Instruct-abliterated.i1-Q2_K.gguf",
-        "comment": "Q2, 11.3GB, big, simple request loop",
+        "comment": "Q2, 11.3GB, big, uncensored, simple request loop",
     },
     {
         "repo_id": "CMSManhattan/JiRackDeltaNet_27b",
@@ -549,11 +549,11 @@ MODELS = [
         "thinking": True,
         "disable_thinking": "enable_thinking",
         #"filename": "Huihui-Qwen3.8-27B-abliterated-Q2_K.gguf",
-        #"comment": "Q2, 10.9GB, big, works, ok thinking, slow",
+        #"comment": "Q2, 10.9GB, big, uncensored, works, ok thinking, slow",
         "filename": "Huihui-Qwen3.8-27B-abliterated-UD-Q3_K_XL.gguf", #if this is too big use the next one
-        "comment": "Q3, 13.3GB, big",
+        "comment": "Q3, 13.3GB, big, uncensored",
         #"filename": "Huihui-Qwen3.8-27B-abliterated-UD-Q2_K_XL.gguf",
-        #"comment": "Q2, 10GB, big",
+        #"comment": "Q2, 10GB, big, uncensored",
     },
     {
         "repo_id": "XeyonAI/Helcyon-Solara-2-14b-v2.0-GGUF",
@@ -582,9 +582,9 @@ MODELS = [
     {
         "repo_id": "bartowski/Qwen2.5-Coder-14B-Instruct-abliterated-GGUF",
         "thinking": True,
-        #"disable_thinking": "enable_thinking", #says K quants think less
-        "filename": "Qwen2.5-Coder-14B-Instruct-abliterated-Q4_K_M.gguf", #many more
-        "comment": "Q4, 9GB, big, old",
+        #"disable_thinking": "enable_thinking",
+        "filename": "Qwen2.5-Coder-14B-Instruct-abliterated-Q4_K_M.gguf", #many more; says K quants think less
+        "comment": "Q4, 9GB, big, old, uncensored",
     },
     {
         "repo_id": "unsloth/GLM-4.7-Flash-REAP-23B-A3B-GGUF",

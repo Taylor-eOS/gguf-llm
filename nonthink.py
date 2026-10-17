@@ -63,7 +63,7 @@ def check_bos(llm):
     found = leading_bos_count(llm, tokens)
     expected = EXPECTED_BOS_COUNT[BOS_MODE]
     if found != expected:
-        print(f"Warning: the prompt starts with {found} BOS tokens but \"{BOS_MODE}\" expects {expected}. Check the disable_thinking entry of this model.")
+        print(f"Warning: the prompt starts with {found} BOS tokens but \"{BOS_MODE}\" expects {expected}. Check disable_thinking entry.")
     elif BOS_MODE == "no_bos" and llm.metadata.get("tokenizer.ggml.add_bos_token") == "true":
         print("Warning: the model metadata asks for a BOS token but \"no_bos\" adds none. Consider bos_by_tokenizer.")
 

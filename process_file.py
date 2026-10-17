@@ -138,22 +138,21 @@ def read_input(prompt):
 def pick_request():
     last_instruction = load_state_value("instruction", str) or settings.DEFAULT_REQUEST
     last_sample = " ".join(last_instruction.split())[:65]
-    print("m/c: Enter instruction manually.")
     print(f"Enter: Last used instruction: {last_sample}")
     for i, request in enumerate(settings.REQUESTS, 1):
         sample = " ".join(request.split())[:92]
         print(f"{i}: {sample}")
     while True:
-        choice = read_input(f"Pick an instruction [1-{len(settings.REQUESTS)}, m/c, Enter for last]: ").lower()
+        choice = read_input(f"Pick an instruction [1-{len(settings.REQUESTS)}], type a custom one, or Enter for last: ")
         if choice == "":
             settings.REQUEST = last_instruction
-        elif choice in ("m", "c"):
-            settings.REQUEST = read_input("Enter instruction: ") or last_instruction
-        elif choice.isdigit() and 1 <= int(choice) <= len(settings.REQUESTS):
+        elif choice.isdigit():
+            if not 1 <= int(choice) <= len(settings.REQUESTS):
+                print("Invalid number, try again.")
+                continue
             settings.REQUEST = settings.REQUESTS[int(choice) - 1]
         else:
-            print("Invalid choice, try again.")
-            continue
+            settings.REQUEST = choice
         break
     save_state_value("instruction", settings.REQUEST)
     log_instruction_use(settings.REQUEST)
