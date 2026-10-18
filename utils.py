@@ -128,6 +128,7 @@ def print_model_list(models_list):
     RESET = "\033[0m"
     cached_symb = "x"
     thinking_symb = "T"
+    toggleable_thinking_symb = "t"
     nonthinking_symb = "n"
     neither_symb = " "
     repo_id_counts = {}
@@ -136,7 +137,13 @@ def print_model_list(models_list):
     for i, m in enumerate(models_list):
         tag = f"[{cached_symb}]" if is_cached(m) else f"[{neither_symb}]"
         think_val = m.get("thinking")
-        think_tag = f"[{thinking_symb}]" if think_val is True else (f"[{neither_symb}]" if think_val is None else f"[{nonthinking_symb}]")
+        if think_val is True:
+            think_char = toggleable_thinking_symb if "disable_thinking" in m else thinking_symb
+        elif think_val is None:
+            think_char = neither_symb
+        else:
+            think_char = nonthinking_symb
+        think_tag = f"[{think_char}]"
         comment = f"{DIM}{m['comment']}{RESET}" if m.get("comment") else "  "
         dup_marker = "*" if repo_id_counts[m["repo_id"]] > 1 else ""
         print(f"{i + 1:2d} {tag}{think_tag} {m['repo_id'][:88]}{dup_marker}")
@@ -172,8 +179,10 @@ def available_models():
 
 def print_model_menu(last_model, current):
     cached_symb = "x"
+    thinking_symb = "T"
+    toggleable_thinking_symb = "t"
     nonthinking_symb = "n"
-    print(f"Available models ([{cached_symb}] = cached, [{nonthinking_symb}] = non-thinking):")
+    print(f"Available models ([{cached_symb}] = cached, [{thinking_symb}] = thinking, [{toggleable_thinking_symb}] = thinking can be disabled, [{nonthinking_symb}] = non-thinking):")
     if last_model is not None:
         print(f"l: Last used model: {last_model['repo_id']} ({last_model['filename']})")
     print_model_list(current)
