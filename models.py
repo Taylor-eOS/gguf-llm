@@ -11,7 +11,7 @@ MODELS = [
         "repo_id": "deadbydawn101/RavenX-OpenFable-Coder-Gemma-4-12B-GGUF",
         "thinking": False,
         "filename": "RavenX-OpenFable-Coder-Gemma-4-12B-Q4_K_M.gguf", #only one
-        "comment": "Q4, 7.4GB, seems to work, good code description, good advice, few DL, slow, history",
+        "comment": "Q4, 7.4GB, seems to work, good code description, good advice, few dl, slow, history",
     },
     {
         "repo_id": "Qwen/Qwen2.5-Coder-7B-Instruct-GGUF",
@@ -134,7 +134,7 @@ MODELS = [
         "repo_id": "MaziyarPanahi/mistral-small-3.1-24b-instruct-2503-hf-GGUF",
         "thinking": False,
         "filename": "mistral-small-3.1-24b-instruct-2503-hf.Q3_K_M.gguf",
-        "comment": "Q3, 11.5GB, big, works, slow, gets authors right, sanitized, boring repeats request",
+        "comment": "Q3, 11.5GB, big, works, slow, gets authors right, sanitized, boring, repeats, right summ",
     },
     {
         "repo_id": "unsloth/gpt-oss-20b-GGUF",
@@ -188,7 +188,7 @@ MODELS = [
         "thinking": True,
         #"disable_thinking": "enable_thinking",
         "filename": "NVIDIA-Nemotron3-Nano-4B-Q4_K_M.gguf", #only one
-        "comment": "Q4, 2.8GB, small, ok thinking, works, restricted",
+        "comment": "Q4, 2.8GB, small, ok thinking, works, restricted, short summ",
     },
     {
         "repo_id": "VLTX/VertaLily-1.2-1B-GGUF",
@@ -229,9 +229,9 @@ MODELS = [
     {
         "repo_id": "unsloth/gemma-4-12b-it-GGUF",
         "thinking": True,
-        #"disable_thinking": "enable_thinking/bos_in_template",
+        "disable_thinking": "enable_thinking/bos_in_template",
         "filename": "gemma-4-12b-it-Q4_K_M.gguf",
-        "comment": "Q4, 7.1GB",
+        "comment": "Q4, 7.1GB, popular, emo summ, good joke",
     },
     {
         "repo_id": "jica98/qwen3.5-4B-super-coder",
@@ -263,7 +263,7 @@ MODELS = [
         #"filename": "gemma-4-E4B-it-IQ4_NL.gguf", #UD-IQ3_XXS 3.7GB
         #"comment": "IQ4, 4.8GB, good workhorse, summarizes well",
         "filename": "gemma-4-E4B-it-UD-Q4_K_XL.gguf",
-        "comment": "UD-Q4, 5.1GB, in library, good workhorse, rough if instructed",
+        "comment": "UD-Q4, 5.1GB, in library, good workhorse, rough if instructed, objective",
     },
     {
         "repo_id": "shafire/Zero-Gemma4-E4B-OpenZero-GGUF",
@@ -281,7 +281,7 @@ MODELS = [
         "repo_id": "RusteddDDD/Gemma-4-E4B-Uncensored-HauhauCS-Aggressive",
         "thinking": False,
         "filename": "Gemma-4-E4B-Uncensored-HauhauCS-Aggressive-Q5_K_P.gguf", #has same quants as above
-        "comment": "Q5, 5.8GB, the above",
+        "comment": "Q5, 5.8GB, bigger quant of the above",
     },
     {
         "repo_id": "llmfan46/gemma-4-E4B-it-ultra-uncensored-heretic-GGUF",
@@ -294,13 +294,13 @@ MODELS = [
         "repo_id": "nguyenmanhd93/phi-4-unsloth-bnb-4bit-gguf-Q4_K_M",
         #"thinking": False,
         "filename": "unsloth.Q4_K_M.gguf",
-        "comment": "Q4, 8.9GB, big-ish, very few DL",
+        "comment": "Q4, 8.9GB, big-ish, few dl",
     },
     {
         "repo_id": "mradermacher/Arsh-V1-GGUF",
         "thinking": False,
         "filename": "Arsh-V1.Q4_K_M.gguf",
-        "comment": "Q4, 8.9GB, big-ish, slow, good summary, loop",
+        "comment": "Q4, 8.9GB, big-ish, slow, good summary, loop, wrong summ",
     },
     {
         "repo_id": "openbmb/MiniCPM5-2B-GGUF",
@@ -314,12 +314,12 @@ MODELS = [
         "thinking": True,
         "disable_thinking": "enable_thinking",
         "filename": "Qwen3.8-9B-Q4_K_M.gguf", #Q5 6.5GB was slow & too much thinking
-        "comment": "Q4, 5.8GB, kind of good, ok thinking",
+        "comment": "Q4, 5.8GB, kind of good, ok thinking, right summ",
     },
     {
         "repo_id": "ornith-ai/Ornith-1.5-9B-GGUF",
         "thinking": True,
-        "disable_thinking": "enable_thinking", #no_bos/bos_in_template/bos_by_tokenizer
+        "disable_thinking": "enable_thinking",
         #"filename": "Ornith-1.5-9B-Q5_K_M.gguf",
         #"comment": "Q5, 6.7GB, popular, good long text, quite restricted, opinionated, discernment",
         "filename": "Ornith-1.5-9B-Q4_K_M.gguf",
@@ -436,7 +436,7 @@ MODELS = [
         "thinking": True,
         "disable_thinking": "empty_think/bos_in_template",
         "filename": "JiRackUltra_14b_Q3_K_M.gguf",
-        "comment": "Q3, 7.3GB, for CPU, limited thinking, boring, good analysis",
+        "comment": "Q3, 7.3GB, for CPU, limited thinking, boring, good analysis, med summ",
         #"filename": "JiRackUltra_14b_Q4_K_M.gguf", #try this
         #"comment": "Q4, 9GB, big, for CPU, limited thinking",
     },
@@ -521,7 +521,7 @@ MODELS = [
         "thinking": True,
         "disable_thinking": "enable_thinking",
         "filename": "JiRackDeltaNet_27b.Q2_K.gguf", #only one small enough
-        "comment": "Q2, 10.9GB, big, good long analysis, precise, repeats/loop, short thinking, helpful",
+        "comment": "Q2, 10.9GB, big, long analysis, precise, loop, short thinking, helpful, good summ",
     },
     {
         "repo_id": "bytkim/Qwen3.6-27B-MTP-pi-tune-GGUF",
@@ -566,7 +566,7 @@ MODELS = [
         "repo_id": "XeyonAI/Helcyon-Solara-2-14b-v2.0-GGUF",
         "thinking": False,
         "filename": "Helcyon-Solara-2-14B-v2.0-Q4_K_M.gguf",
-        "comment": "Q4, 8.2GB, big-ish, supposedly personality, works, appreciable discernment",
+        "comment": "Q4, 8.2GB, big-ish, supposedly personality, works, appreciable discernment, good summ",
     },
     {
         "repo_id": "MaziyarPanahi/solar-pro-preview-instruct-GGUF",
@@ -584,7 +584,7 @@ MODELS = [
         "repo_id": "JetBrains/Mellum2-12B-A2.5B-Instruct-GGUF-Q4_K_M",
         "thinking": False,
         "filename": "Mellum2-12B-A2.5B-Instruct-Q4_K_M.gguf", #only one
-        "comment": "Q4, 8.1GB, big-ish, fast, restricted",
+        "comment": "Q4, 8.1GB, big-ish, fast, restricted, strong summ",
     },
     {
         "repo_id": "JetBrains/Mellum2.1-12B-A2.5B-Thinking-GGUF",
@@ -605,7 +605,7 @@ MODELS = [
         "thinking": True,
         "disable_thinking": "enable_thinking/bos_in_template", #if the model triggers “found 1, expects 0” add bos_in_template
         "filename": "GLM-4.7-Flash-REAP-23B-A3B-Q3_K_M.gguf", #Q4 is too big, Q3_K_S 10.3GB
-        "comment": "Q3, 11.3GB, big, fast, overthinks, loop",
+        "comment": "Q3, 11.3GB, big, fast, overthinks, loop, accurate summ",
     },
     {
         "repo_id": "pfeifferj/Ornith-1.5-35B-A3B-GSQ-RCO-GGUF",
@@ -635,7 +635,7 @@ MODELS = [
         "thinking": True,
         #"disable_thinking": "no", #apparently no disabling
         "filename": "LFM2.5-24B-A2B-Q4_K_M.gguf",
-        "comment": "Q4, 14.5GB, fast, limited thinking, refuses dark joke",
+        "comment": "Q4, 14.5GB, fast, limited thinking, refuses dark joke, heavy swap/CPU fluc, acc summ",
     },
     {
         "repo_id": "Verdugie/Therapy-3.8",
@@ -644,18 +644,25 @@ MODELS = [
         #"filename": "Therapy-3.8-i1-Q3_K_M.gguf", #many more
         #"comment": "Q3, 13.3GB, specialist, works but slow",
         "filename": "Therapy-3.8-i1-Q3_K_S.gguf",
-        "comment": "Q3, 12.1GB, specialist",
+        "comment": "Q3, 12.1GB, specialist, works but weird",
+    },
+    {
+        "repo_id": "candor-lab/K2-Horizon-7B-Candor-Uncensored-GGUF",
+        #"thinking": False,
+        #"disable_thinking": "enable_thinking",
+        "filename": "K2-Horizon-7B-Candor-Uncensored-Q4_K_M.gguf", #only one
+        "comment": "Q4, 5.6GB",
     },
     {
         "repo_id": "",
         #"thinking": False,
+        #"disable_thinking": "enable_thinking",
         "filename": "",
         "comment": "",
     },
     {
         "repo_id": "",
         #"thinking": False,
-        #"disable_thinking": "enable_thinking",
         "filename": "",
         "comment": "",
     },

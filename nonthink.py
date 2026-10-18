@@ -77,7 +77,6 @@ def ask(model):
     if name not in MECHANISMS or bos_mode not in EXPECTED_BOS_COUNT:
         print(f"Warning: unknown disable_thinking setting \"{setting}\", thinking stays enabled.")
         return
-    print("This model can disable thinking.")
     if input("Disable thinking? [y/N]: ").strip().lower() in ("y", "yes"):
         STATE["mechanism"] = MECHANISMS[name]
         STATE["bos_mode"] = bos_mode
