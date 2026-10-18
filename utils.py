@@ -182,7 +182,7 @@ def print_model_menu(last_model, current):
     thinking_symb = "T"
     toggleable_thinking_symb = "t"
     nonthinking_symb = "n"
-    print(f"Available models ([{cached_symb}] = cached, [{thinking_symb}] = thinking, [{toggleable_thinking_symb}] = thinking can be disabled, [{nonthinking_symb}] = non-thinking):")
+    print(f"Available models ([{cached_symb}] = cached, [{thinking_symb}] = thinking, [{nonthinking_symb}] = non-thinking):")
     if last_model is not None:
         print(f"l: Last used model: {last_model['repo_id']} ({last_model['filename']})")
     print_model_list(current)

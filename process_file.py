@@ -148,7 +148,7 @@ def pick_request():
             settings.REQUEST = last_instruction
         elif choice.isdigit():
             if not 1 <= int(choice) <= len(settings.REQUESTS):
-                print("Invalid number, try again.")
+                print("Invalid number.")
                 continue
             settings.REQUEST = settings.REQUESTS[int(choice) - 1]
         else:
