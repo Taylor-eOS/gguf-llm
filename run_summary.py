@@ -24,8 +24,10 @@ def summarize(llm, question, answer):
 
 def stream_response(llm, prompt):
     print()
+    brevity = "This is a fast back and forth chat. Respond with only a few sentences, as appropriate for this response, in continuous format."
     system = compact(settings.SYSTEM_INSTRUCTION)
-    messages = build_messages(system, prompt, system + "\n" + prompt + "\nRespond with 2-3 sentences at most.")
+    user = prompt + "\n" + brevity
+    messages = build_messages(system, user, system + "\n" + user)
     stream = llm.create_chat_completion(messages=messages, stream=True)
     tokens = []
     for chunk in stream:
