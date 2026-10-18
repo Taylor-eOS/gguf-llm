@@ -161,9 +161,10 @@ def filter_models(models_list, query):
     filtered = []
     for m in models_list:
         think_val = m.get("thinking")
+        can_run_nonthinking = think_val is False or (think_val is True and "disable_thinking" in m)
         if thinking_only and think_val is not True:
             continue
-        if nonthinking_only and think_val is not False:
+        if nonthinking_only and not can_run_nonthinking:
             continue
         if cached_only and not is_cached(m):
             continue
@@ -186,7 +187,7 @@ def print_model_menu(last_model, current):
     if last_model is not None:
         print(f"l: Last used model: {last_model['repo_id']} ({last_model['filename']})")
     print_model_list(current)
-    print("Keywords to filter, number to select, l or Enter for last used, * to reset, t thinking models, n non-thinking, x downloaded.")
+    print("Keywords to filter, number to select, l or Enter for last used, * to reset, n non-thinking, x downloaded.")
 
 def select_by_number(raw, current):
     idx = int(raw)
