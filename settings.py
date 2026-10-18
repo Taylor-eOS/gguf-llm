@@ -1,5 +1,8 @@
 INPUT_FILE = "input.txt"
 OUTPUT_FILE = "output.txt"
+MODEL_LOG_FILE = "llm_use.log"
+INSTRUCTION_LOG_FILE = "instruction_use.log"
+LAST_INSTRUCTION_FILE = "last_used.json"
 OUTPUT_FILE_TEMPLATE = "output_{n}.txt"
 N_THREADS = 6
 N_CTX = 16 * 1024 #Total context window given to the model, models total memory, used in run.py
@@ -22,6 +25,7 @@ WRITE_LOG = False
 PERFORMANCE_METRICS = False
 USE_PREV_OUTPUT = False
 DEBUG_SUMMARY = True
+USE_SYSTEM_ROLE = True
 PAUSE_FLAG = "pause"
 KEEP_THINKING_VALUE = "keep_thinking"
 

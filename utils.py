@@ -2,49 +2,28 @@ import os
 import sys
 import time
 import json
-import glob
-from datetime import datetime
-from huggingface_hub import hf_hub_download
-from huggingface_hub.utils import LocalEntryNotFoundError
-from llama_cpp import Llama
 from pathlib import Path
+from llama_cpp import Llama
+from utils_helpers import data_path, log_model_use, log_instruction_use, resolve_model_path, available_memory_bytes, ask_or_exit, strip_think, wait_while_stopped, next_free_path
 import models
 import settings
-
-MODEL_LOG_PATH = Path(__file__).resolve().parent / "llm_use.log"
-INSTRUCTION_LOG_PATH = Path(__file__).resolve().parent / "instruction_use.log"
-LAST_INSTRUCTION_PATH = Path(__file__).resolve().parent / "last.json"
-USE_SYSTEM_ROLE = True
 
 def is_cached(model):
     repo_slug = "models--" + model["repo_id"].replace("/", "--")
     return (Path.home() / ".cache" / "huggingface" / "hub" / repo_slug).is_dir()
 
-def log_model_use(model):
-    MODEL_LOG_PATH.parent.mkdir(parents=True, exist_ok=True)
-    timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-    with open(MODEL_LOG_PATH, "a") as f:
-        f.write(f"{timestamp} {model['repo_id']} {model['filename']}\n")
-
 def remember_model(model):
     save_state_value("model", {"repo_id": model["repo_id"], "filename": model["filename"]})
 
 def configure_system_role(model):
-    global USE_SYSTEM_ROLE
-    USE_SYSTEM_ROLE = not model.get("no_system_role", False)
-    if not USE_SYSTEM_ROLE:
+    settings.USE_SYSTEM_ROLE = not model.get("no_system_role", False)
+    if not settings.USE_SYSTEM_ROLE:
         print("Model is marked no_system_role, putting the instruction into the user message.")
 
 def build_messages(system, user, flat_prompt):
-    if USE_SYSTEM_ROLE:
+    if settings.USE_SYSTEM_ROLE:
         return [{"role": "system", "content": system}, {"role": "user", "content": user}]
     return [{"role": "user", "content": flat_prompt}]
-
-def log_instruction_use(instruction):
-    INSTRUCTION_LOG_PATH.parent.mkdir(parents=True, exist_ok=True)
-    timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-    with open(INSTRUCTION_LOG_PATH, "a") as f:
-        f.write(f"{timestamp} {instruction}\n")
 
 def construct_llama(path, llama_kwargs, redirect_logs):
     log_target = "llama_output.log" if redirect_logs else os.devnull
@@ -65,13 +44,6 @@ def construct_llama(path, llama_kwargs, redirect_logs):
         log_file.close()
     return llm
 
-def resolve_model_path(model):
-    try:
-        return hf_hub_download(repo_id=model["repo_id"], filename=model["filename"], local_files_only=True)
-    except LocalEntryNotFoundError:
-        print(f"{model['filename']} is not cached, downloading.")
-        return hf_hub_download(repo_id=model["repo_id"], filename=model["filename"])
-
 def load_model(model, c_ntx=None, redirect_logs=settings.WRITE_LOG):
     if c_ntx is None:
         c_ntx = settings.N_CTX
@@ -91,13 +63,6 @@ def load_model(model, c_ntx=None, redirect_logs=settings.WRITE_LOG):
         "verbose": settings.PERFORMANCE_METRICS,
     }
     return construct_llama(path, llama_kwargs, redirect_logs)
-
-def available_memory_bytes():
-    with open("/proc/meminfo", "r") as f:
-        for line in f:
-            if line.startswith("MemAvailable:"):
-                return int(line.split()[1]) * 1024
-    raise RuntimeError("MemAvailable not found in /proc/meminfo")
 
 def metadata_int(metadata, key):
     value = metadata.get(key)
@@ -205,27 +170,38 @@ def filter_models(models_list, query):
 def available_models():
     return [m for m in models.MODELS if m.get("repo_id") and m.get("filename")]
 
-def pick_model():
+def print_model_menu(last_model, current):
     cached_symb = "x"
     nonthinking_symb = "n"
+    print(f"Available models ([{cached_symb}] = cached, [{nonthinking_symb}] = non-thinking):")
+    if last_model is not None:
+        print(f"l: Last used model: {last_model['repo_id']} ({last_model['filename']})")
+    print_model_list(current)
+    print("Keywords to filter, number to select, l or Enter for last used, * to reset, t thinking models, n non-thinking, x downloaded.")
+
+def select_by_number(raw, current):
+    idx = int(raw)
+    if 1 <= idx <= len(current):
+        return current[idx - 1]
+    print(f"Enter a number between 1 and {len(current)}.")
+    return None
+
+def confirm_model(model):
+    return ask_or_exit(f"Use {model['repo_id']}? [Y/n]: ").lower() != "n"
+
+def pick_model():
     all_models = available_models()
     if not all_models:
         print("No usable models defined.")
         raise SystemExit
     last_model = find_last_model(all_models)
     current = all_models
-    print(f"Available models ([{cached_symb}] = cached, [{nonthinking_symb}] = non-thinking):")
-    if last_model is not None:
-        print(f"l: Last used model: {last_model['repo_id']} ({last_model['filename']})")
-    print_model_list(current)
-    print("Keywords to filter, number to select, l last used, * to reset, t thinking models, n non-thinking, x downloaded.")
+    print_model_menu(last_model, current)
     while True:
-        try:
-            raw = input("Filter / select: ").strip()
-        except (KeyboardInterrupt, EOFError):
-            print("\nExiting.")
-            raise SystemExit
-        if raw.lower() == "l":
+        raw = ask_or_exit("Filter / select: ")
+        if raw == "" and len(current) == 1:
+            return current[0]
+        if raw.lower() == "l" or (raw == "" and last_model in current):
             if last_model is None:
                 print("No last used model saved.")
                 continue
@@ -235,13 +211,10 @@ def pick_model():
             print_model_list(current)
             continue
         if raw.isdigit():
-            idx = int(raw)
-            if 1 <= idx <= len(current):
-                return current[idx - 1]
-            print(f"Enter a number between 1 and {len(current)}.")
+            selected = select_by_number(raw, current)
+            if selected is not None:
+                return selected
             continue
-        if raw == "" and len(current) == 1:
-            return current[0]
         if raw == "":
             print_model_list(current)
             continue
@@ -251,22 +224,17 @@ def pick_model():
             continue
         current = narrowed
         print_model_list(current)
-        if len(current) == 1:
-            try:
-                confirm = input(f"Use {current[0]['repo_id']}? [Y/n]: ").strip().lower()
-            except (KeyboardInterrupt, EOFError):
-                print("\nExiting.")
-                raise SystemExit
-            if confirm != "n":
-                return current[0]
+        if len(current) == 1 and confirm_model(current[0]):
+            return current[0]
 
 def read_state():
-    if not LAST_INSTRUCTION_PATH.is_file():
+    state_path = data_path(settings.LAST_INSTRUCTION_FILE)
+    if not state_path.is_file():
         return {}
-    return json.loads(LAST_INSTRUCTION_PATH.read_text(encoding="utf-8"))
+    return json.loads(state_path.read_text(encoding="utf-8"))
 
 def write_state(state):
-    LAST_INSTRUCTION_PATH.write_text(json.dumps(state, ensure_ascii=False, indent=2), encoding="utf-8")
+    data_path(settings.LAST_INSTRUCTION_FILE).write_text(json.dumps(state, ensure_ascii=False, indent=2), encoding="utf-8")
 
 def load_state_value(key, expected_type=None):
     value = read_state().get(key)
@@ -279,21 +247,6 @@ def save_state_value(key, value):
     state[key] = value
     write_state(state)
 
-def strip_think(text):
-    marker = "</think>"
-    idx = text.find(marker)
-    if idx == -1:
-        return text
-    return text[idx + len(marker):].strip()
-
-def wait_while_stopped():
-    if not Path(settings.PAUSE_FLAG).is_file():
-        return
-    print("Stop file detected, pausing.")
-    while Path(settings.PAUSE_FLAG).is_file():
-        time.sleep(10)
-    print("Stop file removal detected, resuming.")
-
 def find_last_model(models_list):
     last = load_state_value("model")
     if last is None:
@@ -302,12 +255,3 @@ def find_last_model(models_list):
         if m["repo_id"] == last["repo_id"] and m["filename"] == last["filename"]:
             return m
     return None
-
-def next_free_path(template):
-    prefix, suffix = template.split("{n}")
-    highest = 0
-    for match in glob.glob(template.replace("{n}", "*")):
-        number = match[len(prefix):len(match) - len(suffix)]
-        if number.isdigit():
-            highest = max(highest, int(number))
-    return Path(template.format(n=highest + 1))

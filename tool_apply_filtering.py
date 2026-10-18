@@ -2,11 +2,11 @@ import re
 
 input_file = "input.txt"
 answers_file = "output.txt"
-output_file = "output_filtered.txt"
+output_file = "input_filtered.txt"
 uncertain_file = "output_uncertain.txt"
-
 AFFIRMATIVE_WORDS = {"yes", "y", "true", "correct", "affirmative", "agree", "accurate", "confirmed"}
 NEGATIVE_WORDS = {"no", "n", "false", "negative", "incorrect", "disagree", "disagreed"}
+WRITE_UNCERTAIN = False
 
 def read_segments(path):
     with open(path, "r", encoding="utf-8") as f:
@@ -57,9 +57,10 @@ def main():
     check_segment_counts(segments, answers)
     kept, uncertain = classify_segments(segments, answers)
     write_segments(output_file, kept)
-    write_segments(uncertain_file, uncertain)
     print(f"Kept {len(kept)} of {len(segments)} segments. Written to {output_file}.")
-    print(f"{len(uncertain)} segments were UNCERTAIN. Written to {uncertain_file} for manual review.")
+    if WRITE_UNCERTAIN:
+        write_segments(uncertain_file, uncertain)
+        print(f"{len(uncertain)} segments were UNCERTAIN. Written to {uncertain_file} for manual review.")
 
 if __name__ == "__main__":
     main()

@@ -478,6 +478,13 @@ MODELS = [
         "comment": "Q2, 10.8GB, big, MTP, faster, overthinking",
     },
     {
+        "repo_id": "bartowski/orcarouter_Qwen3.8-27B-Uncensored-GGUF",
+        "thinking": True,
+        #"disable_thinking": "enable_thinking",
+        "filename": "orcarouter_Qwen3.8-27B-Uncensored-Q3_K_S.gguf",
+        "comment": "Q3, 13.7GB, big",
+    },
+    {
         "repo_id": "unsloth/Qwen3-30B-A3B-Instruct-2507-GGUF",
         "thinking": False,
         "filename": "Qwen3-30B-A3B-Instruct-2507-UD-TQ1_0.gguf",
@@ -578,6 +585,13 @@ MODELS = [
         "thinking": False,
         "filename": "Mellum2-12B-A2.5B-Instruct-Q4_K_M.gguf", #only one
         "comment": "Q4, 8.1GB, big-ish, fast, restricted",
+    },
+    {
+        "repo_id": "JetBrains/Mellum2.1-12B-A2.5B-Thinking-GGUF",
+        "thinking": True,
+        #"disable_thinking": "enable_thinking",
+        "filename": "Mellum2.1-12B-A2.5B-Thinking-Q4_K_M.gguf", #Q6_K 10.9GB
+        "comment": "Q4, 8.1GB, big-ish",
     },
     {
         "repo_id": "bartowski/Qwen2.5-Coder-14B-Instruct-abliterated-GGUF",

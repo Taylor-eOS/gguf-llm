@@ -160,7 +160,7 @@ def pick_request():
 def main():
     model = pick_model()
     pick_request()
-    segment_mode = input("Use segment mode or line mode? [S/l]: ").strip().lower() in ("s", "segment", "")
+    segment_mode = input("Use segment mode or line mode? [S/l]: ").strip().lower() in ("s", "segment", "y", "")
     use_prev_output = input("Include previous output as context? [y/N]: ").strip().lower() in ("y", "yes")
     nonthink.ask(model)
     with open(settings.INPUT_FILE, "r", encoding="utf-8") as infile:
