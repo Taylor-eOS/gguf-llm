@@ -187,7 +187,7 @@ def print_model_menu(last_model, current):
     if last_model is not None:
         print(f"l: Last used model: {last_model['repo_id']} ({last_model['filename']})")
     print_model_list(current)
-    print("Keywords to filter, number to select, l or Enter for last used, * to reset, n non-thinking, x downloaded.")
+    print("Keywords to filter, number to select, Enter for last used, * to reset, n non-thinking, x downloaded.")
 
 def select_by_number(raw, current):
     idx = int(raw)

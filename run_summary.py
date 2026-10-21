@@ -24,7 +24,7 @@ def summarize(llm, question, answer):
 
 def stream_response(llm, prompt):
     print()
-    brevity = "This is a fast back and forth chat. Respond with only a few sentences, as appropriate for this response, in continuous format."
+    brevity = "This is a fast back and forth chat. Respond with only a few sentences, as appropriate for this response, in continuous format. Write continuously without any formatting or line shifts at all!"
     system = compact(settings.SYSTEM_INSTRUCTION)
     user = prompt + "\n" + brevity
     messages = build_messages(system, user, system + "\n" + user)

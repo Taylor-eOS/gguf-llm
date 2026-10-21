@@ -60,7 +60,7 @@ MODELS = [
         "repo_id": "DavidAU/Llama-3.2-8X3B-MOE-Dark-Champion-Instruct-uncensored-abliterated-18.4B-GGUF",
         "thinking": False,
         "filename": "L3.2-8X3B-MOE-Dark-Champion-Inst-18.4B-uncen-ablit_D_AU-Q4_k_s.gguf",
-        "comment": "Q4, 10.7GB, big",
+        "comment": "Q4, 10.7GB, big, fast, boring, not dark, wishy-washy",
     },
     {
         "repo_id": "squ11z1/Mythos-nano",
@@ -128,7 +128,7 @@ MODELS = [
         #"filename": "aya-expanse-8b-abliterated.i1-IQ4_XS.gguf",
         #"comment": "IQ4, 4.6GB",
         "filename": "aya-expanse-8b-abliterated.i1-Q4_K_M.gguf",
-        "comment": "Q4, 5.1GB, uncensored, some French, not slow, useful, long context, unoriginal",
+        "comment": "Q4, 5.1GB, uncensored, some French, fast, useful, long context, unoriginal",
     },
     {
         "repo_id": "MaziyarPanahi/mistral-small-3.1-24b-instruct-2503-hf-GGUF",
@@ -228,10 +228,10 @@ MODELS = [
     },
     {
         "repo_id": "unsloth/gemma-4-12b-it-GGUF",
-        "thinking": True,
-        "disable_thinking": "enable_thinking/bos_in_template",
+        "thinking": False,
+        #"disable_thinking": "enable_thinking/bos_in_template", #this is not a thinking model
         "filename": "gemma-4-12b-it-Q4_K_M.gguf",
-        "comment": "Q4, 7.1GB, popular, emo summ, good joke",
+        "comment": "Q4, 7.1GB, popular, emo summ, good joke, fast",
     },
     {
         "repo_id": "jica98/qwen3.5-4B-super-coder",
@@ -441,6 +441,13 @@ MODELS = [
         #"comment": "Q4, 9GB, big, for CPU, limited thinking",
     },
     {
+        "repo_id": "CMSManhattan/JiRackDeltaNet_27b",
+        "thinking": True,
+        "disable_thinking": "enable_thinking",
+        "filename": "JiRackDeltaNet_27b.Q2_K.gguf", #only one small enough
+        "comment": "Q2, 10.9GB, big, long analysis, precise, loop, short thinking, helpful, good summ",
+    },
+    {
         "repo_id": "HauhauCS/Qwen3.8-27B-Uncensored-HauhauCS-Aggressive-MTP-GGUF",
         "thinking": True,
         "disable_thinking": "enable_thinking",
@@ -469,6 +476,13 @@ MODELS = [
     #    "comment": "IQ2, 10.6GB, big, MTP, popular, ok thinking, slow, good full segment, thinks to limit",
     #},
     {
+        "repo_id": "bartowski/orcarouter_Qwen3.8-27B-Uncensored-GGUF",
+        "thinking": True,
+        "disable_thinking": "enable_thinking",
+        "filename": "orcarouter_Qwen3.8-27B-Uncensored-Q3_K_S.gguf",
+        "comment": "Q3, 13.7GB, big, like Coletti one, slow, limited thinking, unoriginal analysis",
+    },
+    {
         "repo_id": "bartowski/Altworld_Hemmingway-1-GGUF",
         "thinking": True,
         #"disable_thinking": "enable_thinking",
@@ -476,13 +490,6 @@ MODELS = [
         #"comment": "IQ2, 10.5GB, big, MTP, faster, overthinking, slow",
         "filename": "Altworld_Hemmingway-1-Q2_K.gguf", #only Q small enough
         "comment": "Q2, 10.8GB, big, MTP, faster, overthinking",
-    },
-    {
-        "repo_id": "bartowski/orcarouter_Qwen3.8-27B-Uncensored-GGUF",
-        "thinking": True,
-        #"disable_thinking": "enable_thinking",
-        "filename": "orcarouter_Qwen3.8-27B-Uncensored-Q3_K_S.gguf",
-        "comment": "Q3, 13.7GB, big",
     },
     {
         "repo_id": "unsloth/Qwen3-30B-A3B-Instruct-2507-GGUF",
@@ -515,13 +522,6 @@ MODELS = [
         "thinking": False,
         "filename": "Huihui-Qwen3-Coder-30B-A3B-Instruct-abliterated.i1-Q2_K.gguf",
         "comment": "Q2, 11.3GB, big, uncensored, simple request loop",
-    },
-    {
-        "repo_id": "CMSManhattan/JiRackDeltaNet_27b",
-        "thinking": True,
-        "disable_thinking": "enable_thinking",
-        "filename": "JiRackDeltaNet_27b.Q2_K.gguf", #only one small enough
-        "comment": "Q2, 10.9GB, big, long analysis, precise, loop, short thinking, helpful, good summ",
     },
     {
         "repo_id": "bytkim/Qwen3.6-27B-MTP-pi-tune-GGUF",
@@ -612,7 +612,7 @@ MODELS = [
         "thinking": True,
         "disable_thinking": "enable_thinking",
         "filename": "Ornith-1.5-35B-A3B-GSQ-RCO-3bit.gguf",
-        "comment": "3bit, 13GB, big, works, fast, ok thinking, restricted, less discernment than 9B",
+        "comment": "3bit, 13GB, big, works, fast, ok thinking, excellent discernment, may refuse",
         #"filename": "Ornith-1.5-35B-A3B-GSQ-RCO-3.5bit.gguf", #much bigger than RAM but worth trying
         #"comment": "3.5bit, 15.2GB, big",
     },
@@ -654,6 +654,13 @@ MODELS = [
         "comment": "Q4, 5.6GB",
     },
     {
+        "repo_id": "nerkyor/Qwen3.8-27B-Coder390-EfficientThink-Opus5.5-GPT6Astra-Grok4.7-DSV4Pro-K3-SFT-RLOO-MTP-DFlash2",
+        "thinking": True,
+        "disable_thinking": "enable_thinking",
+        "filename": "GGUF/Qwen3.8-27B-Coder390-EfficientThink-Q2LynnStyle-Q8MTP.gguf",
+        "comment": "Q2, 13.5GB, big, quite slow, interesting summ",
+    },
+    {
         "repo_id": "",
         #"thinking": False,
         #"disable_thinking": "enable_thinking",
@@ -663,6 +670,7 @@ MODELS = [
     {
         "repo_id": "",
         #"thinking": False,
+        #"disable_thinking": "enable_thinking",
         "filename": "",
         "comment": "",
     },
