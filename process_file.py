@@ -3,6 +3,12 @@ from utils import build_messages, load_model, load_state_value, load_tokenizer, 
 import nonthink
 import settings
 
+def configure_token_cap(model):
+    thinking = model.get("thinking") is not False and not nonthink.STATE
+    settings.MAX_TOKENS = settings.MAX_TOKENS * settings.THINKING_FACTOR if thinking else settings.MAX_TOKENS
+    settings.RESERVE_TOKENS = settings.MAX_TOKENS + settings.SAFETY_MARGIN
+    print(f"Generation cap is {settings.MAX_TOKENS} tokens ({'thinking' if thinking else 'no thinking'}).")
+
 def run_completion(llm, messages):
     if settings.PRINT_PROCESSING_PROMPT:
         for message in messages:
@@ -23,7 +29,10 @@ def run_completion(llm, messages):
         print(f"Prompt: {perf['prompt_tokens']} tokens in {perf['prompt_seconds']:.2f}s ({prompt_speed:.2f} tok/s), generation: {perf['generation_tokens']} tokens in {perf['generation_seconds']:.2f}s ({generation_speed:.2f} tok/s)")
     choice = result["choices"][0]
     if choice["finish_reason"] == "length":
-        print("Warning: generation filled the context, output was cut off.")
+        if usage["completion_tokens"] >= settings.MAX_TOKENS:
+            print(f"Warning: generation reached the MAX_TOKENS cap of {settings.MAX_TOKENS}, output was cut off.")
+        else:
+            print("Warning: generation filled the context, output was cut off.")
     return choice["message"]["content"].strip()
 
 def build_user_prompt(line, context=None):
@@ -163,6 +172,7 @@ def main():
     segment_mode = input("Use segment mode or line mode? [S/l]: ").strip().lower() in ("s", "segment", "y", "")
     use_prev_output = input("Include previous output as context? [y/N]: ").strip().lower() in ("y", "yes")
     nonthink.ask(model)
+    configure_token_cap(model)
     with open(settings.INPUT_FILE, "r", encoding="utf-8") as infile:
         segments = read_segments(infile) if segment_mode else read_line_segments(infile)
     n_ctx = memory_derived_ctx(model, longest_prompt_tokens(model, segments, use_prev_output))

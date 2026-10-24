@@ -23,22 +23,19 @@ MODELS = [
     },
     {
         "repo_id": "Jackrong/Qwopus3.5-9B-Coder-GGUF",
-        "thinking": True,
-        #"disable_thinking": "enable_thinking", #probably
+        "thinking": True, #probably
         "filename": "Qwopus3.5-9B-coder-Exp-Q4_K_M.gguf",
         "comment": "Q4, 5.2GB, class leader, good responses, too much think, few dl",
     },
     {
         "repo_id": "LiquidAI/LFM2.5-8B-A1B-GGUF",
         "thinking": True,
-        #"disable_thinking": "enable_thinking",
         "filename": "LFM2.5-8B-A1B-Q4_K_M.gguf",
         "comment": "Q4, 5.2GB, MoE, ok answers",
     },
     {
         "repo_id": "LiquidAI/LFM2.5-2.6B-GGUF",
         "thinking": True,
-        #"disable_thinking": "enable_thinking",
         "filename": "LFM2.5-2.6B-Q5_K_M.gguf",
         "comment": "Q5, 1.9GB, small, popular, sub-4GB agentic tool-use, finishes think, nonsense summary",
     },
@@ -65,7 +62,6 @@ MODELS = [
     {
         "repo_id": "squ11z1/Mythos-nano",
         "thinking": True,
-        #"disable_thinking": "enable_thinking",
         "filename": "mythos-nano-Q4_K_M.gguf",
         "comment": "Q4, 1.9GB, 3B, small",
     },
@@ -73,7 +69,7 @@ MODELS = [
         "repo_id": "DreamFast/gemma-3-12b-it-heretic-v2",
         "thinking": False,
         "filename": "gguf/gemma-3-12b-it-heretic-v2-Q4_K_M.gguf",
-        "comment": "Q4, 7.3GB, no refuse, slow, verbose, swaps, interesting, likely uncensored, slow-ish",
+        "comment": "Q4, 7.3GB, uncensored, slow, verbose, swaps, interesting, slow-ish, boring chat",
     },
     {
         "repo_id": "DreamFast/qwen3-8b-heretic",
@@ -134,19 +130,17 @@ MODELS = [
         "repo_id": "MaziyarPanahi/mistral-small-3.1-24b-instruct-2503-hf-GGUF",
         "thinking": False,
         "filename": "mistral-small-3.1-24b-instruct-2503-hf.Q3_K_M.gguf",
-        "comment": "Q3, 11.5GB, big, works, slow, gets authors right, sanitized, boring, repeats, right summ",
+        "comment": "Q3, 11.5GB, big, works, gets authors right, sanitized, boring, repeats, right summ",
     },
     {
         "repo_id": "unsloth/gpt-oss-20b-GGUF",
         "thinking": True,
-        #"disable_thinking": "enable_thinking",
         "filename": "gpt-oss-20b-UD-Q4_K_XL.gguf", #only UD that fits
         "comment": "UD-Q4, 11.9GB, big, popular, fast, tags, limited think, refuses dirty joke, loop", #promising
     },
     {
         "repo_id": "MaziyarPanahi/gpt-oss-20b-Derestricted-GGUF",
         "thinking": True,
-        #"disable_thinking": "enable_thinking",
         "filename": "gpt-oss-20b-Derestricted.Q3_K_M.gguf",
         "comment": "Q3, 12.9GB, big, MoE",
     },
@@ -168,7 +162,6 @@ MODELS = [
     {
         "repo_id": "MaziyarPanahi/NVIDIA-Nemotron-Nano-12B-v2-GGUF",
         "thinking": True,
-        #"disable_thinking": "enable_thinking",
         "filename": "NVIDIA-Nemotron-Nano-12B-v2.Q2_K.gguf", #Q4_K_M 7.5GB, Q5_K_M 8.8GB
         "comment": "Q2, 4.7GB, low-q test, seems coherent, no refuse, overthinks, may skip thinking", #small low-q test
         #"filename": "NVIDIA-Nemotron-Nano-12B-v2.Q3_K_L.gguf", #better, Q3_K_M 6GB
@@ -177,7 +170,6 @@ MODELS = [
     {
         "repo_id": "dominguesm/NVIDIA-Nemotron-Nano-9B-v2-GGUF",
         "thinking": True,
-        #"disable_thinking": "enable_thinking",
         #"filename": "nemotron-nano-9b-v2-q2_k.gguf", #q5_k_m 7.1GB
         #"comment": "Q2, 5GB, worse code descr than 12B, good summary, ok think, no swap, no refuse",
         "filename": "nemotron-nano-9b-v2-q4_k_s.gguf", #better
@@ -186,7 +178,6 @@ MODELS = [
     {
         "repo_id": "nvidia/NVIDIA-Nemotron-3-Nano-4B-GGUF",
         "thinking": True,
-        #"disable_thinking": "enable_thinking",
         "filename": "NVIDIA-Nemotron3-Nano-4B-Q4_K_M.gguf", #only one
         "comment": "Q4, 2.8GB, small, ok think, works, restricted, short summ",
     },
@@ -292,9 +283,9 @@ MODELS = [
     },
     {
         "repo_id": "nguyenmanhd93/phi-4-unsloth-bnb-4bit-gguf-Q4_K_M",
-        #"thinking": False,
+        "thinking": False,
         "filename": "unsloth.Q4_K_M.gguf",
-        "comment": "Q4, 8.9GB, big-ish, few dl",
+        "comment": "Q4, 8.9GB, big-ish, few dl, fast-ish",
     },
     {
         "repo_id": "mradermacher/Arsh-V1-GGUF",
@@ -305,7 +296,6 @@ MODELS = [
     {
         "repo_id": "openbmb/MiniCPM5-2B-GGUF",
         "thinking": True,
-        #"disable_thinking": "enable_thinking",
         "filename": "MiniCPM5-2B-Q4_K_M.gguf", #Only other: Q8_0 is 2.7GB
         "comment": "Q4, 1.6GB, small, seems coherent, ok thinking",
     },
@@ -327,10 +317,9 @@ MODELS = [
     },
     {
         "repo_id": "MaziyarPanahi/Nemotron-Orchestrator-8B-GGUF",
-        "thinking": True,
-        #"disable_thinking": "enable_thinking",
+        "thinking": True, #says it can skip thinking
         "filename": "Nemotron-Orchestrator-8B.Q5_K_M.gguf",
-        "comment": "Q5, 5.9GB, can skip think, nonsense loop, keeps thinking",
+        "comment": "Q5, 5.9GB, nonsense loop, keeps thinking",
     },
     {
         "repo_id": "bartowski/allura-forge_Llama-3.3-8B-Instruct-GGUF",
@@ -391,8 +380,7 @@ MODELS = [
     },
     {
         "repo_id": "Jackrong/Qwopus3.5-9B-Coder-MTP-GGUF",
-        "thinking": True,
-        #"disable_thinking": "enable_thinking", #probably
+        "thinking": True, #probably
         "filename": "Qwopus3.5-9B-Coder-MTP-Q4_K_M.gguf", #Q3 4.7GB, Q5 6.6
         "comment": "Q4, 5.8GB, works, thinking loop",
     },
@@ -406,28 +394,24 @@ MODELS = [
     {
         "repo_id": "AnkitAI/Parable-Qwen3-8B-Claude-Fable-5-GGUF",
         "thinking": True,
-        #"disable_thinking": "enable_thinking",
         "filename": "Parable-Qwen3-8B-Claude-Fable-5-GGUF-Q4_K_M.gguf",
         "comment": "Q4, 5GB, old",
     },
     {
         "repo_id": "Jackrong/Qwen3.5-9B-DeepSeek-V4-Flash-GGUF",
-        "thinking": True,
-        #"disable_thinking": "enable_thinking", #probably
+        "thinking": True, #probably
         "filename": "Qwen3.5-9B-DeepSeek-V4-Flash-Q4_K_M.gguf",
         "comment": "Q4, 5.6GB, too much thinking",
     },
     {
         "repo_id": "MaziyarPanahi/DeepSeek-R1-0528-Qwen3-8B-GGUF",
         "thinking": True,
-        #"disable_thinking": "enable_thinking",
         "filename": "DeepSeek-R1-0528-Qwen3-8B.Q2_K.gguf", #Q3_K_L 4.4GB, Q4_K_M %GB
         "comment": "Q2, 3.3GB, old", #try as a small quant fast thinking deepseek or move up
     },
     {
         "repo_id": "bartowski/DeepSeek-Coder-V2-Lite-Instruct-GGUF",
         "thinking": True,
-        #"disable_thinking": "enable_thinking",
         "filename": "DeepSeek-Coder-V2-Lite-Instruct-Q4_K_M.gguf", #or try Q3_K_L 8.5GB
         "comment": "Q4, 10.4GB, big, says less thinking",
     },
@@ -489,7 +473,6 @@ MODELS = [
     {
         "repo_id": "bartowski/Altworld_Hemmingway-1-GGUF",
         "thinking": True,
-        #"disable_thinking": "enable_thinking",
         #"filename": "Altworld_Hemmingway-1-IQ2_M.gguf",
         #"comment": "IQ2, 10.5GB, big, MTP, faster, overthink, slow",
         "filename": "Altworld_Hemmingway-1-Q2_K.gguf", #only Q small enough
@@ -539,7 +522,7 @@ MODELS = [
         "thinking": True,
         "disable_thinking": "enable_thinking",
         "filename": "Qwen3.8-27B-UD-Q2_K_XL.gguf", #only Q small enough
-        "comment": "UD-Q2, 9.8GB, big, says it can skip think, slow on long input",
+        "comment": "UD-Q2, 9.8GB, big-ish, slow on long input",
     },
     {
         "repo_id": "tvall43/Qwen3.6-14B-A3B-FableVibes-GGUF",
@@ -551,7 +534,6 @@ MODELS = [
     {
         "repo_id": "DevQuasar/amd.Instella-MoE-16B-A3B-Think-GGUF",
         "thinking": True,
-        #"disable_thinking": "enable_thinking",
         "filename": "Q4_K_M/amd.Instella-MoE-16B-A3B-Think.f16.gguf.Q4_K_M.gguf", #or go Q3 8.2GB
         "comment": "Q4, 10.5GB, big, experimental",
     },
@@ -593,14 +575,12 @@ MODELS = [
     {
         "repo_id": "JetBrains/Mellum2.1-12B-A2.5B-Thinking-GGUF",
         "thinking": True,
-        #"disable_thinking": "enable_thinking",
         "filename": "Mellum2.1-12B-A2.5B-Thinking-Q4_K_M.gguf", #Q6_K 10.9GB
         "comment": "Q4, 8.1GB, big-ish",
     },
     {
         "repo_id": "bartowski/Qwen2.5-Coder-14B-Instruct-abliterated-GGUF",
         "thinking": True,
-        #"disable_thinking": "enable_thinking",
         "filename": "Qwen2.5-Coder-14B-Instruct-abliterated-Q4_K_M.gguf", #many more; says K quants think less
         "comment": "Q4, 9GB, big, old, uncensored",
     },
@@ -630,7 +610,6 @@ MODELS = [
     {
         "repo_id": "ConwayResearch/Underdog-Saluki-27B-1.0",
         "thinking": True,
-        #"disable_thinking": "enable_thinking",
         "filename": "Underdog-Saluki-27B-1.0-IQ2-mix.gguf",
         "comment": "IQ2, 7.9GB, tool-calling",
     },
@@ -644,18 +623,10 @@ MODELS = [
     {
         "repo_id": "Verdugie/Therapy-3.8",
         "thinking": True,
-        #"disable_thinking": "enable_thinking",
         #"filename": "Therapy-3.8-i1-Q3_K_M.gguf", #many more
         #"comment": "Q3, 13.3GB, specialist, works but slow",
         "filename": "Therapy-3.8-i1-Q3_K_S.gguf",
-        "comment": "Q3, 12.1GB, specialist, works but weird",
-    },
-    {
-        "repo_id": "candor-lab/K2-Horizon-7B-Candor-Uncensored-GGUF",
-        #"thinking": False,
-        #"disable_thinking": "enable_thinking",
-        "filename": "K2-Horizon-7B-Candor-Uncensored-Q4_K_M.gguf", #only one
-        "comment": "Q4, 5.6GB",
+        "comment": "Q3, 12.1GB, specialist, works but weird, slow",
     },
     {
         "repo_id": "nerkyor/Qwen3.8-27B-Coder390-EfficientThink-Opus5.5-GPT6Astra-Grok4.7-DSV4Pro-K3-SFT-RLOO-MTP-DFlash2",
@@ -665,23 +636,21 @@ MODELS = [
         "comment": "Q2, 13.5GB, big, quite slow, interesting summ",
     },
     {
-        "repo_id": "XHToken/Spark-X2.6-4B-GGUF",
-        #"thinking": False,
-        #"disable_thinking": "enable_thinking",
-        "filename": "Spark-X2.6-4B-Q4_K_M.gguf",
-        "comment": "Q4, 3.5GB, small",
+        "repo_id": "ttindall/Qwen3.8-27B-Defiance-Uncensored-MTP-GGUF",
+        "thinking": True, #probably
+        "disable_thinking": "enable_thinking", #probably
+        "filename": "Qwen3.8-27B-Defiance-Uncensored-IQ4_XS.gguf", #might be too big/slow, only one
+        "comment": "IQ4, 15.7GB, big",
     },
     {
         "repo_id": "",
         #"thinking": False,
-        #"disable_thinking": "enable_thinking",
         "filename": "",
         "comment": "",
     },
     {
         "repo_id": "",
         #"thinking": False,
-        #"disable_thinking": "enable_thinking",
         "filename": "",
         "comment": "",
     },
