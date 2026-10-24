@@ -48,7 +48,7 @@ def stream_response(llm, prompt):
 def build_full_prompt(prompt):
     lines = ["<history>"]
     lines.extend(f"<background>{b}</background>" for b in batches)
-    lines.extend(f"<summary>{s}</summary>" for s in summaries)
+    lines.extend(f"{s}" for s in summaries)
     for q, a in recent:
         lines.append(f"<user>{q}</user>")
         lines.append(f"<assistant>{a}</assistant>")

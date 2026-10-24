@@ -98,29 +98,40 @@ def kv_bytes_per_token(metadata):
     value_len = metadata_int(metadata, f"{arch}.attention.value_length") or key_len
     return layers * heads_kv * (key_len + value_len) * 2
 
+def trained_context(metadata):
+    arch = metadata.get("general.architecture")
+    if arch is None:
+        return None
+    return metadata_int(metadata, f"{arch}.context_length")
+
+def wanted_context(longest_prompt):
+    if longest_prompt is None:
+        return settings.N_CTX
+    return max(settings.N_CTX_MIN, longest_prompt + settings.RESERVE_TOKENS)
+
+def memory_limited_ctx(metadata, n_ctx):
+    try:
+        per_token = kv_bytes_per_token(metadata)
+    except (KeyError, TypeError):
+        print("Could not read the KV cache geometry from the model metadata, skipping the memory check.")
+        return n_ctx
+    budget = int(available_memory_bytes() * settings.MEMORY_FRACTION)
+    if per_token * n_ctx <= budget:
+        return n_ctx
+    limited = min(n_ctx, max(settings.N_CTX_MIN, budget // per_token))
+    print(f"Warning: the KV cache for {n_ctx} tokens needs about {per_token * n_ctx / 1024 ** 3:.2f} GiB but only {budget / 1024 ** 3:.2f} GiB of memory is usable, reducing the context window to {limited} tokens.")
+    return limited
+
 def memory_derived_ctx(model, longest_prompt=None):
     tokenizer_llm = load_tokenizer(model)
     metadata = dict(tokenizer_llm.metadata)
     del tokenizer_llm
-    try:
-        per_token = kv_bytes_per_token(metadata)
-    except (KeyError, TypeError):
-        print(f"Could not read the KV cache geometry from the model metadata, falling back to N_CTX of {settings.N_CTX}.")
-        return settings.N_CTX
-    usable = int(available_memory_bytes() * settings.MEMORY_FRACTION)
-    memory_ctx = usable // per_token
-    trained = metadata_int(metadata, f"{metadata['general.architecture']}.context_length")
-    n_ctx = min(memory_ctx, settings.N_CTX_MAX)
+    ceiling = settings.N_CTX_MAX
+    trained = trained_context(metadata)
     if trained:
-        n_ctx = min(n_ctx, trained)
-    if longest_prompt is not None:
-        n_ctx = min(n_ctx, max(settings.N_CTX_MIN, longest_prompt + settings.RESERVE_TOKENS))
-    if n_ctx < 1024:
-        fallback = min(settings.N_CTX, trained) if trained else settings.N_CTX
-        print(f"The memory estimate allows only {n_ctx} tokens of context, using {fallback} instead.")
-        return fallback
-    print(f"KV cache estimate: {per_token * n_ctx / 1024 ** 3:.2f} GiB for {n_ctx} tokens (memory would allow {memory_ctx}).")
-    return n_ctx
+        ceiling = min(ceiling, trained)
+    n_ctx = min(wanted_context(longest_prompt), ceiling)
+    return memory_limited_ctx(metadata, n_ctx)
 
 def load_tokenizer(model, redirect_logs=settings.WRITE_LOG):
     path = resolve_model_path(model)
