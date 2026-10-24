@@ -3,7 +3,7 @@ import sys
 import time
 import json
 from pathlib import Path
-from llama_cpp import Llama
+from llama_cpp import Llama, llama_perf_context, llama_perf_context_reset
 from utils_helpers import data_path, log_model_use, log_instruction_use, resolve_model_path, available_memory_bytes, ask_or_exit, strip_think, wait_while_stopped, next_free_path
 import models
 import settings
@@ -13,7 +13,7 @@ def is_cached(model):
     return (Path.home() / ".cache" / "huggingface" / "hub" / repo_slug).is_dir()
 
 def remember_model(model):
-    save_state_value("model", {"repo_id": model["repo_id"], "filename": model["filename"]})
+    save_state_value("last_used", model["repo_id"])
 
 def configure_system_role(model):
     settings.USE_SYSTEM_ROLE = not model.get("no_system_role", False)
@@ -43,6 +43,18 @@ def construct_llama(path, llama_kwargs, redirect_logs):
         os.close(old_stderr)
         log_file.close()
     return llm
+
+def reset_perf(llm):
+    llama_perf_context_reset(llm._ctx.ctx)
+
+def read_perf(llm):
+    perf = llama_perf_context(llm._ctx.ctx)
+    return {
+        "prompt_tokens": perf.n_p_eval,
+        "prompt_seconds": perf.t_p_eval_ms / 1000,
+        "generation_tokens": perf.n_eval,
+        "generation_seconds": perf.t_eval_ms / 1000,
+    }
 
 def load_model(model, c_ntx=None, redirect_logs=settings.WRITE_LOG):
     if c_ntx is None:
@@ -187,7 +199,7 @@ def print_model_menu(last_model, current):
     if last_model is not None:
         print(f"l: Last used model: {last_model['repo_id']} ({last_model['filename']})")
     print_model_list(current)
-    print("Keywords to filter, number to select, Enter for last used, * to reset, n non-thinking, x downloaded.")
+    print("Keyword filter, number select, * reset, n non-thinking, x downloaded, Enter last used.")
 
 def select_by_number(raw, current):
     idx = int(raw)
@@ -258,10 +270,10 @@ def save_state_value(key, value):
     write_state(state)
 
 def find_last_model(models_list):
-    last = load_state_value("model")
+    last = load_state_value("last_used", str)
     if last is None:
         return None
     for m in models_list:
-        if m["repo_id"] == last["repo_id"] and m["filename"] == last["filename"]:
+        if m["repo_id"] == last:
             return m
     return None

@@ -1,14 +1,13 @@
-import time
 import readline
-from utils import build_messages, load_model, load_state_value, load_tokenizer, log_instruction_use, memory_derived_ctx, pick_model, save_state_value, strip_think, wait_while_stopped, next_free_path
-import settings
+from utils import build_messages, load_model, load_state_value, load_tokenizer, log_instruction_use, memory_derived_ctx, pick_model, save_state_value, strip_think, wait_while_stopped, next_free_path, read_perf, reset_perf
 import nonthink
+import settings
 
 def run_completion(llm, messages):
     if settings.PRINT_PROCESSING_PROMPT:
         for message in messages:
             print(message["content"])
-    start_time = time.perf_counter()
+    reset_perf(llm)
     try:
         result = nonthink.generate(llm, messages, max_tokens=settings.MAX_TOKENS, temperature=0.6, top_p=0.95, top_k=20, presence_penalty=1.0)
     except ValueError as error:
@@ -18,9 +17,10 @@ def run_completion(llm, messages):
     if settings.PRINT_TOKEN_USAGE:
         print(f"Prompt tokens: {usage['prompt_tokens']}, completion tokens: {usage['completion_tokens']}, n_ctx: {llm.n_ctx()}")
     if settings.PRINT_GENERATION_SPEED:
-        elapsed = time.perf_counter() - start_time
-        tokens_per_second = usage["completion_tokens"] / elapsed if elapsed > 0 else 0.0
-        print(f"Generated {usage['completion_tokens']} tokens in {elapsed:.2f}s ({tokens_per_second:.2f} tok/s)")
+        perf = read_perf(llm)
+        prompt_speed = perf["prompt_tokens"] / perf["prompt_seconds"] if perf["prompt_seconds"] > 0 else 0.0
+        generation_speed = perf["generation_tokens"] / perf["generation_seconds"] if perf["generation_seconds"] > 0 else 0.0
+        print(f"Prompt: {perf['prompt_tokens']} tokens in {perf['prompt_seconds']:.2f}s ({prompt_speed:.2f} tok/s), generation: {perf['generation_tokens']} tokens in {perf['generation_seconds']:.2f}s ({generation_speed:.2f} tok/s)")
     choice = result["choices"][0]
     if choice["finish_reason"] == "length":
         print("Warning: generation filled the context, output was cut off.")
