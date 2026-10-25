@@ -1,5 +1,6 @@
 import readline
 from utils import build_messages, is_cached, load_model, pick_model, strip_think
+import nonthink
 import settings
 
 batches = []
@@ -16,7 +17,7 @@ def separate_answer(text):
     return question.rstrip() + " " + marker + answer.lstrip()
 
 def complete(llm, prompt):
-    response = llm.create_chat_completion(messages=[{"role": "user", "content": prompt}], stream=False)
+    response = nonthink.generate(llm, [{"role": "user", "content": prompt}], **settings.SUMMARY_SAMPLING)
     return compact(strip_think(response["choices"][0]["message"]["content"]))
 
 def build_summary_prompt(question, answer):
@@ -53,7 +54,7 @@ def build_full_prompt(prompt):
         lines.append(f"<user>{q}</user>")
         lines.append(f"<assistant>{a}</assistant>")
     lines.append("</history>")
-    lines.append(f"<current_query>{prompt}</current_query>")
+    lines.append(f"<query>{prompt}</query>")
     return "\n".join(lines)
 
 def summarize_overflow(llm):
@@ -89,5 +90,7 @@ def run_chat_loop(llm):
 
 if __name__ == "__main__":
     model = pick_model()
+    nonthink.ask(model, confirm=False)
     llm = load_model(model)
+    nonthink.prepare(llm)
     run_chat_loop(llm)

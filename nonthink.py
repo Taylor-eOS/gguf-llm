@@ -67,7 +67,7 @@ def deactivate(reason):
     STATE.clear()
     print(f"Warning: {reason}, thinking stays enabled.")
 
-def ask(model):
+def ask(model, confirm=True):
     STATE.clear()
     setting = model.get("disable_thinking")
     if not isinstance(setting, str) or not setting:
@@ -77,10 +77,11 @@ def ask(model):
     if name not in MECHANISMS or bos_mode not in EXPECTED_BOS_COUNT:
         print(f"Warning: unknown disable_thinking setting \"{setting}\", thinking stays enabled.")
         return
-    if input("Disable thinking? [Y/n]: ").strip().lower() not in ("n", "no"):
-        STATE["mechanism"] = MECHANISMS[name]
-        STATE["bos_mode"] = bos_mode
-        print(f"Disabling thinking via {setting}.")
+    if confirm and input("Disable thinking? [Y/n]: ").strip().lower() in ("n", "no"):
+        return
+    STATE["mechanism"] = MECHANISMS[name]
+    STATE["bos_mode"] = bos_mode
+    print(f"Disabling thinking via {setting}.")
 
 def prepare(llm):
     if not STATE:

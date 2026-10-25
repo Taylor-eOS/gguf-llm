@@ -27,7 +27,7 @@ def translate(llm, target_lang, text):
     return result["choices"][0]["message"]["content"]
 
 if __name__ == "__main__":
-    raw = input("Target language (e.g. e=English, g=German, s=Spanish): ")
+    raw = input("Target language (English, German, Spanish): ")
     target_lang = resolve_language(raw)
     print(f"Using target language: {target_lang}")
     llm = tu.load_model(REPO_ID, FILENAME)
