@@ -601,7 +601,7 @@ MODELS = [
         #"filename": "Ornith-1.5-35B-A3B-GSQ-RCO-3bit.gguf",
         #"comment": "3bit, 13GB, big, MoE, fast, ok think, excellent discernment, may decline",
         "filename": "Ornith-1.5-35B-A3B-GSQ-RCO-3.5bit.gguf", #much bigger than RAM but works
-        "comment": "3.5bit, 15.2GB, big, MoE, fast, ok think, fine discernment, may decline, can limit think",
+        "comment": "3.5bit, 15.2GB, big, MoE, fast, can lim think, fine discernment, may decline, good chat",
     },
     #{
     #    "repo_id": "pfeifferj/Spark-X2.5-4B-GSQ-RCO-GGUF", #loading crashes

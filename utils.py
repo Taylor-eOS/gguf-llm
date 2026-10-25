@@ -207,9 +207,9 @@ def print_model_menu(last_model, current):
     toggleable_thinking_symb = "t"
     nonthinking_symb = "n"
     print(f"Available models ([{cached_symb}] = cached, [{thinking_symb}] = thinking, [{nonthinking_symb}] = non-thinking):")
-    if last_model is not None:
-        print(f"l: Last used model: {last_model['repo_id']} ({last_model['filename']})")
     print_model_list(current)
+    if last_model is not None:
+        print(f"Last: {last_model['repo_id']}")
     print("Keyword filter, number select, * reset, n non-thinking, x downloaded, Enter last used.")
 
 def select_by_number(raw, current):
@@ -236,7 +236,6 @@ def pick_model():
             return current[0]
         if raw.lower() == "l" or (raw == "" and last_model in current):
             if last_model is None:
-                print("No last used model saved.")
                 continue
             return last_model
         if raw == "*":
